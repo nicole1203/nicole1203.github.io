@@ -1,6 +1,11 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="pt-BR">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>IC Connect</title>
+</head>
+<body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -194,6 +199,29 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .hchip.ia{color:#fff;background:rgba(15,23,42,.78)}
 .hconf{margin-top:24px;background:var(--accent-soft);border-radius:12px;padding:14px 16px}
 .hconf h2{margin:0 0 6px;font-size:18px}.hconf p{margin:6px 0}
+body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
+.authwrap{max-width:440px;margin:8px auto 0}
+.authcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.authtabs{display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:4px;margin-bottom:16px}
+.authtabs button{flex:1;border:0;background:transparent;border-radius:8px;padding:9px 8px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer}
+.authtabs button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.field input[type=email],.field input[type=password],.field input[type=text]{width:100%;font:inherit;padding:11px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.field small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.showpw{display:flex;gap:8px;align-items:center;font-size:14px;margin:-4px 0 14px}
+.btn.block{width:100%;justify-content:center}
+.gbtn{width:100%;justify-content:center;gap:10px;font-weight:600}
+.orline{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin:16px 0}
+.orline::before,.orline::after{content:"";flex:1;height:1px;background:var(--line)}
+#authmsg{margin:0 0 12px;font-size:14px}
+#authmsg:empty{display:none}
+#authmsg.err{color:#8c1d18;background:#fdecea;padding:10px 12px;border-radius:8px}
+#authmsg.ok{color:#14532d;background:#e6f4ea;padding:10px 12px;border-radius:8px}
+.authnote{font-size:13px;color:var(--muted);margin:14px 0 0}
+.authlinks{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:14px}
+.linkbtn{border:0;background:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+.authwarn{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:14px;margin-bottom:14px}
 .auditflag{font-size:11px;font-weight:600;color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:6px}
 .auditbox{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .auditbox h2{font-size:13px;margin:0 0 8px;color:var(--muted);font-weight:600}
@@ -253,6 +281,7 @@ ul.plain{margin:0;padding-left:18px}
       <a href="#explorar" data-nav="explorar">Explorar</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
+      <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
     </nav>
   </div>
 </header>
@@ -265,6 +294,8 @@ ul.plain{margin:0;padding-left:18px}
   <a href="#explorar" data-nav="explorar">Explorar</a>
   <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
+
+  <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
 </nav>
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -1030,6 +1061,112 @@ function viewAjuda(){
     <p>Prazos, requisitos e bolsas podem mudar. Antes de se candidatar, consulte o edital ou a página indicada. O IC Connect é um protótipo acadêmico e não substitui o edital.</p>
     <p><strong>Ainda ficou com dúvida?</strong> Neste protótipo, use sempre a fonte da oportunidade para confirmar informações específicas sobre inscrição, requisitos, bolsa ou prazo.</p></section>`;
 }
+/* ===================== conta (login) =====================
+   Login real via Firebase Authentication (e-mail e senha, verificação de e-mail e Google).
+   Preencha FIREBASE_CONFIG (veja o LEIA-ME). Sem as chaves, a tela aparece desativada e o site funciona sem login. */
+const FIREBASE_CONFIG = { apiKey:"", authDomain:"", projectId:"", appId:"" };
+const AUTH = { mode:"entrar", user:null, api:null, ready:false, loading:false, checked:false, failed:false };
+/* Login obrigatório: só vale depois que as chaves do Firebase forem preenchidas. Sem chaves, o site abre normalmente. */
+const gated = () => authConfigured() && !(AUTH.user && AUTH.user.verified);
+const authConfigured = () => !!(window.__fakeAuth || FIREBASE_CONFIG.apiKey);
+const G_ICON = '<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>';
+const AUTH_ERR = {
+  "auth/invalid-credential":"E-mail ou senha incorretos.", "auth/wrong-password":"E-mail ou senha incorretos.", "auth/user-not-found":"E-mail ou senha incorretos.",
+  "auth/invalid-email":"Esse e-mail não parece válido.", "auth/email-already-in-use":"Já existe uma conta com esse e-mail. Use “Entrar”.",
+  "auth/weak-password":"A senha é fraca. Use pelo menos 8 caracteres.", "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos e tente de novo.",
+  "auth/network-request-failed":"Sem conexão com o serviço de login. Verifique a internet.", "auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.",
+  "auth/cancelled-popup-request":"A janela do Google foi fechada antes de terminar.", "auth/popup-blocked":"O navegador bloqueou a janela do Google. Permita pop-ups e tente de novo.",
+  "auth/unauthorized-domain":"Este endereço ainda não está autorizado no serviço de login (veja o LEIA-ME).", "auth/operation-not-allowed":"Este método de login não está ativado no serviço (veja o LEIA-ME).",
+  "auth/user-disabled":"Esta conta foi desativada."
+};
+const authErr = e => AUTH_ERR[e && e.code] || "Não foi possível concluir. Tente de novo em instantes.";
+function setMsg(text, kind){ const m = $("#authmsg"); if (!m) return; m.textContent = text || ""; m.className = kind || ""; m.setAttribute("role", kind==="err" ? "alert" : "status"); }
+function setBusy(b){ document.querySelectorAll("#authForm button, #authBox button[data-auth]").forEach(x => { x.disabled = b || (x.dataset.needsCfg === "1" && !authConfigured()); }); }
+function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); }
+function applyUser(u){ const was = gated(); AUTH.user = u ? { email:u.email, verified:!!u.emailVerified } : null; AUTH.checked = true; updateAcctLinks(); if (was && !gated()) { go("inicio"); return; } render(); }
+async function authInit(){
+  if (AUTH.ready || AUTH.loading || !authConfigured()) return;
+  AUTH.loading = true;
+  try {
+    if (window.__fakeAuth) AUTH.api = window.__fakeAuth;
+    else {
+      const base = "https://www.gstatic.com/firebasejs/10.12.2/";
+      const [{ initializeApp }, A] = await Promise.all([import(base+"firebase-app.js"), import(base+"firebase-auth.js")]);
+      const auth = A.getAuth(initializeApp(FIREBASE_CONFIG)); auth.languageCode = "pt-BR";
+      AUTH.api = {
+        signIn:(e,p)=>A.signInWithEmailAndPassword(auth,e,p),
+        signUp: async (e,p)=>{ const c = await A.createUserWithEmailAndPassword(auth,e,p); await A.sendEmailVerification(c.user); return c; },
+        sendVerify:()=>A.sendEmailVerification(auth.currentUser),
+        reload: async ()=>{ await auth.currentUser.reload(); return auth.currentUser; },
+        google:()=>A.signInWithPopup(auth, new A.GoogleAuthProvider()),
+        reset:e=>A.sendPasswordResetEmail(auth,e),
+        signOut:()=>A.signOut(auth),
+        onChange:cb=>A.onAuthStateChanged(auth,cb)
+      };
+    }
+    AUTH.api.onChange(applyUser); AUTH.ready = true;
+  } catch (err) { AUTH.api = null; AUTH.failed = true; render(); setMsg("Não foi possível carregar o serviço de login. Verifique a internet e as chaves.", "err"); }
+  AUTH.loading = false;
+}
+function viewCarregando(){ return '<div class="authwrap"><h1>IC Connect</h1><p class="lede" role="status">Carregando…</p></div>'; }
+function viewEntrar(){
+  const cfg = authConfigured();
+  const warn = cfg ? "" : '<p class="authwarn" role="note">O login ainda não foi configurado neste site. Os botões ficam desativados até as chaves do serviço serem preenchidas (veja o LEIA-ME). O restante do site funciona normalmente.</p>';
+  const dis = cfg ? "" : ' disabled data-needs-cfg="1"';
+  const skip = gated() ? "" : '<p class="authlinks"><a href="#explorar">Continuar sem entrar</a></p>';
+  const intro = gated() ? '<p class="lede">Entre para acessar o IC Connect, um protótipo acadêmico de oportunidades de iniciação científica.</p>' : "";
+  const u = AUTH.user;
+  if (u && !u.verified) return `<div class="authwrap" id="authBox"><h1>Verifique seu e-mail</h1><div class="authcard">
+    <p>Enviamos um link de confirmação para <strong>${esc(u.email)}</strong>. Abra o e-mail, clique no link e volte aqui.</p>
+    <p class="authnote">Não achou? Olhe também a caixa de spam.</p><div id="authmsg" role="status" aria-live="polite"></div>
+    <button class="btn primary block" data-auth="check" type="button">Já confirmei</button>
+    <p class="authlinks"><button class="linkbtn" data-auth="resend" type="button">Reenviar e-mail</button><button class="linkbtn" data-auth="out" type="button">Sair</button></p></div>${skip}</div>`;
+  if (u) return `<div class="authwrap" id="authBox"><h1>Sua conta</h1><div class="authcard">
+    <p><strong>${esc(u.email)}</strong><br><span class="pill st-aberta" style="margin-top:6px">E-mail verificado</span></p>
+    <p class="authnote">Neste protótipo, a conta ainda não sincroniza seus Salvos: eles continuam guardados só neste navegador.</p><div id="authmsg" role="status" aria-live="polite"></div>
+    <button class="btn block" data-auth="out" type="button">Sair</button></div></div>`;
+  const m = AUTH.mode;
+  const title = m==="criar" ? "Criar conta" : m==="reset" ? "Redefinir senha" : "Entrar";
+  const pwField = m==="reset" ? "" : `<label class="field"><span>Senha</span><input id="authPw" type="password" required autocomplete="${m==="criar"?"new-password":"current-password"}"${m==="criar"?' aria-describedby="pwhint"':""}>${m==="criar"?'<small id="pwhint">Mínimo de 8 caracteres.</small>':""}</label>
+    <label class="showpw"><input type="checkbox" id="showPw"> Mostrar senha</label>`;
+  const go = m==="criar" ? "Criar conta" : m==="reset" ? "Enviar link de redefinição" : "Entrar";
+  const google = ""; /* login com Google desativado: o acesso é só por e-mail e senha */
+  const extra = m==="entrar" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="reset">Esqueci a senha</button></p>' : m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
+  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: o e-mail é usado apenas para o acesso à conta, e você receberá uma mensagem para confirmá-lo.</p>' : "";
+  return `<div class="authwrap" id="authBox"><h1>${title}</h1>${intro}${warn}<div class="authcard">
+    ${m==="reset"?"":`<div class="authtabs" role="group" aria-label="Escolha"><button type="button" data-authmode="entrar" aria-pressed="${m==="entrar"}">Entrar</button><button type="button" data-authmode="criar" aria-pressed="${m==="criar"}">Criar conta</button></div>`}
+    <form id="authForm" novalidate><div id="authmsg" role="status" aria-live="polite"></div>
+    <label class="field"><span>E-mail</span><input id="authEmail" type="email" required autocomplete="email" inputmode="email"></label>${pwField}
+    <button class="btn primary block" type="submit"${dis}>${go}</button></form>${google}${extra}${note}</div>${skip}</div>`;
+}
+document.addEventListener("submit", async e => {
+  if (e.target.id !== "authForm") return; e.preventDefault();
+  if (!AUTH.api) { setMsg("O login não está disponível agora.", "err"); return; }
+  const email = $("#authEmail").value.trim(), pw = $("#authPw") ? $("#authPw").value : "";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setMsg("Digite um e-mail válido.", "err"); $("#authEmail").focus(); return; }
+  if (AUTH.mode !== "reset" && !pw) { setMsg("Digite a senha.", "err"); $("#authPw").focus(); return; }
+  if (AUTH.mode === "criar" && pw.length < 8) { setMsg("A senha precisa ter pelo menos 8 caracteres.", "err"); $("#authPw").focus(); return; }
+  setBusy(true); setMsg("");
+  try {
+    if (AUTH.mode === "entrar") await AUTH.api.signIn(email, pw);
+    else if (AUTH.mode === "criar") await AUTH.api.signUp(email, pw);
+    else { await AUTH.api.reset(email); setMsg("Se existir uma conta com esse e-mail, enviamos um link para redefinir a senha.", "ok"); }
+  } catch (err) { setMsg(authErr(err), "err"); }
+  setBusy(false);
+});
+document.addEventListener("click", async e => {
+  const mb = e.target.closest("[data-authmode]"); if (mb) { AUTH.mode = mb.dataset.authmode; render(); $("#authEmail")?.focus(); return; }
+  const ab = e.target.closest("[data-auth]"); if (!ab || !AUTH.api) return;
+  const act = ab.dataset.auth; setBusy(true); setMsg("");
+  try {
+    if (act === "google") await AUTH.api.google();
+    else if (act === "out") { AUTH.mode = "entrar"; await AUTH.api.signOut(); }
+    else if (act === "resend") { await AUTH.api.sendVerify(); setMsg("E-mail reenviado.", "ok"); }
+    else if (act === "check") { const u = await AUTH.api.reload(); if (u.emailVerified) applyUser(u); else setMsg("Ainda não encontramos a confirmação. Clique no link do e-mail e tente de novo.", "err"); }
+  } catch (err) { setMsg(authErr(err), "err"); }
+  setBusy(false);
+});
+document.addEventListener("change", e => { if (e.target.id === "showPw") { const p = $("#authPw"); if (p) p.type = e.target.checked ? "text" : "password"; } });
 function viewSalvos(){
   const list = saved.map(id => byId[id]).filter(Boolean);
   const al = alerts.map(id => byId[id]).filter(Boolean);
@@ -1067,13 +1204,19 @@ function viewGrupo(){
 
 /* ===================== roteamento ===================== */
 let filtersOpen = false;
-function route(){ return (location.hash || "#inicio").slice(1); }
+/* Navegação: usa o hash do endereço, com memória própria para funcionar também em visualizadores isolados (sandbox) que bloqueiam links "#". */
+let ROUTE_MEM = null;
+function route(){ return (ROUTE_MEM !== null ? "#"+ROUTE_MEM : (location.hash || "#inicio")).slice(1); }
+function go(t){ ROUTE_MEM = String(t).replace(/^#/,""); try { location.hash = "#"+ROUTE_MEM; } catch(_) {} onRoute(); }
 function render(){
   const focusId = document.activeElement && document.activeElement.id;
   const r = route(); let html, nav = r;
-  if (r === "explorar") html = viewExplorar();
+  const lock = gated(); document.body.classList.toggle("locked", lock);
+  if (lock) { html = (AUTH.checked || AUTH.failed) ? viewEntrar() : viewCarregando(); nav = "entrar"; }
+  else if (r === "explorar") html = viewExplorar();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
+  else if (r === "entrar") html = viewEntrar();
   else if (r === "grupo-demo") { html = viewGrupo(); nav = ""; }
   else if (r.startsWith("op-") && byId[r.slice(3)]) { html = viewDetalhe(byId[r.slice(3)]); nav = ""; }
   else if (r.startsWith("pesquisador-") && RES[r.slice(12)]) { html = viewPesquisador(r.slice(12)); nav = ""; }
@@ -1084,10 +1227,17 @@ function render(){
   if (focusId && focusId !== "q") { const el = document.getElementById(focusId); if (el) el.focus({preventScroll:true}); else if (focusId.startsWith("rm-")) $(".fchip, #openF")?.focus({preventScroll:true}); }
 }
 let lastRoute = route();
-window.addEventListener("hashchange", () => {
+function onRoute(){
   const r = route(); filtersOpen = false; render();
   if (r !== lastRoute) { window.scrollTo(0,0); $("#app").focus({preventScroll:true}); }
   lastRoute = r;
+}
+window.addEventListener("hashchange", () => { ROUTE_MEM = null; onRoute(); });
+document.addEventListener("click", e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === "_blank") return;
+  const h = a.getAttribute("href"); if (h.length < 2 || document.getElementById(h.slice(1))) return;
+  e.preventDefault(); go(h);
 });
 
 /* ===================== eventos ===================== */
@@ -1095,7 +1245,7 @@ function clearFilters(){ ["status","origin","externos","bolsa","mod"].forEach(k=
 document.addEventListener("click", e => {
   const s = e.target.closest("[data-save]"); if (s) { toggleSave(s.dataset.save); return; }
   const a = e.target.closest("[data-alert]"); if (a) { toggleAlert(a.dataset.alert); return; }
-  const t = e.target.closest("[data-topic]"); if (t) { clearFilters(); F.q=""; $("#q").value=""; F.area = t.dataset.topic; location.hash = "#explorar"; return; }
+  const t = e.target.closest("[data-topic]"); if (t) { clearFilters(); F.q=""; $("#q").value=""; F.area = t.dataset.topic; go("explorar"); return; }
   const rm = e.target.closest("[data-rm]");
   if (rm) { const [k,v] = rm.dataset.rm.split(/:(.*)/s); if (F[k] instanceof Set) F[k].delete(v); else { F[k] = ""; if (k==="q") $("#q").value=""; } render(); return; }
   if (e.target.closest("#openF")) { filtersOpen = true; render(); $("#filters")?.querySelector("input,select")?.focus(); return; }
@@ -1111,12 +1261,14 @@ document.addEventListener("change", e => {
 document.addEventListener("keydown", e => { if (e.key === "Escape" && filtersOpen) { filtersOpen = false; render(); $("#openF")?.focus(); } });
 $("#searchForm").addEventListener("submit", e => {
   e.preventDefault(); F.q = $("#q").value.trim();
-  if (route() !== "explorar") location.hash = "#explorar"; else render();
+  if (route() !== "explorar") go("explorar"); else render();
 });
 $("#q").addEventListener("input", e => { if (route() === "explorar") { F.q = e.target.value.trim(); render(); } });
 
 render();
+authInit();
 
 </script>
 
-</body></html>
+</body>
+</html>
