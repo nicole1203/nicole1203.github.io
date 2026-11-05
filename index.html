@@ -1064,7 +1064,7 @@ function viewAjuda(){
 /* ===================== conta (login) =====================
    Login real via Firebase Authentication (e-mail e senha, verificação de e-mail e Google).
    Preencha FIREBASE_CONFIG (veja o LEIA-ME). Sem as chaves, a tela aparece desativada e o site funciona sem login. */
-const FIREBASE_CONFIG = { apiKey:"", authDomain:"", projectId:"", appId:"" };
+const FIREBASE_CONFIG = { apiKey:"AIzaSyAHwS-ZAUk4CI_kcxkvZWqBG_vPd4gX2uo", authDomain:"ic-connect-36298.firebaseapp.com", projectId:"ic-connect-36298", appId:"1:911083963854:web:c6e6e8e5da1606e487579f" };
 const AUTH = { mode:"entrar", user:null, api:null, ready:false, loading:false, checked:false, failed:false };
 /* Login obrigatório: só vale depois que as chaves do Firebase forem preenchidas. Sem chaves, o site abre normalmente. */
 const gated = () => authConfigured() && !(AUTH.user && AUTH.user.verified);
