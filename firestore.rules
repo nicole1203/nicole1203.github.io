@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Perfil: cada pessoa lê o próprio e o cria uma vez como aluno ou professor.
+    // O papel 'admin' só pode ser definido manualmente no console do Firebase.
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['username', 'role'])
+        && request.resource.data.role in ['aluno', 'professor']
+        && request.resource.data.username is string && request.resource.data.username.size() <= 20;
+      allow update, delete: if false;
+    }
+
+    // Vagas: nascem 'pendente'; só o admin aprova ou recusa; só vagas aprovadas são públicas (para logados).
+    match /vagas/{id} {
+      allow read: if signedIn() && (resource.data.status == 'aprovada' || resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'pendente'
+        && request.resource.data.keys().hasOnly(['title','institution','areas','summary','requirements','scholarship','modality','location','deadline','contact','applicationUrl','tipo','ownerRole','ownerUid','ownerName','status','createdAt'])
+        && request.resource.data.title is string && request.resource.data.title.size() <= 150
+        && request.resource.data.institution is string && request.resource.data.institution.size() <= 120
+        && request.resource.data.summary is string && request.resource.data.summary.size() <= 1500
+        && request.resource.data.contact is string && request.resource.data.contact.size() <= 400
+        && request.resource.data.areas is list && request.resource.data.areas.size() <= 16;
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['aprovada', 'recusada', 'pendente'];
+      allow delete: if signedIn() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+    }
+  }
+}

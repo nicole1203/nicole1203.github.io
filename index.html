@@ -51,6 +51,10 @@ button,input,select{font:inherit;color:inherit}
 .search{flex:1;min-width:0;display:flex}
 .search input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
 .topnav{display:flex;gap:4px}
+.adm-only[hidden]{display:none!important}
+.roles{border:0;margin:0 0 12px;padding:0}.roles legend{font-weight:600;margin-bottom:6px}.roles label{display:flex;gap:8px;align-items:center;padding:8px 0}
+.pubform .field textarea,.pubform .field select{width:100%;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:inherit}
+.pubform .chk{display:flex;flex-wrap:wrap;gap:6px 14px}.pubform .chk label{display:flex;gap:6px;align-items:center}
 .topnav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500}
 .topnav a[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 .bottomnav{display:none}
@@ -281,20 +285,23 @@ ul.plain{margin:0;padding-left:18px}
       <a href="#explorar" data-nav="explorar">Explorar</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
+      <a href="#publicar" data-nav="publicar">Divulgar vaga</a>
+      <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
     </nav>
   </div>
 </header>
 
 <main id="app" tabindex="-1"></main>
-<p class="foot">Protótipo acadêmico da disciplina de Engenharia de Usabilidade (UNIFEI); não é um sistema oficial. As imagens são ilustrações geradas por IA, não fotos das instituições. Os dados vêm de um levantamento e ainda não foram todos conferidos pela equipe nas fontes: confirme prazos e requisitos no edital oficial.</p>
+<p class="foot"><a href="#diretrizes">Diretrizes de uso</a> · Protótipo acadêmico da disciplina de Engenharia de Usabilidade (UNIFEI); não é um sistema oficial. As imagens são ilustrações geradas por IA, não fotos das instituições. Os dados vêm de um levantamento e ainda não foram todos conferidos pela equipe nas fontes: confirme prazos e requisitos no edital oficial.</p>
 
 <nav class="bottomnav" aria-label="Principal (celular)">
   <a href="#inicio" data-nav="inicio">Início</a>
   <a href="#explorar" data-nav="explorar">Explorar</a>
   <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
-
+  <a href="#publicar" data-nav="publicar">Divulgar</a>
+  <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderar</a>
   <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
 </nav>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -661,7 +668,7 @@ function art(o, big){
 
 const AV = {"sim-visao":"SA","sim-energia":"SB","sim-drone":"SA",cdtn:"CDTN",cbpf:"CBPF",ird:"IRD",on:"ON",iec:"IEC",embrapa:"EI",inpe:"INPE",lndc:"LNDC",bn:"BN",funed:"FUNED",cetem:"CETEM",inma:"INMA","inma-primate":"INMA","inma-bioinfo":"INMA","inma-beija":"INMA","inma-dados":"INMA",lncc:"LNCC","ipen-arqueo":"IPEN","ipen-mat":"IPEN",inmetro:"INM",mast:"MAST","on-instr":"ON"};
 const LAB = "Laboratório Demonstrativo de Visão e Robótica";
-function avatar(o){ return `<span class="avatar${o.sim?" s":""}" aria-hidden="true">${esc(AV[o.id]||(o.hist?"UF":"?"))}</span>`; }
+function avatar(o){ return `<span class="avatar${o.sim?" s":""}" aria-hidden="true">${esc(AV[o.id]||(o.prof?"PR":o.hist?"UF":"?"))}</span>`; }
 function groupLink(o){ return o.group === LAB ? `<a href="#grupo-demo">${esc(o.group)}</a>` : esc(o.group); }
 
 /* ===================== pesquisadores (fonte: Pesquisadores_IC_Connect_Perfis_Verificados.docx, conferido em 03/11/2026) ===================== */
@@ -924,7 +931,7 @@ const LBL = {status:{aberta:"Vaga aberta",cadastro:"Cadastro disponível",andame
   externos:{"Sim":"Aceita externo","A confirmar":"Externo a confirmar","ni":"Externo não informado"},
   bolsa:{sim:"Com bolsa",vol:"Voluntária",ni:"Bolsa não informada"},
   mod:{presencial:"Presencial",remota:"Remota",hibrida:"Híbrida",ni:"Modalidade não informada"},
-  origin:{unifei:"UNIFEI",externa:"Outras instituições",simulada:"Dados simulados"}};
+  origin:{unifei:"UNIFEI",externa:"Outras instituições",simulada:"Dados simulados",professor:"Publicadas por professores"}};
 function activeChips(){
   const out = [];
   ["status","externos","bolsa","mod","origin"].forEach(k => F[k].forEach(v => out.push([`${k}:${v}`, LBL[k][v]])));
@@ -953,7 +960,7 @@ function viewExplorar(){
         ${checks("Modalidade",[["presencial","Presencial"],["remota","Remota"],["hibrida","Híbrida"],["ni","Não informada"]],"mod")}
         ${selectF("fLocal","Local",locais,F.local)}
         ${selectF("fInst","Instituição",insts,F.inst)}
-        ${checks("Origem",[["unifei","UNIFEI"],["externa","Outras instituições"],["simulada","Dados simulados"]],"origin")}
+        ${checks("Origem",[["unifei","UNIFEI"],["externa","Outras instituições"],["simulada","Dados simulados"],["professor","Publicadas por professores"]],"origin")}
       </aside>
       <section style="min-width:0">
         <div class="resultbar">
@@ -968,7 +975,7 @@ function viewExplorar(){
 
 function viewDetalhe(o){
   const list = arr => `<ul class="plain">${arr.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`;
-  const srcLink = o.sim ? `<a href="${o.sourceUrl}">${esc(o.sourceName)}</a>` : `<a href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(o.sourceName)} ↗</a>`;
+  const srcLink = o.prof ? esc(o.sourceName) : o.sim ? `<a href="${o.sourceUrl}">${esc(o.sourceName)}</a>` : `<a href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(o.sourceName)} ↗</a>`;
   const canApply = o.status === "aberta" && o.applicationUrl;
   const facts = o.hist ? [["Tipo",o.type],["Confirmação",o.confirmation],["Bolsa",o.scholarship],["Valor da bolsa",o.scholarshipValue],["Vigência",o.duration]] : [["Prazo",o.deadline],["Bolsa",o.scholarship],["Valor da bolsa",o.scholarshipValue],["Carga horária",o.weeklyHours],["Duração",o.duration],
     ["Modalidade",o.modality],["Local",o.location],["Aceita aluno de outra instituição",o.externos]];
@@ -1006,8 +1013,8 @@ function viewDetalhe(o){
           <div><dt>Fonte consultada</dt><dd>${srcLink}</dd></div></dl></section>`:""}
         ${o.externosNote?`<p class="warnline" style="margin-top:12px">${esc(o.externosNote)}</p>`:""}
         <div class="actions" style="margin-top:14px">
-          ${canApply && !o.hist ? `<a class="btn primary" href="${esc(o.applicationUrl)}">Candidatar-se</a>` : ""}
-          <a class="btn${canApply?"":" primary"}" href="${esc(o.sourceUrl)}" ${o.sim?"":'target="_blank" rel="noopener noreferrer"'}>${esc(o.ctaLabel||"Ver fonte oficial")}</a>
+          ${canApply && !o.hist ? `<a class="btn primary" href="${esc(o.applicationUrl)}"${o.prof?' target="_blank" rel="noopener noreferrer"':""}>Candidatar-se</a>` : ""}
+          ${o.prof?"":`<a class="btn${canApply?"":" primary"}" href="${esc(o.sourceUrl)}" ${o.sim?"":'target="_blank" rel="noopener noreferrer"'}>${esc(o.ctaLabel||"Ver fonte oficial")}</a>`}
           ${o.hist?"":actionBtn(o)}
         </div>
       </aside>
@@ -1082,11 +1089,45 @@ const AUTH_ERR = {
 const UDOM = "@icconnect.example.com";
 const uname = e => String(e||"").replace(UDOM,"");
 const toEmail = n => n + UDOM;
+const DOMAIN_OK = u => /^https?:\/\//i.test(u);
 const authErr = e => AUTH_ERR[e && e.code] || "Não foi possível concluir. Tente de novo em instantes.";
 function setMsg(text, kind){ const m = $("#authmsg"); if (!m) return; m.textContent = text || ""; m.className = kind || ""; m.setAttribute("role", kind==="err" ? "alert" : "status"); }
 function setBusy(b){ document.querySelectorAll("#authForm button, #authBox button[data-auth]").forEach(x => { x.disabled = b || (x.dataset.needsCfg === "1" && !authConfigured()); }); }
-function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); }
-function applyUser(u){ const was = gated(); AUTH.user = u ? { email:u.email, name:uname(u.email), verified:true } : null; AUTH.checked = true; updateAcctLinks(); if (was && !gated()) { go("inicio"); return; } render(); }
+function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); }
+async function applyUser(u){
+  const was = gated();
+  if (!u) { AUTH.user = null; VAGAS.stop(); } else {
+    let role = "aluno";
+    try { role = await AUTH.api.loadRole(u.uid, uname(u.email), AUTH.pendingRole); AUTH.dbError = false; } catch (e) { AUTH.dbError = true; }
+    AUTH.pendingRole = null;
+    AUTH.user = { uid:u.uid, email:u.email, name:uname(u.email), role, verified:true };
+    VAGAS.start();
+  }
+  AUTH.checked = true; updateAcctLinks();
+  if (was && !gated()) { go("inicio"); return; } render();
+}
+const VAGAS = {
+  unsub:null, items:[],
+  start(){ if (this.unsub || !AUTH.api.watchVagas) return; this.unsub = AUTH.api.watchVagas(list => { this.items = list; syncVagas(); }, () => { AUTH.dbError = true; }, AUTH.user.uid, AUTH.user.role === "admin"); },
+  stop(){ if (this.unsub) this.unsub(); this.unsub = null; this.items = []; syncVagas(); }
+};
+/* converte o documento do Firestore no formato das demais oportunidades; todo texto continua passando por esc() na exibição */
+function vagaToOpp(v){
+  const reqs = String(v.requirements||"").split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  const when = v.createdMs ? new Date(v.createdMs).toLocaleDateString("pt-BR") : "";
+  return { id:"prof-"+v.id, prof:true, ownerUid:v.ownerUid, title:v.title, institution:v.institution, short:v.institution, origin:"professor", type:v.tipo==="Continuidade por desistência"?"Continuidade de projeto":"Vaga", status:"aberta",
+    statusNote:(v.tipo==="Continuidade por desistência"?"Projeto em andamento que busca quem dê continuidade. ":"")+"Divulgada por "+(v.ownerRole==="professor"?"professor(a)":"aluno(a)")+" e aprovada pela moderação do IC Connect. Confirme os detalhes diretamente com o(a) responsável.",
+    areas:Array.isArray(v.areas)&&v.areas.length?v.areas:["Engenharia"], tags:[], summary:v.summary, activities:NI, requirements:reqs.length?reqs:NI, desiredSkills:NI,
+    scholarship:v.scholarship||NI, scholarshipValue:NI, duration:NI, weeklyHours:NI, modality:v.modality||NI, location:v.location||NI, externos:NI, deadline:v.deadline||NI,
+    selection:NI, howTo:v.contact, advisor:v.ownerName, group:NI, sourceName:"Divulgada por "+(v.ownerName||"usuário")+(when?" em "+when:""), sourceUrl:"#explorar",
+    applicationUrl: DOMAIN_OK(v.applicationUrl||"") ? v.applicationUrl : NI, verifiedAt:when||"—",
+    auditStatus:"a_confirmar", auditNote:"Aprovada pela moderação do IC Connect quanto a coerência e fonte de contato; o conteúdo vem de quem divulgou e não foi confirmado em edital oficial.", auditDate:when||"—" };
+}
+function syncVagas(){
+  for (let i = ALL.length-1; i >= 0; i--) if (ALL[i].prof) { delete byId[ALL[i].id]; ALL.splice(i,1); }
+  VAGAS.items.filter(v => v.status === "aprovada").forEach(v => { const o = vagaToOpp(v); ALL.push(o); byId[o.id] = o; });
+  if (route() === "publicar") { const box = $("#minhasVagas"); if (box) box.innerHTML = minhasVagasHtml(); } else if (route() === "moderacao") { const box = $("#filaMod"); if (box) box.innerHTML = filaModHtml(); } else if (!gated()) render();
+}
 async function authInit(){
   if (AUTH.ready || AUTH.loading || !authConfigured()) return;
   AUTH.loading = true;
@@ -1094,8 +1135,8 @@ async function authInit(){
     if (window.__fakeAuth) AUTH.api = window.__fakeAuth;
     else {
       const base = "https://www.gstatic.com/firebasejs/10.12.2/";
-      const [{ initializeApp }, A] = await Promise.all([import(base+"firebase-app.js"), import(base+"firebase-auth.js")]);
-      const auth = A.getAuth(initializeApp(FIREBASE_CONFIG)); auth.languageCode = "pt-BR";
+      const [{ initializeApp }, A, D] = await Promise.all([import(base+"firebase-app.js"), import(base+"firebase-auth.js"), import(base+"firebase-firestore.js")]);
+      const fbApp = initializeApp(FIREBASE_CONFIG), auth = A.getAuth(fbApp), db = D.getFirestore(fbApp); auth.languageCode = "pt-BR";
       AUTH.api = {
         signIn:(e,p)=>A.signInWithEmailAndPassword(auth,e,p),
         signUp:(e,p)=>A.createUserWithEmailAndPassword(auth,e,p),
@@ -1104,7 +1145,24 @@ async function authInit(){
         google:()=>A.signInWithPopup(auth, new A.GoogleAuthProvider()),
         reset:e=>A.sendPasswordResetEmail(auth,e),
         signOut:()=>A.signOut(auth),
-        onChange:cb=>A.onAuthStateChanged(auth,cb)
+        onChange:cb=>A.onAuthStateChanged(auth,cb),
+        loadRole: async (uid, username, wanted) => {
+          const ref = D.doc(db, "users", uid), snap = await D.getDoc(ref);
+          if (snap.exists()) { const rl = snap.data().role; return rl === "admin" || rl === "professor" ? rl : "aluno"; }
+          const role = wanted === "professor" ? "professor" : "aluno";
+          await D.setDoc(ref, { username, role }); return role;
+        },
+        watchVagas:(cb, onErr, uid, isAdmin) => {
+          const parts = {}, push = () => cb(Object.values(parts).flat().filter((v,i,a) => a.findIndex(w => w.id === v.id) === i).sort((a,b) => (b.createdMs||0)-(a.createdMs||0)));
+          const map = snap => snap.docs.map(d => { const x = d.data(); return { id:d.id, ...x, createdMs: x.createdAt && x.createdAt.toMillis ? x.createdAt.toMillis() : 0 }; });
+          const C = D.collection(db,"vagas");
+          const qs = isAdmin ? { all:D.query(C) } : { ok:D.query(C, D.where("status","==","aprovada")), mine:D.query(C, D.where("ownerUid","==",uid)) };
+          const offs = Object.entries(qs).map(([k,q]) => D.onSnapshot(q, snap => { parts[k] = map(snap); push(); }, onErr));
+          return () => offs.forEach(f => f());
+        },
+        setStatus:(id, status) => D.updateDoc(D.doc(db,"vagas",id), { status }),
+        addVaga:data => D.addDoc(D.collection(db,"vagas"), { ...data, status:"pendente", createdAt: D.serverTimestamp() }),
+        removeVaga:id => D.deleteDoc(D.doc(db,"vagas",id))
       };
     }
     AUTH.api.onChange(applyUser); AUTH.ready = true;
@@ -1125,7 +1183,7 @@ function viewEntrar(){
     <button class="btn primary block" data-auth="check" type="button">Já confirmei</button>
     <p class="authlinks"><button class="linkbtn" data-auth="resend" type="button">Reenviar e-mail</button><button class="linkbtn" data-auth="out" type="button">Sair</button></p></div>${skip}</div>`;
   if (u) return `<div class="authwrap" id="authBox"><h1>Sua conta</h1><div class="authcard">
-    <p>Usuário: <strong>${esc(u.name)}</strong></p>
+    <p>Usuário: <strong>${esc(u.name)}</strong><br><span class="pill st-aberta" style="margin-top:6px">${u.role==="professor"?"Professor(a)":"Aluno(a)"}</span></p>
     <p class="authnote">Neste protótipo, a conta ainda não sincroniza seus Salvos: eles continuam guardados só neste navegador.</p><div id="authmsg" role="status" aria-live="polite"></div>
     <button class="btn block" data-auth="out" type="button">Sair</button></div></div>`;
   const m = AUTH.mode;
@@ -1135,11 +1193,11 @@ function viewEntrar(){
   const go = m==="criar" ? "Criar conta" : m==="reset" ? "Enviar link de redefinição" : "Entrar";
   const google = ""; /* login com Google desativado: o acesso é só por e-mail e senha */
   const extra = m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
-  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Guarde bem sua senha: não há recuperação de senha.</p>' : "";
+  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Guarde bem sua senha: não há recuperação de senha. Neste protótipo, a escolha entre aluno e professor não é verificada.</p>' : "";
   return `<div class="authwrap" id="authBox"><h1>${title}</h1>${intro}${warn}<div class="authcard">
     ${m==="reset"?"":`<div class="authtabs" role="group" aria-label="Escolha"><button type="button" data-authmode="entrar" aria-pressed="${m==="entrar"}">Entrar</button><button type="button" data-authmode="criar" aria-pressed="${m==="criar"}">Criar conta</button></div>`}
     <form id="authForm" novalidate><div id="authmsg" role="status" aria-live="polite"></div>
-    <label class="field"><span>Nome de usuário</span><input id="authEmail" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="unhint"><small id="unhint">3 a 20 caracteres: letras, números, ponto, hífen ou sublinhado.</small></label>${pwField}
+    ${m==="criar"?'<fieldset class="roles"><legend>Você é</legend><label><input type="radio" name="role" value="aluno" checked> Aluno(a): procuro vagas</label><label><input type="radio" name="role" value="professor"> Professor(a): quero publicar vagas</label></fieldset>':""}<label class="field"><span>Nome de usuário</span><input id="authEmail" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="unhint"><small id="unhint">3 a 20 caracteres: letras, números, ponto, hífen ou sublinhado.</small></label>${pwField}
     <button class="btn primary block" type="submit"${dis}>${go}</button></form>${google}${extra}${note}</div>${skip}</div>`;
 }
 document.addEventListener("submit", async e => {
@@ -1152,7 +1210,7 @@ document.addEventListener("submit", async e => {
   setBusy(true); setMsg("");
   try {
     if (AUTH.mode === "entrar") await AUTH.api.signIn(email, pw);
-    else if (AUTH.mode === "criar") await AUTH.api.signUp(email, pw);
+    else if (AUTH.mode === "criar") { AUTH.pendingRole = (document.querySelector("input[name=role]:checked")||{}).value || "aluno"; await AUTH.api.signUp(email, pw); }
     else { await AUTH.api.reset(email); setMsg("Se existir uma conta com esse e-mail, enviamos um link para redefinir a senha.", "ok"); }
   } catch (err) { setMsg(authErr(err), "err"); }
   setBusy(false);
@@ -1205,6 +1263,87 @@ function viewGrupo(){
     </div>`;
 }
 
+/* ===================== publicar vaga (professor) ===================== */
+function minhasVagasHtml(){
+  const mine = VAGAS.items.filter(v => AUTH.user && v.ownerUid === AUTH.user.uid);
+  if (!mine.length) return '<div class="empty">Você ainda não publicou nenhuma vaga.</div>';
+  return mine.map(v => `<article class="card"><h3 style="margin:0 0 6px">${v.status==="aprovada"?`<a href="#op-prof-${esc(v.id)}">${esc(v.title)}</a>`:esc(v.title)}</h3><p class="na" style="margin:0 0 10px">${esc(v.institution)}${v.deadline?" · prazo: "+esc(v.deadline):""} · <strong>${v.status==="aprovada"?"Aprovada":v.status==="recusada"?"Recusada":"Aguardando moderação"}</strong></p><button class="btn" type="button" data-delvaga="${esc(v.id)}">Remover vaga</button></article>`).join("");
+}
+function viewPublicar(){
+  const areas = DISCOVER.map(a => `<label><input type="checkbox" name="parea" value="${esc(a)}"> ${esc(a)}</label>`).join("");
+  return `<h1>Divulgar vaga</h1><p class="lede">Professores e alunos podem divulgar uma vaga nova ou um projeto que precisa de alguém para continuar (por exemplo, quando o aluno desiste). <strong>Toda divulgação passa por verificação da moderação antes de aparecer no site.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
+  ${AUTH.dbError?'<p class="authwarn" role="alert">O banco de vagas não respondeu. Não é possível publicar agora.</p>':""}
+  <form id="pubForm" class="pubform authcard" novalidate style="max-width:680px"><div id="pubmsg" role="status" aria-live="polite"></div>
+    <label class="field"><span>Tipo *</span><select id="pTipo"><option>Nova vaga</option><option>Continuidade por desistência</option></select></label>
+    <label class="field"><span>Título da vaga *</span><input id="pTitle" type="text" maxlength="150" required></label>
+    <label class="field"><span>Instituição *</span><input id="pInst" type="text" maxlength="120" required placeholder="Ex.: UNIFEI"></label>
+    <fieldset class="roles"><legend>Áreas * (marque pelo menos uma)</legend><div class="chk">${areas}</div></fieldset>
+    <label class="field"><span>Descrição do projeto *</span><textarea id="pSummary" rows="4" maxlength="1500" required></textarea></label>
+    <label class="field"><span>Requisitos (um por linha)</span><textarea id="pReq" rows="3" maxlength="800"></textarea></label>
+    <label class="field"><span>Bolsa</span><select id="pBolsa"><option value="">Não informar</option><option>Sim</option><option>Não (voluntária)</option></select></label>
+    <label class="field"><span>Modalidade</span><select id="pMod"><option value="">Não informar</option><option>Presencial</option><option>Remota</option><option>Híbrida</option></select></label>
+    <label class="field"><span>Local</span><input id="pLoc" type="text" maxlength="100" placeholder="Ex.: Itajubá/MG"></label>
+    <label class="field"><span>Prazo de inscrição</span><input id="pDeadline" type="date"></label>
+    <label class="field"><span>Como se candidatar / contato *</span><textarea id="pContact" rows="2" maxlength="400" required placeholder="Ex.: enviar histórico e currículo para o e-mail do professor"></textarea></label>
+    <label class="field"><span>Link para inscrição (opcional, começando com https://)</span><input id="pUrl" type="text" maxlength="300" inputmode="url"></label>
+    <button class="btn primary block" type="submit">Enviar para moderação</button></form>
+  <section class="section"><h2 class="sec">Minhas vagas</h2><div class="stack" id="minhasVagas">${minhasVagasHtml()}</div></section>`;
+}
+document.addEventListener("submit", async e => {
+  if (e.target.id !== "pubForm") return; e.preventDefault();
+  const msg = (t,k) => { const m = $("#pubmsg"); m.textContent = t||""; m.className = k||""; m.setAttribute("role", k==="err"?"alert":"status"); if (t) m.scrollIntoView({block:"nearest"}); };
+  if (!AUTH.user || !AUTH.api || !AUTH.api.addVaga) { msg("Entre para divulgar uma vaga.", "err"); return; }
+  const g = id => $("#"+id).value.trim();
+  const areas = [...document.querySelectorAll("input[name=parea]:checked")].map(x => x.value);
+  const url = g("pUrl"), dl = g("pDeadline");
+  if (!g("pTitle") || !g("pInst") || !g("pSummary") || !g("pContact")) { msg("Preencha os campos marcados com *.", "err"); return; }
+  if (!areas.length) { msg("Marque pelo menos uma área.", "err"); return; }
+  if (url && !DOMAIN_OK(url)) { msg("O link precisa começar com http:// ou https://.", "err"); $("#pUrl").focus(); return; }
+  const deadline = dl ? dl.split("-").reverse().join("/") : "";
+  const btn = e.target.querySelector("button[type=submit]"); btn.disabled = true; msg("");
+  try {
+    await AUTH.api.addVaga({ title:g("pTitle"), institution:g("pInst"), areas, summary:g("pSummary"), requirements:g("pReq"), scholarship:g("pBolsa"), modality:g("pMod"),
+      location:g("pLoc"), deadline, contact:g("pContact"), applicationUrl:url, tipo:g("pTipo"), ownerRole:AUTH.user.role === "professor" ? "professor" : "aluno", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name });
+    e.target.reset(); msg("Enviada. Ela aparece no site assim que a moderação aprovar; acompanhe em “Minhas vagas”.", "ok");
+  } catch (err) { msg("Não foi possível enviar. Verifique a conexão e as regras do banco.", "err"); }
+  btn.disabled = false;
+});
+document.addEventListener("click", async e => {
+  const d = e.target.closest("[data-delvaga]"); if (!d) return;
+  if (!confirm("Remover esta vaga? Isso não pode ser desfeito.")) return;
+  try { await AUTH.api.removeVaga(d.dataset.delvaga); toast("Vaga removida"); } catch (err) { toast("Não foi possível remover"); }
+});
+
+/* ===================== moderação (admin) ===================== */
+function filaModHtml(){
+  const fila = VAGAS.items.filter(v => v.status === "pendente");
+  if (!fila.length) return '<div class="empty">Nenhuma vaga aguardando moderação.</div>';
+  return fila.map(v => `<article class="card"><p class="na" style="margin:0 0 4px">${esc(v.tipo||"Nova vaga")} · por ${esc(v.ownerName||"?")} (${v.ownerRole==="professor"?"professor":"aluno"})</p>
+    <h3 style="margin:0 0 6px">${esc(v.title)}</h3><p style="margin:0 0 6px"><strong>${esc(v.institution)}</strong> · ${esc((v.areas||[]).join(", "))}</p>
+    <p style="margin:0 0 6px">${esc(v.summary)}</p><p style="margin:0 0 6px"><strong>Requisitos:</strong> ${esc(v.requirements||"—")}</p>
+    <p style="margin:0 0 6px"><strong>Contato/inscrição:</strong> ${esc(v.contact)}${v.applicationUrl?" · "+esc(v.applicationUrl):""}</p>
+    <p class="na" style="margin:0 0 10px">Bolsa: ${esc(v.scholarship||"—")} · Modalidade: ${esc(v.modality||"—")} · Local: ${esc(v.location||"—")} · Prazo: ${esc(v.deadline||"—")}</p>
+    <div class="actions"><button class="btn primary" type="button" data-mod="aprovada" data-id="${esc(v.id)}">Aprovar</button><button class="btn" type="button" data-mod="recusada" data-id="${esc(v.id)}">Recusar</button></div></article>`).join("");
+}
+function viewModeracao(){
+  return `<h1>Moderação</h1><p class="lede">Antes de aprovar, confira: a pessoa e a instituição existem, o contato é institucional, o prazo e as informações são coerentes e não há pedido de dinheiro ou dados sensíveis. Em caso de dúvida, recuse.</p>
+  <div class="stack" id="filaMod">${filaModHtml()}</div>`;
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-mod]"); if (!b || !AUTH.user || AUTH.user.role !== "admin") return;
+  b.disabled = true;
+  try { await AUTH.api.setStatus(b.dataset.id, b.dataset.mod); toast(b.dataset.mod === "aprovada" ? "Vaga aprovada" : "Vaga recusada"); } catch (err) { toast("Não foi possível atualizar"); b.disabled = false; }
+});
+/* ===================== diretrizes de uso ===================== */
+function viewDiretrizes(){
+  return `<h1>Diretrizes de uso</h1><p class="lede">O IC Connect é um protótipo acadêmico, não oficial. Estas regras valem para quem divulga vagas.</p>
+  <section class="block"><h2>Antes de divulgar</h2><ul class="plain"><li>Divulgue apenas vagas reais, que você tem autorização para anunciar.</li><li>Informe um contato institucional ou um link oficial para inscrição.</li><li>Não invente dados: se não souber o valor da bolsa ou o prazo, deixe em branco.</li></ul></section>
+  <section class="block"><h2>Verificação</h2><ul class="plain"><li>Toda vaga divulgada fica em “Aguardando moderação” até a equipe do site conferir.</li><li>A moderação avalia coerência e contato; ela <strong>não substitui</strong> o edital ou a confirmação com o(a) responsável.</li><li>Vagas recusadas não aparecem no site. Quem divulgou pode removê-las a qualquer momento.</li></ul></section>
+  <section class="block"><h2>Vaga por desistência</h2><ul class="plain"><li>Quem deixa um projeto só pode divulgá-lo com ciência do(a) orientador(a).</li><li>Não exponha dados pessoais de outras pessoas nem resultados ainda não publicados.</li></ul></section>
+  <section class="block"><h2>Proibido</h2><ul class="plain"><li>Cobrar dinheiro, pedir senhas ou documentos pessoais para “garantir” uma vaga.</li><li>Divulgar conteúdo falso, ofensivo ou que se passe por outra pessoa ou instituição.</li></ul></section>
+  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa só nome de usuário e senha, sem e-mail. Não há recuperação de senha.</li><li>O perfil (aluno ou professor) é informado por você e não é verificado.</li></ul></section>`;
+}
+
 /* ===================== roteamento ===================== */
 let filtersOpen = false;
 /* Navegação: usa o hash do endereço, com memória própria para funcionar também em visualizadores isolados (sandbox) que bloqueiam links "#". */
@@ -1219,6 +1358,9 @@ function render(){
   else if (r === "explorar") html = viewExplorar();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
+  else if (r === "publicar") html = viewPublicar();
+  else if (r === "moderacao") html = (AUTH.user && AUTH.user.role === "admin") ? viewModeracao() : viewInicio();
+  else if (r === "diretrizes") html = viewDiretrizes();
   else if (r === "entrar") html = viewEntrar();
   else if (r === "grupo-demo") { html = viewGrupo(); nav = ""; }
   else if (r.startsWith("op-") && byId[r.slice(3)]) { html = viewDetalhe(byId[r.slice(3)]); nav = ""; }
