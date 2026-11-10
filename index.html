@@ -51,7 +51,7 @@ button,input,select{font:inherit;color:inherit}
 .search{flex:1;min-width:0;display:flex}
 .search input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
 .topnav{display:flex;gap:4px}
-.adm-only[hidden]{display:none!important}
+.adm-only[hidden]{display:none!important}.prof-only[hidden]{display:none!important}
 .roles{border:0;margin:0 0 12px;padding:0}.roles legend{font-weight:600;margin-bottom:6px}.roles label{display:flex;gap:8px;align-items:center;padding:8px 0}
 .pubform .field textarea,.pubform .field select{width:100%;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:inherit}
 .pubform .chk{display:flex;flex-wrap:wrap;gap:6px 14px}.pubform .chk label{display:flex;gap:6px;align-items:center}
@@ -285,7 +285,7 @@ ul.plain{margin:0;padding-left:18px}
       <a href="#explorar" data-nav="explorar">Explorar</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
-      <a href="#publicar" data-nav="publicar">Divulgar vaga</a>
+      <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar vaga</a>
       <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
     </nav>
@@ -300,7 +300,7 @@ ul.plain{margin:0;padding-left:18px}
   <a href="#explorar" data-nav="explorar">Explorar</a>
   <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
-  <a href="#publicar" data-nav="publicar">Divulgar</a>
+  <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar</a>
   <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderar</a>
   <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
 </nav>
@@ -1093,7 +1093,7 @@ const DOMAIN_OK = u => /^https?:\/\//i.test(u);
 const authErr = e => AUTH_ERR[e && e.code] || "Não foi possível concluir. Tente de novo em instantes.";
 function setMsg(text, kind){ const m = $("#authmsg"); if (!m) return; m.textContent = text || ""; m.className = kind || ""; m.setAttribute("role", kind==="err" ? "alert" : "status"); }
 function setBusy(b){ document.querySelectorAll("#authForm button, #authBox button[data-auth]").forEach(x => { x.disabled = b || (x.dataset.needsCfg === "1" && !authConfigured()); }); }
-function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); }
+function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".prof-only").forEach(a => a.hidden = !(AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin"))); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); }
 async function applyUser(u){
   const was = gated();
   if (!u) { AUTH.user = null; VAGAS.stop(); } else {
@@ -1116,7 +1116,7 @@ function vagaToOpp(v){
   const reqs = String(v.requirements||"").split(/\n+/).map(x=>x.trim()).filter(Boolean);
   const when = v.createdMs ? new Date(v.createdMs).toLocaleDateString("pt-BR") : "";
   return { id:"prof-"+v.id, prof:true, ownerUid:v.ownerUid, title:v.title, institution:v.institution, short:v.institution, origin:"professor", type:v.tipo==="Continuidade por desistência"?"Continuidade de projeto":"Vaga", status:"aberta",
-    statusNote:(v.tipo==="Continuidade por desistência"?"Projeto em andamento que busca quem dê continuidade. ":"")+"Divulgada por "+(v.ownerRole==="professor"?"professor(a)":"aluno(a)")+" e aprovada pela moderação do IC Connect. Confirme os detalhes diretamente com o(a) responsável.",
+    statusNote:(v.tipo==="Continuidade por desistência"?"Projeto em andamento que busca quem dê continuidade. ":"")+"Divulgada por professor(a) e aprovada pela moderação do IC Connect. Confirme os detalhes diretamente com o(a) responsável.",
     areas:Array.isArray(v.areas)&&v.areas.length?v.areas:["Engenharia"], tags:[], summary:v.summary, activities:NI, requirements:reqs.length?reqs:NI, desiredSkills:NI,
     scholarship:v.scholarship||NI, scholarshipValue:NI, duration:NI, weeklyHours:NI, modality:v.modality||NI, location:v.location||NI, externos:NI, deadline:v.deadline||NI,
     selection:NI, howTo:v.contact, advisor:v.ownerName, group:NI, sourceName:"Divulgada por "+(v.ownerName||"usuário")+(when?" em "+when:""), sourceUrl:"#explorar",
@@ -1193,7 +1193,7 @@ function viewEntrar(){
   const go = m==="criar" ? "Criar conta" : m==="reset" ? "Enviar link de redefinição" : "Entrar";
   const google = ""; /* login com Google desativado: o acesso é só por e-mail e senha */
   const extra = m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
-  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Guarde bem sua senha: não há recuperação de senha. Neste protótipo, a escolha entre aluno e professor não é verificada.</p>' : "";
+  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Guarde bem sua senha: não há recuperação de senha. Só professores divulgam vagas, e toda vaga passa por moderação.</p>' : "";
   return `<div class="authwrap" id="authBox"><h1>${title}</h1>${intro}${warn}<div class="authcard">
     ${m==="reset"?"":`<div class="authtabs" role="group" aria-label="Escolha"><button type="button" data-authmode="entrar" aria-pressed="${m==="entrar"}">Entrar</button><button type="button" data-authmode="criar" aria-pressed="${m==="criar"}">Criar conta</button></div>`}
     <form id="authForm" novalidate><div id="authmsg" role="status" aria-live="polite"></div>
@@ -1271,7 +1271,7 @@ function minhasVagasHtml(){
 }
 function viewPublicar(){
   const areas = DISCOVER.map(a => `<label><input type="checkbox" name="parea" value="${esc(a)}"> ${esc(a)}</label>`).join("");
-  return `<h1>Divulgar vaga</h1><p class="lede">Professores e alunos podem divulgar uma vaga nova ou um projeto que precisa de alguém para continuar (por exemplo, quando o aluno desiste). <strong>Toda divulgação passa por verificação da moderação antes de aparecer no site.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
+  return `<h1>Divulgar vaga</h1><p class="lede">Professores podem divulgar uma vaga nova ou um projeto que precisa de alguém para continuar (por exemplo, quando o aluno desiste). <strong>Toda divulgação passa por verificação da moderação antes de aparecer no site.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
   ${AUTH.dbError?'<p class="authwarn" role="alert">O banco de vagas não respondeu. Não é possível publicar agora.</p>':""}
   <form id="pubForm" class="pubform authcard" novalidate style="max-width:680px"><div id="pubmsg" role="status" aria-live="polite"></div>
     <label class="field"><span>Tipo *</span><select id="pTipo"><option>Nova vaga</option><option>Continuidade por desistência</option></select></label>
@@ -1292,7 +1292,7 @@ function viewPublicar(){
 document.addEventListener("submit", async e => {
   if (e.target.id !== "pubForm") return; e.preventDefault();
   const msg = (t,k) => { const m = $("#pubmsg"); m.textContent = t||""; m.className = k||""; m.setAttribute("role", k==="err"?"alert":"status"); if (t) m.scrollIntoView({block:"nearest"}); };
-  if (!AUTH.user || !AUTH.api || !AUTH.api.addVaga) { msg("Entre para divulgar uma vaga.", "err"); return; }
+  if (!AUTH.user || (AUTH.user.role !== "professor" && AUTH.user.role !== "admin") || !AUTH.api || !AUTH.api.addVaga) { msg("Apenas professores podem divulgar vagas.", "err"); return; }
   const g = id => $("#"+id).value.trim();
   const areas = [...document.querySelectorAll("input[name=parea]:checked")].map(x => x.value);
   const url = g("pUrl"), dl = g("pDeadline");
@@ -1303,7 +1303,7 @@ document.addEventListener("submit", async e => {
   const btn = e.target.querySelector("button[type=submit]"); btn.disabled = true; msg("");
   try {
     await AUTH.api.addVaga({ title:g("pTitle"), institution:g("pInst"), areas, summary:g("pSummary"), requirements:g("pReq"), scholarship:g("pBolsa"), modality:g("pMod"),
-      location:g("pLoc"), deadline, contact:g("pContact"), applicationUrl:url, tipo:g("pTipo"), ownerRole:AUTH.user.role === "professor" ? "professor" : "aluno", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name });
+      location:g("pLoc"), deadline, contact:g("pContact"), applicationUrl:url, tipo:g("pTipo"), ownerRole:"professor", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name });
     e.target.reset(); msg("Enviada. Ela aparece no site assim que a moderação aprovar; acompanhe em “Minhas vagas”.", "ok");
   } catch (err) { msg("Não foi possível enviar. Verifique a conexão e as regras do banco.", "err"); }
   btn.disabled = false;
@@ -1339,9 +1339,9 @@ function viewDiretrizes(){
   return `<h1>Diretrizes de uso</h1><p class="lede">O IC Connect é um protótipo acadêmico, não oficial. Estas regras valem para quem divulga vagas.</p>
   <section class="block"><h2>Antes de divulgar</h2><ul class="plain"><li>Divulgue apenas vagas reais, que você tem autorização para anunciar.</li><li>Informe um contato institucional ou um link oficial para inscrição.</li><li>Não invente dados: se não souber o valor da bolsa ou o prazo, deixe em branco.</li></ul></section>
   <section class="block"><h2>Verificação</h2><ul class="plain"><li>Toda vaga divulgada fica em “Aguardando moderação” até a equipe do site conferir.</li><li>A moderação avalia coerência e contato; ela <strong>não substitui</strong> o edital ou a confirmação com o(a) responsável.</li><li>Vagas recusadas não aparecem no site. Quem divulgou pode removê-las a qualquer momento.</li></ul></section>
-  <section class="block"><h2>Vaga por desistência</h2><ul class="plain"><li>Quem deixa um projeto só pode divulgá-lo com ciência do(a) orientador(a).</li><li>Não exponha dados pessoais de outras pessoas nem resultados ainda não publicados.</li></ul></section>
+  <section class="block"><h2>Vaga por desistência</h2><ul class="plain"><li>Só professores divulgam vagas. Se você é aluno(a) e vai deixar um projeto, peça ao(à) orientador(a) que divulgue a continuidade.</li><li>Não exponha dados pessoais de outras pessoas nem resultados ainda não publicados.</li></ul></section>
   <section class="block"><h2>Proibido</h2><ul class="plain"><li>Cobrar dinheiro, pedir senhas ou documentos pessoais para “garantir” uma vaga.</li><li>Divulgar conteúdo falso, ofensivo ou que se passe por outra pessoa ou instituição.</li></ul></section>
-  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa só nome de usuário e senha, sem e-mail. Não há recuperação de senha.</li><li>O perfil (aluno ou professor) é informado por você e não é verificado.</li></ul></section>`;
+  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa só nome de usuário e senha, sem e-mail. Não há recuperação de senha.</li><li>O perfil (aluno ou professor) é escolhido por você no cadastro e não é verificado; a moderação confere cada vaga antes de ela aparecer.</li></ul></section>`;
 }
 
 /* ===================== roteamento ===================== */
@@ -1358,7 +1358,7 @@ function render(){
   else if (r === "explorar") html = viewExplorar();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
-  else if (r === "publicar") html = viewPublicar();
+  else if (r === "publicar") html = (AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin")) ? viewPublicar() : viewInicio();
   else if (r === "moderacao") html = (AUTH.user && AUTH.user.role === "admin") ? viewModeracao() : viewInicio();
   else if (r === "diretrizes") html = viewDiretrizes();
   else if (r === "entrar") html = viewEntrar();

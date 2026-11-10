@@ -22,6 +22,7 @@ service cloud.firestore {
     match /vagas/{id} {
       allow read: if signedIn() && (resource.data.status == 'aprovada' || resource.data.ownerUid == request.auth.uid || isAdmin());
       allow create: if signedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['professor', 'admin']
         && request.resource.data.ownerUid == request.auth.uid
         && request.resource.data.status == 'pendente'
         && request.resource.data.keys().hasOnly(['title','institution','areas','summary','requirements','scholarship','modality','location','deadline','contact','applicationUrl','tipo','ownerRole','ownerUid','ownerName','status','createdAt'])
