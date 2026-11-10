@@ -594,7 +594,7 @@ function persist(){ try { localStorage.setItem("icconnect-salvos", JSON.stringif
 function isSaved(id){ return saved.includes(id); }
 function toggleSave(id){
   if (isSaved(id)) { saved = saved.filter(x => x !== id); toast("Removida dos salvos"); }
-  else { saved.push(id); toast("Salva. Veja em Salvos."); }
+  else { saved.push(id); toast("Salvo. Veja em Salvos."); }
   persist(); render();
 }
 let toastTimer;
@@ -819,7 +819,7 @@ function toggleAlert(id){
 function actionBtn(o){
   if (o.status === "encerrada" || o.status === "confirmar")
     return `<button class="btn" type="button" id="al-${o.id}" data-alert="${o.id}" aria-pressed="${hasAlert(o.id)}">${hasAlert(o.id)?"Acompanhando programa":"Acompanhar programa"}</button>`;
-  return `<button class="btn" type="button" id="sv-${o.id}" data-save="${o.id}" aria-pressed="${isSaved(o.id)}">${isSaved(o.id)?"Salva":"Salvar"}</button>`;
+  return `<button class="btn" type="button" id="sv-${o.id}" data-save="${o.id}" aria-pressed="${isSaved(o.id)}">${isSaved(o.id)?"Salvo":"Salvar"}</button>`;
 }
 
 function card(o, ctx){
