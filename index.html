@@ -47,11 +47,15 @@ button,input,select{font:inherit;color:inherit}
 .brand{display:flex;flex-direction:column;text-decoration:none;color:var(--fg);flex-shrink:0}
 .brand b{font-size:18px;letter-spacing:-.01em}
 .brand b span{color:var(--accent)}
-.brand small{font-size:11px;color:var(--muted);letter-spacing:.02em}
+.brand small{font-size:13px;color:var(--muted);letter-spacing:.02em}
 .search{flex:1;min-width:0;display:flex}
 .search input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
 .topnav{display:flex;gap:4px}
 .adm-only[hidden]{display:none!important}.prof-only[hidden]{display:none!important}
+.filters label{display:flex;align-items:center;gap:8px;min-height:44px}.filters input[type=checkbox]{width:20px;height:20px;flex:none}
+.fchip{min-height:36px}.openbar{margin:0 0 12px;color:var(--muted);font-size:14px}.sortl{display:inline-flex;gap:8px;align-items:center;font-size:14px}.sortl select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:inherit}
+.pwwarn{margin:4px 0 12px;padding:10px 12px;border:1px solid #b45309;background:#fffbeb;color:#78350f;border-radius:8px;font-size:14px}.pwwarn .showpw{margin-top:8px}
+.mstat{display:inline-block;padding:2px 8px;border-radius:999px;font-size:13px;font-weight:600}.mstat.ok{background:#dcfce7;color:#14532d}.mstat.wait{background:#fef3c7;color:#78350f}.mstat.no{background:#fee2e2;color:#7f1d1d}
 .roles{border:0;margin:0 0 12px;padding:0}.roles legend{font-weight:600;margin-bottom:6px}.roles label{display:flex;gap:8px;align-items:center;padding:8px 0}
 .pubform .field textarea,.pubform .field select{width:100%;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:inherit}
 .pubform .chk{display:flex;flex-wrap:wrap;gap:6px 14px}.pubform .chk label{display:flex;gap:6px;align-items:center}
@@ -73,16 +77,16 @@ main{max-width:1080px;margin:0 auto;padding-block:20px 48px;
 h1{font-size:24px;line-height:1.25;margin:0;text-wrap:balance;letter-spacing:-.01em}
 h2{font-size:17px;margin:0;text-wrap:balance}
 .lede{color:var(--muted);margin:6px 0 0;max-width:62ch}
-.eyebrow{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.eyebrow{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
 
 .notice{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:12px 14px;font-size:14px;color:var(--muted)}
 .notice strong{color:var(--fg)}
 
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
+.chip{min-height:44px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.chip .n{color:var(--muted);margin-left:4px;font-size:12px}
+.chip .n{color:var(--muted);margin-left:4px;font-size:13px}
 .chip[aria-pressed="true"] .n{color:inherit;opacity:.8}
 
 .stack{display:flex;flex-direction:column;gap:14px}
@@ -101,7 +105,7 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .avatar.s{background:var(--sim-soft);color:var(--sim)}
 .who.big .avatar{width:56px;height:56px;font-size:15px}
 .what{display:flex;flex-direction:column;gap:2px}
-.what .lbl{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.what .lbl{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .what p{margin:0;max-width:70ch}
 .clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .clamp1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
@@ -127,11 +131,11 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .summary{margin:0;max-width:70ch}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;margin:0;padding:10px 0 0;border-top:1px solid var(--line)}
 .facts div{min-width:0}
-.facts dt{font-size:12px;color:var(--muted);letter-spacing:.02em}
+.facts dt{font-size:13px;color:var(--muted);letter-spacing:.02em}
 .facts dd{margin:0;font-size:14px;font-weight:500;overflow-wrap:anywhere}
 .na{color:var(--muted);font-weight:400;font-style:italic}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-size:12px;background:var(--surface-2);color:var(--muted);padding:2px 8px;border-radius:6px}
+.tag{font-size:13px;background:var(--surface-2);color:var(--muted);padding:2px 8px;border-radius:6px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
   text-decoration:none;color:var(--fg);font-weight:500;cursor:pointer;min-height:40px}
@@ -139,8 +143,8 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .btn[disabled]{opacity:.55;cursor:not-allowed}
 
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.01em}
-.pill i{font-style:normal;font-size:10px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.01em}
+.pill i{font-style:normal;font-size:13px}
 .st-aberta{color:var(--open);background:var(--open-soft)}
 .st-encerrada{color:var(--closed);background:var(--closed-soft)}
 .st-historico{color:var(--closed);background:var(--closed-soft)}
@@ -152,46 +156,46 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .relprom>h2{font-size:18px;margin-bottom:10px}
 .relprom .card{box-shadow:none}
 .rgrp{margin:0 0 12px}
-.rgrp .lbl{font-size:12px;color:var(--muted);font-weight:600;margin-right:6px}
+.rgrp .lbl{font-size:13px;color:var(--muted);font-weight:600;margin-right:6px}
 .h2s{font-size:15px;margin:12px 0 4px}
 .rs{margin:0;font-size:13px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}
-.rs .lbl{font-size:12px;color:var(--muted);font-weight:600}
+.rs .lbl{font-size:13px;color:var(--muted);font-weight:600}
 .rs a{font-weight:600}
-.rrel{font-size:12px;color:var(--muted)}
+.rrel{font-size:13px;color:var(--muted)}
 .pesq{margin-top:16px}
 .pesq .rname{font-size:18px;margin:4px 0}
 .relwrap{margin:0 0 6px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
-.relbadge{display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:600;color:var(--open);background:var(--open-soft);padding:3px 9px;border-radius:999px}
-.relbadge i{font-style:normal;font-size:10px}
+.relbadge{display:inline-flex;gap:6px;align-items:center;font-size:13px;font-weight:600;color:var(--open);background:var(--open-soft);padding:3px 9px;border-radius:999px}
+.relbadge i{font-style:normal;font-size:13px}
 .relbadge.contact{color:var(--warn);background:var(--warn-soft)}
 .rsub{margin:0 0 10px;color:var(--muted)}
 .rkv{margin-bottom:12px}
 .rareas{margin-bottom:12px}
-.rareas .lbl{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.rareas .lbl{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
 .rbio{margin:0 0 14px;max-width:70ch}
 .verif{margin:12px 0 0;font-size:13px;color:var(--muted)}
 .imgw{position:relative;flex-shrink:0;display:block;line-height:0}
-.iab{font-size:10px;line-height:1.2;font-weight:600;color:#fff;background:rgba(15,23,42,.78);padding:2px 6px;border-radius:4px}
+.iab{font-size:13px;line-height:1.2;font-weight:600;color:#fff;background:rgba(15,23,42,.78);padding:2px 6px;border-radius:4px}
 .imgw .iab{position:absolute;left:4px;bottom:4px}
 .herow{margin:12px 0;position:relative;max-width:398px;line-height:0}
 .herow.low{max-width:199px}
 .herow .hero{margin:0;width:100%}
 .herow figcaption{position:absolute;left:6px;bottom:6px}
-.nb{font-size:12px;color:var(--muted)}
+.nb{font-size:13px;color:var(--muted)}
 .keyfacts{margin:0;padding-top:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 16px}
-.keyfacts dt{font-size:12px;color:var(--muted)}
+.keyfacts dt{font-size:13px;color:var(--muted)}
 .keyfacts dd{margin:0;font-size:14px;font-weight:600;overflow-wrap:anywhere}
 .keyfacts .na{font-weight:400}
 @media (max-width:480px){.titlerow{flex-direction:column-reverse;gap:8px}}
-.more{font-size:12px;color:var(--muted)}
+.more{font-size:13px;color:var(--muted)}
 .fontes{margin:0 0 12px;font-size:14px}
 .fontes summary{cursor:pointer;color:var(--accent);font-weight:500;min-height:32px}
 .thumb{flex-shrink:0;width:128px;height:72px;object-fit:cover;border-radius:6px;background:var(--surface-2)}
 .hero{display:block;width:100%;max-width:398px;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:8px;margin:12px 0}
 #app:focus{outline:none}
 .st-andamento{color:var(--run);background:var(--run-soft)}
-.typ{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:999px}
-.simbadge{font-size:11px;font-weight:600;color:var(--sim);background:var(--sim-soft);padding:3px 8px;border-radius:6px}
+.typ{font-size:13px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:999px}
+.simbadge{font-size:13px;font-weight:600;color:var(--sim);background:var(--sim-soft);padding:3px 8px;border-radius:6px}
 .hgroup{margin-top:22px;padding-left:14px;border-left:4px solid var(--accent)}
 .hg1{border-left-color:var(--warn)}.hg2{border-left-color:var(--sim)}
 .hgroup h2{margin:0;font-size:18px}.hsub{margin:2px 0 12px;color:var(--muted);font-size:14px}
@@ -199,7 +203,7 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .hcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
 .hdemo{margin-bottom:10px;line-height:1.2}
 .hcard h3{margin:0 0 4px;font-size:15px}.hcard p{margin:0;font-size:14px;color:var(--muted)}
-.hchip{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:6px}
+.hchip{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:6px}
 .hchip.ia{color:#fff;background:rgba(15,23,42,.78)}
 .hconf{margin-top:24px;background:var(--accent-soft);border-radius:12px;padding:14px 16px}
 .hconf h2{margin:0 0 6px;font-size:18px}.hconf p{margin:6px 0}
@@ -226,7 +230,7 @@ body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
 .authlinks{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:14px}
 .linkbtn{border:0;background:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
 .authwarn{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:14px;margin-bottom:14px}
-.auditflag{font-size:11px;font-weight:600;color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:6px}
+.auditflag{font-size:13px;font-weight:600;color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:6px}
 .auditbox{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .auditbox h2{font-size:13px;margin:0 0 8px;color:var(--muted);font-weight:600}
 .auditbox .kv{gap:8px}
@@ -263,7 +267,7 @@ body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
 .block p{margin:0}
 .block + .block{margin-top:12px}
 .kv{display:flex;flex-direction:column;gap:10px;margin:0}
-.kv dt{font-size:12px;color:var(--muted)}
+.kv dt{font-size:13px;color:var(--muted)}
 .kv dd{margin:0;font-weight:500;overflow-wrap:anywhere}
 .back{display:inline-block;margin-bottom:10px;text-decoration:none;font-weight:500}
 ul.plain{margin:0;padding-left:18px}
@@ -285,7 +289,7 @@ ul.plain{margin:0;padding-left:18px}
       <a href="#explorar" data-nav="explorar">Explorar</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
-      <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar vaga</a>
+      <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar</a>
       <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
     </nav>
@@ -301,7 +305,7 @@ ul.plain{margin:0;padding-left:18px}
   <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#ajuda" data-nav="ajuda">Ajuda</a>
   <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar</a>
-  <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderar</a>
+  <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
   <a href="#entrar" data-nav="entrar" class="acct-link">Entrar</a>
 </nav>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -605,7 +609,7 @@ function toggleSave(id){
   persist(); render();
 }
 let toastTimer;
-function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(()=> t.hidden = true, 2200); }
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(()=> t.hidden = true, 4500); }
 
 function daysLeft(o){
   if (o.status !== "aberta" || o.sim) return null;
@@ -824,8 +828,6 @@ function toggleAlert(id){
   render();
 }
 function actionBtn(o){
-  if (o.status === "encerrada" || o.status === "confirmar")
-    return `<button class="btn" type="button" id="al-${o.id}" data-alert="${o.id}" aria-pressed="${hasAlert(o.id)}">${hasAlert(o.id)?"Acompanhando programa":"Acompanhar programa"}</button>`;
   return `<button class="btn" type="button" id="sv-${o.id}" data-save="${o.id}" aria-pressed="${isSaved(o.id)}">${isSaved(o.id)?"Salvo":"Salvar"}</button>`;
 }
 
@@ -852,14 +854,17 @@ const GLOSS = `<details class="gloss"><summary>O que significam PIBIC, PIBITI e 
 
 
 /* ===================== estado de busca e filtros ===================== */
-const F = {q:"", status:new Set(), area:"", inst:"", origin:new Set(), externos:new Set(), bolsa:new Set(), mod:new Set(), local:""};
+const F = {onlyOpen:true, sort:"status", limit:12, q:"", status:new Set(), area:"", inst:"", origin:new Set(), externos:new Set(), bolsa:new Set(), mod:new Set(), local:""};
 let feedTopic = "";
 
 function bolsaCat(o){ if (o.scholarship === null) return "ni"; if (/^n[aã]o/i.test(o.scholarship)) return "vol"; if (/^sim/i.test(o.scholarship)) return "sim"; return "ni"; }
 function modCat(o){ const m = norm(o.modality); if (!m) return "ni"; const c=[]; if (m.includes("presencial")) c.push("presencial"); if (m.includes("remot")) c.push("remota"); if (m.includes("hibrid")) c.push("hibrida"); return c.length?c:["ni"]; }
 function haystack(o){ return norm([o.title,o.institution,o.short,o.summary,o.group,o.advisor,(o.areas||[]).join(" "),(o.tags||[]).join(" "),o.location,o.researcherName,(o.researcherResearchAreas||[]).join(" "),o.researcherGroup].join(" ")); }
 
-function matches(o){
+const isOpenNow = o => (o.status === "aberta" && !(daysLeft(o) !== null && daysLeft(o) < 0)) || o.status === "cadastro";
+function deadlineKey(o){ const m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(o.deadline||""); return m ? +(m[3]+m[2]+m[1]) : 99999999; }
+function matches(o, ignoreOpen){
+  if (!ignoreOpen && F.onlyOpen && !F.status.size && !isOpenNow(o)) return false;
   if (F.q) { const words = norm(F.q).split(/\s+/).filter(Boolean); const h = haystack(o); if (!words.every(w => h.includes(w))) return false; }
   if (F.status.size && !F.status.has(o.status)) return false;
   if (F.area && !o.areas.includes(F.area)) return false;
@@ -882,9 +887,9 @@ function viewInicio(){
   const counts = {}; ALL.forEach(o => o.areas.forEach(a => counts[a]=(counts[a]||0)+1));
   const topics = DISCOVER.filter(t => counts[t]);
   const REAL = ALL.filter(o => !o.sim && !o.hist), SIMS = ALL.filter(o => o.sim);
-  const abertas = sorted(REAL.filter(o => o.status === "aberta" || o.status === "cadastro"));
+  const abertas = sorted(REAL.filter(isOpenNow));
   const andamento = REAL.filter(o => o.status === "andamento");
-  const acompanhar = sorted(REAL.filter(o => o.status === "encerrada" || o.status === "confirmar"));
+  const acompanhar = sorted(REAL.filter(o => o.status === "encerrada" || o.status === "confirmar" || (o.status === "aberta" && !isOpenNow(o))));
   return `
     <h1>Oportunidades de iniciação científica</h1>
     <p class="lede">Veja o que o aluno faz em cada projeto e o que é exigido. Protótipo acadêmico: dados reais de fontes públicas; itens simulados e ilustrações geradas por IA são sempre identificados.</p>
@@ -940,19 +945,22 @@ function activeChips(){
   return out;
 }
 function viewExplorar(){
-  const results = sorted(ALL.filter(matches));
+  let results = sorted(ALL.filter(o => matches(o)));
+  if (F.sort === "prazo") results = [...results].sort((a,b) => deadlineKey(a) - deadlineKey(b));
+  const hiddenN = (F.onlyOpen && !F.status.size) ? ALL.filter(o => matches(o, true) && !isOpenNow(o)).length : 0;
+  const total = results.length; results = results.slice(0, F.limit);
   const areas = [...new Set(ALL.flatMap(o=>o.areas))].sort((a,b)=>a.localeCompare(b,"pt"));
   const insts = [...new Set(ALL.map(o=>o.short))].sort((a,b)=>a.localeCompare(b,"pt"));
   const locais = [...new Set(ALL.map(o=>o.location).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt"));
   const chips = activeChips();
   return `
     <h1>Explorar</h1>
-    <p class="lede">Busque e combine filtros. Vagas abertas aparecem primeiro.</p>
+    <p class="lede">Busque e combine filtros. Por padrão, mostramos só o que está aberto agora. <a href="#ajuda">O que significam os selos?</a></p>
     <div class="explore">
       <div class="scrim ${filtersOpen?"open":""}" data-close-filters></div>
       <aside class="filters ${filtersOpen?"open":""}" id="filters" aria-label="Filtros">
         <div class="filters-head"><strong>Filtros</strong>
-          <span><button class="linkbtn" type="button" id="clearF">Limpar</button><button class="btn closefilters" type="button" data-close-filters>Ver ${results.length} resultado${results.length===1?"":"s"}</button></span></div>
+          <span><button class="linkbtn" type="button" id="clearF">Limpar</button><button class="btn closefilters" type="button" data-close-filters>Ver ${total} resultado${total===1?"":"s"}</button></span></div>
         ${selectF("fArea","Área",areas,F.area)}
         ${checks("Status",[["aberta","Vaga aberta"],["cadastro","Cadastro disponível"],["andamento","Pesquisa em andamento"],["confirmar","Status a confirmar"],["encerrada","Encerrada"],["historico","Histórico"]],"status")}
         ${checks("Aceita aluno de outra instituição",[["Sim","Sim"],["A confirmar","A confirmar"],["ni","Não informado"]],"externos")}
@@ -964,11 +972,14 @@ function viewExplorar(){
       </aside>
       <section style="min-width:0">
         <div class="resultbar">
-          <span aria-live="polite"><strong class="mono">${results.length}</strong> resultado${results.length===1?"":"s"}</span>
+          <span aria-live="polite"><strong class="mono">${total}</strong> resultado${total===1?"":"s"}</span>
+          <label class="sortl">Ordenar <select id="fSort" data-sort><option value="status"${F.sort==="status"?" selected":""}>Situação</option><option value="prazo"${F.sort==="prazo"?" selected":""}>Prazo mais próximo</option></select></label>
           <button class="btn openfilters" type="button" id="openF" aria-controls="filters">Filtros${chips.length?` (${chips.length})`:""}</button>
         </div>
         ${chips.length?`<div class="fchips" aria-label="Filtros ativos">${chips.map(([k,l])=>`<button class="fchip" type="button" id="rm-${slug(k)}" data-rm="${esc(k)}" aria-label="Remover filtro ${esc(l)}">${esc(l)} <span aria-hidden="true">×</span></button>`).join("")}</div>`:""}
-        <div class="stack">${results.map(card).join("") || `<div class="empty">Nenhuma oportunidade com esses critérios. Remova um filtro acima.</div>`}</div>
+        ${(F.onlyOpen && !F.status.size) ? `<p class="openbar">Mostrando só vagas e cadastros abertos. ${hiddenN?`<button class="linkbtn" type="button" data-showall>Ver também encerradas, históricas e em andamento (${hiddenN})</button>`:""}</p>` : (!F.status.size ? `<p class="openbar">Mostrando todas as situações. <button class="linkbtn" type="button" data-onlyopen>Mostrar só abertas</button></p>` : "")}
+        <div class="stack">${results.map(card).join("") || `<div class="empty">Nenhuma oportunidade aberta com esses critérios.${hiddenN?" Veja também as encerradas e históricas no aviso acima.":" Remova um filtro acima."}</div>`}</div>
+        ${total > results.length ? `<p style="text-align:center;margin:16px 0"><button class="btn" type="button" data-more>Mostrar mais (${total-results.length})</button></p>` : ""}
       </section>
     </div>`;
 }
@@ -1066,6 +1077,7 @@ function viewAjuda(){
     <div class="hgrid">${g[2].map(([demo,t,d])=>`<article class="hcard"><div class="hdemo" aria-hidden="true">${demo}</div><h3>${t}</h3><p>${d}</p></article>`).join("")}</div></section>`).join("")}
    <section class="hconf" aria-labelledby="h-conf"><h2 id="h-conf">Sempre confirme na fonte</h2>
     <p>Prazos, requisitos e bolsas podem mudar. Antes de se candidatar, consulte o edital ou a página indicada. O IC Connect é um protótipo acadêmico e não substitui o edital.</p>
+    <p>Quem divulga vagas deve ler as <a href="#diretrizes">diretrizes de uso</a>.</p>
     <p><strong>Ainda ficou com dúvida?</strong> Neste protótipo, use sempre a fonte da oportunidade para confirmar informações específicas sobre inscrição, requisitos, bolsa ou prazo.</p></section>`;
 }
 /* ===================== conta (login) =====================
@@ -1074,7 +1086,9 @@ function viewAjuda(){
 const FIREBASE_CONFIG = { apiKey:"AIzaSyAHwS-ZAUk4CI_kcxkvZWqBG_vPd4gX2uo", authDomain:"ic-connect-36298.firebaseapp.com", projectId:"ic-connect-36298", appId:"1:911083963854:web:c6e6e8e5da1606e487579f" };
 const AUTH = { mode:"entrar", user:null, api:null, ready:false, loading:false, checked:false, failed:false };
 /* Login obrigatório: só vale depois que as chaves do Firebase forem preenchidas. Sem chaves, o site abre normalmente. */
-const gated = () => authConfigured() && !(AUTH.user && AUTH.user.verified);
+/* Login só é exigido para divulgar/moderar vagas. Para voltar a travar o site inteiro, troque para true. */
+const LOGIN_OBRIGATORIO = false;
+const gated = () => LOGIN_OBRIGATORIO && authConfigured() && !(AUTH.user && AUTH.user.verified);
 const authConfigured = () => !!(window.__fakeAuth || FIREBASE_CONFIG.apiKey);
 const G_ICON = '<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>';
 const AUTH_ERR = {
@@ -1172,6 +1186,7 @@ async function authInit(){
 function viewCarregando(){ return '<div class="authwrap"><h1>IC Connect</h1><p class="lede" role="status">Carregando…</p></div>'; }
 function viewEntrar(){
   const cfg = authConfigured();
+  const retry = AUTH.failed ? '<p class="authlinks"><button class="btn" type="button" data-retry>Tentar de novo</button></p>' : "";
   const warn = cfg ? "" : '<p class="authwarn" role="note">O login ainda não foi configurado neste site. Os botões ficam desativados até as chaves do serviço serem preenchidas (veja o LEIA-ME). O restante do site funciona normalmente.</p>';
   const dis = cfg ? "" : ' disabled data-needs-cfg="1"';
   const skip = gated() ? "" : '<p class="authlinks"><a href="#explorar">Continuar sem entrar</a></p>';
@@ -1189,16 +1204,20 @@ function viewEntrar(){
   const m = AUTH.mode;
   const title = m==="criar" ? "Criar conta" : m==="reset" ? "Redefinir senha" : "Entrar";
   const pwField = m==="reset" ? "" : `<label class="field"><span>Senha</span><input id="authPw" type="password" required autocomplete="${m==="criar"?"new-password":"current-password"}"${m==="criar"?' aria-describedby="pwhint"':""}>${m==="criar"?'<small id="pwhint">Mínimo de 8 caracteres.</small>':""}</label>
-    <label class="showpw"><input type="checkbox" id="showPw"> Mostrar senha</label>`;
+    <label class="showpw"><input type="checkbox" id="showPw"> Mostrar senha</label>${m==="criar"?'<div class="pwwarn" role="note"><strong>Atenção:</strong> sem e-mail, não existe recuperação de senha. Anote sua senha em lugar seguro.<label class="showpw"><input type="checkbox" id="pwAck"> Entendi que não dá para recuperar a senha</label></div>':""}`;
   const go = m==="criar" ? "Criar conta" : m==="reset" ? "Enviar link de redefinição" : "Entrar";
   const google = ""; /* login com Google desativado: o acesso é só por e-mail e senha */
-  const extra = m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
-  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Guarde bem sua senha: não há recuperação de senha. Só professores divulgam vagas, e toda vaga passa por moderação.</p>' : "";
+  if (m === "reset") return `<div class="authwrap" id="authBox"><h1>Esqueci a senha</h1><div class="authcard">
+    <p>Este protótipo não pede e-mail, então <strong>não consegue recuperar senhas</strong>.</p>
+    <p>O que fazer: crie uma conta nova com outro nome de usuário. Se você divulgou vagas com a conta antiga, peça à moderação para remover a conta antiga e liberar o nome.</p>
+    <p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button><button class="linkbtn" type="button" data-authmode="criar">Criar conta nova</button></p></div></div>`;
+  const extra = m==="entrar" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="reset">Esqueci a senha</button></p>' : m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
+  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Só professores divulgam vagas, e toda vaga passa por moderação.</p>' : "";
   return `<div class="authwrap" id="authBox"><h1>${title}</h1>${intro}${warn}<div class="authcard">
     ${m==="reset"?"":`<div class="authtabs" role="group" aria-label="Escolha"><button type="button" data-authmode="entrar" aria-pressed="${m==="entrar"}">Entrar</button><button type="button" data-authmode="criar" aria-pressed="${m==="criar"}">Criar conta</button></div>`}
     <form id="authForm" novalidate><div id="authmsg" role="status" aria-live="polite"></div>
-    ${m==="criar"?'<fieldset class="roles"><legend>Você é</legend><label><input type="radio" name="role" value="aluno" checked> Aluno(a): procuro vagas</label><label><input type="radio" name="role" value="professor"> Professor(a): quero publicar vagas</label></fieldset>':""}<label class="field"><span>Nome de usuário</span><input id="authEmail" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="unhint"><small id="unhint">3 a 20 caracteres: letras, números, ponto, hífen ou sublinhado.</small></label>${pwField}
-    <button class="btn primary block" type="submit"${dis}>${go}</button></form>${google}${extra}${note}</div>${skip}</div>`;
+    ${m==="criar"?'<fieldset class="roles"><legend>Você é</legend><label><input type="radio" name="role" value="aluno" checked> Aluno(a): procuro vagas</label><label><input type="radio" name="role" value="professor"> Professor(a): quero divulgar vagas (passam por moderação)</label><small>A escolha fica registrada na conta. Para mudar depois, fale com a moderação.</small></fieldset>':""}<label class="field"><span>Nome de usuário</span><input id="authEmail" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="unhint"><small id="unhint">3 a 20 caracteres: letras, números, ponto, hífen ou sublinhado.</small></label>${pwField}
+    <button class="btn primary block" type="submit"${dis}>${go}</button></form>${google}${extra}${note}${retry}</div>${skip}</div>`;
 }
 document.addEventListener("submit", async e => {
   if (e.target.id !== "authForm") return; e.preventDefault();
@@ -1206,6 +1225,7 @@ document.addEventListener("submit", async e => {
   const uname0 = $("#authEmail").value.trim().toLowerCase(), email = toEmail(uname0), pw = $("#authPw") ? $("#authPw").value : "";
   if (!/^[a-z0-9._-]{3,20}$/.test(uname0)) { setMsg("Usuário: 3 a 20 caracteres, só letras, números, ponto, hífen ou sublinhado.", "err"); $("#authEmail").focus(); return; }
   if (AUTH.mode !== "reset" && !pw) { setMsg("Digite a senha.", "err"); $("#authPw").focus(); return; }
+  if (AUTH.mode === "criar" && !$("#pwAck").checked) { setMsg("Marque que entendeu que não há recuperação de senha.", "err"); $("#pwAck").focus(); return; }
   if (AUTH.mode === "criar" && pw.length < 8) { setMsg("A senha precisa ter pelo menos 8 caracteres.", "err"); $("#authPw").focus(); return; }
   setBusy(true); setMsg("");
   try {
@@ -1267,7 +1287,7 @@ function viewGrupo(){
 function minhasVagasHtml(){
   const mine = VAGAS.items.filter(v => AUTH.user && v.ownerUid === AUTH.user.uid);
   if (!mine.length) return '<div class="empty">Você ainda não publicou nenhuma vaga.</div>';
-  return mine.map(v => `<article class="card"><h3 style="margin:0 0 6px">${v.status==="aprovada"?`<a href="#op-prof-${esc(v.id)}">${esc(v.title)}</a>`:esc(v.title)}</h3><p class="na" style="margin:0 0 10px">${esc(v.institution)}${v.deadline?" · prazo: "+esc(v.deadline):""} · <strong>${v.status==="aprovada"?"Aprovada":v.status==="recusada"?"Recusada":"Aguardando moderação"}</strong></p><button class="btn" type="button" data-delvaga="${esc(v.id)}">Remover vaga</button></article>`).join("");
+  return mine.map(v => `<article class="card"><h3 style="margin:0 0 6px">${v.status==="aprovada"?`<a href="#op-prof-${esc(v.id)}">${esc(v.title)}</a>`:esc(v.title)}</h3><p class="na" style="margin:0 0 10px">${esc(v.institution)}${v.deadline?" · prazo: "+esc(v.deadline):""} · <span class="mstat ${v.status==="aprovada"?"ok":v.status==="recusada"?"no":"wait"}">${v.status==="aprovada"?"Aprovada: já aparece em Explorar":v.status==="recusada"?"Recusada: não será publicada":"Aguardando moderação"}</span></p><button class="btn" type="button" data-delvaga="${esc(v.id)}">Remover vaga</button></article>`).join("");
 }
 function viewPublicar(){
   const areas = DISCOVER.map(a => `<label><input type="checkbox" name="parea" value="${esc(a)}"> ${esc(a)}</label>`).join("");
@@ -1310,7 +1330,7 @@ document.addEventListener("submit", async e => {
 });
 document.addEventListener("click", async e => {
   const d = e.target.closest("[data-delvaga]"); if (!d) return;
-  if (!confirm("Remover esta vaga? Isso não pode ser desfeito.")) return;
+  if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = "Confirmar remoção (não dá para desfazer)"; setTimeout(() => { if (d.isConnected) { delete d.dataset.sure; d.textContent = "Remover vaga"; } }, 5000); return; }
   try { await AUTH.api.removeVaga(d.dataset.delvaga); toast("Vaga removida"); } catch (err) { toast("Não foi possível remover"); }
 });
 
@@ -1358,6 +1378,7 @@ function render(){
   else if (r === "explorar") html = viewExplorar();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
+  else if ((r === "publicar" || r === "moderacao") && !AUTH.user) { html = viewEntrar(); nav = "entrar"; }
   else if (r === "publicar") html = (AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin")) ? viewPublicar() : viewInicio();
   else if (r === "moderacao") html = (AUTH.user && AUTH.user.role === "admin") ? viewModeracao() : viewInicio();
   else if (r === "diretrizes") html = viewDiretrizes();
@@ -1386,7 +1407,7 @@ document.addEventListener("click", e => {
 });
 
 /* ===================== eventos ===================== */
-function clearFilters(){ ["status","origin","externos","bolsa","mod"].forEach(k=>F[k].clear()); F.area=F.inst=F.local=""; F.q=""; const q=$("#q"); if (q) q.value=""; }
+function clearFilters(){ F.onlyOpen=true; F.limit=12; F.sort="status"; ["status","origin","externos","bolsa","mod"].forEach(k=>F[k].clear()); F.area=F.inst=F.local=""; F.q=""; const q=$("#q"); if (q) q.value=""; }
 document.addEventListener("click", e => {
   const s = e.target.closest("[data-save]"); if (s) { toggleSave(s.dataset.save); return; }
   const a = e.target.closest("[data-alert]"); if (a) { toggleAlert(a.dataset.alert); return; }
@@ -1399,9 +1420,16 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => {
   const c = e.target.closest("[data-f]");
-  if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); render(); return; }
+  if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); F.limit = 12; render(); return; }
   const sel = e.target.closest("[data-sel]");
-  if (sel) { const k = {fArea:"area", fInst:"inst", fLocal:"local"}[sel.id]; F[k] = sel.value; render(); }
+  if (sel) { const k = {fArea:"area", fInst:"inst", fLocal:"local"}[sel.id]; F[k] = sel.value; F.limit = 12; render(); return; }
+  if (e.target.id === "fSort") { F.sort = e.target.value; F.limit = 12; render(); }
+});
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-retry]")) { AUTH.failed = false; AUTH.loading = false; AUTH.ready = false; render(); authInit(); return; }
+  if (e.target.closest("[data-showall]")) { F.onlyOpen = false; F.limit = 12; render(); return; }
+  if (e.target.closest("[data-onlyopen]")) { F.onlyOpen = true; F.limit = 12; render(); return; }
+  if (e.target.closest("[data-more]")) { F.limit += 12; render(); return; }
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && filtersOpen) { filtersOpen = false; render(); $("#openF")?.focus(); } });
 $("#searchForm").addEventListener("submit", e => {
