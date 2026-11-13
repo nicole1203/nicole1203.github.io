@@ -68,12 +68,24 @@ button,input,select{font:inherit;color:inherit}
 .topnav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500}
 .topnav a[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 .bottomnav{display:none}
+.helpbtn{flex-shrink:0;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;text-decoration:none;color:var(--muted);font-weight:700}
+.helpbtn[aria-current="page"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.topnav a.addtop{background:var(--accent);color:var(--accent-fg);margin-left:6px}.topnav a.addtop[aria-current="page"]{background:var(--accent);color:var(--accent-fg);box-shadow:0 0 0 2px var(--accent-soft)}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);margin:0 0 14px}
+.seg a{padding:7px 16px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:600;font-size:14px}.seg a[aria-current="page"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.lrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;display:grid;gap:10px;background:var(--surface)}
+.ta{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:4px;font:inherit}
+.cfile{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cfile label{margin:0}
+.addopts{display:grid;gap:10px;margin-top:10px}.addopt{display:flex;flex-direction:column;gap:2px;text-align:left;width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:inherit;text-decoration:none;cursor:pointer}
+.addopt b{font-size:15px}.addopt span{font-size:14px;color:var(--muted)}.addopt:hover:not([aria-disabled=true]){border-color:var(--accent)}.addopt[aria-disabled=true]{opacity:.75;cursor:default;background:var(--surface-2)}
 @media (max-width:720px){
   .topnav{display:none}
   .brand small{display:none}
   .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
     padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
   .bottomnav a{flex:1;text-align:center;padding:12px 4px;text-decoration:none;color:var(--muted);font-weight:500;font-size:14px}
+  .bottomnav a.plus{flex:0 0 58px;align-self:center;height:48px;margin:-14px 6px 4px;padding:0;border-radius:16px;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;box-shadow:0 4px 12px rgba(37,99,235,.35)}
+  .bottomnav a.plus[aria-current="page"]{color:var(--accent-fg);box-shadow:0 0 0 3px var(--accent-soft),0 4px 12px rgba(37,99,235,.35)}
   .bottomnav a[aria-current="page"]{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
   main{padding-bottom:84px!important}
 }
@@ -337,13 +349,13 @@ ul.plain{margin:0;padding-left:18px}
     <nav class="topnav" aria-label="Principal">
       <a href="#inicio" data-nav="inicio">Início</a>
       <a href="#explorar" data-nav="explorar">Explorar</a>
-      <a href="#eventos" data-nav="eventos">Eventos</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
-      <a href="#ajuda" data-nav="ajuda">Ajuda</a>
       <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar</a>
       <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#perfil" data-nav="perfil">Perfil</a>
+      <a href="#adicionar" data-nav="adicionar" class="addtop">+ Adicionar</a>
     </nav>
+    <a class="helpbtn" href="#ajuda" data-nav="ajuda" aria-label="Ajuda">?</a>
   </div>
 </header>
 
@@ -353,11 +365,8 @@ ul.plain{margin:0;padding-left:18px}
 <nav class="bottomnav" aria-label="Principal (celular)">
   <a href="#inicio" data-nav="inicio">Início</a>
   <a href="#explorar" data-nav="explorar">Explorar</a>
-      <a href="#eventos" data-nav="eventos">Eventos</a>
+  <a href="#adicionar" data-nav="adicionar" class="plus" aria-label="Adicionar"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></a>
   <a href="#salvos" data-nav="salvos">Salvos</a>
-      <a href="#ajuda" data-nav="ajuda">Ajuda</a>
-  <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar</a>
-  <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
   <a href="#perfil" data-nav="perfil">Perfil</a>
 </nav>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -688,10 +697,13 @@ function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = fals
 function lsGet(k,d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }
 function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
 let liked = lsGet("icconnect-curtidas", []);
-let perfil = lsGet("icconnect-perfil", null);
-if (!perfil) { const old = lsGet("icconnect-interesses", null); if (old && old.length) perfil = {faculdade:"", curso:"", ingresso:"", formatura:"", interesses: old, procura: [], link: ""}; }
 let pfDraft = null, pfClear = false;
-const pfEmpty = () => ({foto:"", nome:"", faculdade:"", curso:"", ingresso:"", formatura:"", sobre:"", interesses:[], procura:[], horas:"", email:"", telefone:"", link:"", linkedin:"", lattes:"", github:"", outro:""});
+const pfEmpty = () => ({foto:"", nome:"", faculdade:"", curso:"", ingresso:"", formatura:"", sobre:"", interesses:[], procura:[], horas:"", email:"", telefone:"", skills:"", links:[], exps:[], certs:[]});
+const PF_LEG = [["linkedin","LinkedIn"],["lattes","Lattes"],["github","GitHub"],["link","Currículo online"],["outro","Outro"]];
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+function pfMigrate(p){ if (!p) return p; const o = Object.assign(pfEmpty(), p); if (!Array.isArray(p.links)) { o.links = PF_LEG.filter(([k]) => p[k]).map(([k,r]) => ({r, u:p[k]})); } PF_LEG.forEach(([k]) => delete o[k]); ["links","exps","certs"].forEach(k => { if (!Array.isArray(o[k])) o[k] = []; }); return o; }
+let perfil = pfMigrate(lsGet("icconnect-perfil", null));
+if (!perfil) { const old = lsGet("icconnect-interesses", null); if (old && old.length) perfil = pfMigrate({interesses: old}); }
 let funil = lsGet("icconnect-funil", {});
 let popId = null;
 let idSfx = "";
@@ -1071,6 +1083,16 @@ function activeChips(){
   if (F.q) out.push(["q:", `Busca: ${F.q}`]);
   return out;
 }
+function segTabs(cur){ return `<nav class="seg" aria-label="Vagas ou eventos"><a href="#explorar"${cur==="vagas"?' aria-current="page"':""}>Vagas</a><a href="#eventos"${cur==="eventos"?' aria-current="page"':""}>Eventos</a></nav>`; }
+function viewAdicionar(){
+  const prof = AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin");
+  const op = (a,t,d) => `<button class="addopt" type="button" id="ad-${a}" data-addto="${a}"><b>${t}</b><span>${d}</span></button>`;
+  return `<h1>Adicionar</h1><p class="lede">O que você quer incluir?</p>
+    <h2 class="sec" style="margin-top:18px">No seu perfil</h2>
+    <div class="addopts">${op("certs","Certificado","Curso, minicurso, evento ou prova de proficiência.")}${op("exps","Experiência ou projeto","IC anterior, monitoria, extensão, equipe, estágio.")}${op("links","Link","Lattes, LinkedIn, GitHub, portfólio ou outro.")}</div>
+    <h2 class="sec" style="margin-top:22px">Oportunidades</h2>
+    <div class="addopts">${prof ? `<a class="addopt" id="ad-vaga" href="#publicar"><b>Divulgar uma vaga</b><span>Passa por moderação antes de aparecer para todos.</span></a>` : `<div class="addopt" id="ad-sug" aria-disabled="true"><b>Sugerir uma vaga que você soube</b><span>Ainda não disponível. Hoje só professores com conta publicam. A sugestão de alunos, com confirmação antes de aparecer, está prevista.</span></div><a class="addopt" id="ad-prof" href="#entrar"><b>Sou professor ou orientador</b><span>Entre para divulgar uma vaga.</span></a>`}</div>`;
+}
 function viewExplorar(){
   let results = sorted(ALL.filter(o => matches(o)));
   if (F.sort === "prazo") results = [...results].sort((a,b) => deadlineKey(a) - deadlineKey(b));
@@ -1081,6 +1103,7 @@ function viewExplorar(){
   const locais = [...new Set(ALL.map(o=>o.location).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt"));
   const chips = activeChips();
   return `
+    ${segTabs("vagas")}
     <h1>Explorar</h1>
     <p class="lede">Busque e combine filtros. Por padrão, mostramos só o que está aberto agora. <a href="#ajuda">O que significam os selos?</a></p>
     <div class="explore">
@@ -1436,6 +1459,7 @@ function viewEventos(){
   const show = EV.sit === "passou" ? [] : up, showP = EV.sit === "prox" ? [] : past;
   const chip = (k,v,l,cur) => `<button class="chip" type="button" id="ev-${k}-${v||"todos"}" data-ev-${k}="${v}" aria-pressed="${cur===v}">${l}</button>`;
   return `
+    ${segTabs("eventos")}
     <h1>Congressos, simpósios e eventos</h1>
     <p class="lede">Eventos em que estudantes de graduação podem aprender, apresentar trabalho ou conhecer pesquisadores. Cada item tem a fonte oficial e a data da conferência.</p>
     <p class="proto">Datas e prazos mudam. Confirme sempre na página oficial antes de se inscrever. Onde a fonte não informa o público ou a inscrição, está escrito assim.</p>
@@ -1448,17 +1472,20 @@ function viewEventos(){
 
 /* ===== perfil (tudo neste navegador) ===== */
 function idb(){ return new Promise((res,rej)=>{ try { const r = indexedDB.open("icconnect", 1); r.onupgradeneeded = () => r.result.createObjectStore("cv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch(e) { rej(e); } }); }
+async function filePut(k,f){ const db = await idb(); return new Promise((res,rej)=>{ const tx = db.transaction("cv","readwrite"); tx.objectStore("cv").put(f,k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+async function fileGet(k){ const db = await idb(); return new Promise((res,rej)=>{ const r = db.transaction("cv").objectStore("cv").get(k); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function fileDel(k){ try { const db = await idb(); return await new Promise((res,rej)=>{ const tx = db.transaction("cv","readwrite"); tx.objectStore("cv").delete(k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); } catch(_) {} }
 async function cvPut(f){ const db = await idb(); return new Promise((res,rej)=>{ const tx = db.transaction("cv","readwrite"); tx.objectStore("cv").put(f,"cv"); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
 async function cvGet(){ const db = await idb(); return new Promise((res,rej)=>{ const r = db.transaction("cv").objectStore("cv").get("cv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 async function cvDel(){ const db = await idb(); return new Promise((res,rej)=>{ const tx = db.transaction("cv","readwrite"); tx.objectStore("cv").delete("cv"); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
 const kb = n => n < 1024*1024 ? Math.max(1, Math.round(n/1024)) + " KB" : (n/1024/1024).toFixed(1).replace(".",",") + " MB";
 function pfSave(){ lsSet("icconnect-perfil", perfil); }
 function viewPerfil(){
-  if (!pfDraft) pfDraft = Object.assign(pfEmpty(), JSON.parse(JSON.stringify(perfil || {})));
+  if (!pfDraft) pfDraft = pfMigrate(JSON.parse(JSON.stringify(perfil || {})));
   const d = pfDraft, y = new Date().getFullYear();
   const yrs = (a,b,cur) => `<option value="">Selecione</option>` + Array.from({length:b-a+1},(_,k)=>a+k).map(v=>`<option value="${v}"${String(cur)===String(v)?" selected":""}>${v}</option>`).join("");
   const cv = perfil && perfil.cv;
-  const conta = AUTH.user ? `Você está conectada como <strong>${esc(AUTH.user.username||"")}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>` : `Conta é opcional e só serve para professores divulgarem vagas. <a href="#entrar">Entrar ou criar conta</a>`;
+  const conta = AUTH.user ? `Você está conectada como <strong>${esc(AUTH.user.username||"")}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>${AUTH.user.role==="professor"||AUTH.user.role==="admin"?` · <a href="#publicar">Divulgar vaga</a>`:""}${AUTH.user.role==="admin"?` · <a href="#moderacao">Moderação</a>`:""}` : `Conta é opcional e só serve para professores divulgarem vagas. <a href="#entrar">Entrar ou criar conta</a>`;
   return `
     <h1>Perfil</h1>
     <p class="lede">Preencha o que quiser. As áreas de interesse e o que você procura mudam o que aparece primeiro na tela inicial.</p>
@@ -1477,12 +1504,18 @@ function viewPerfil(){
       <fieldset><legend>Contato</legend><div class="hint">Só entra na mensagem que você mesma copiar para enviar a um professor.</div>
         <div><label for="pf-email">E-mail institucional</label><input type="text" id="pf-email" data-pf="email" inputmode="email" maxlength="120" autocomplete="off" placeholder="nome@unifei.edu.br" value="${esc(d.email)}"></div>
         <div style="margin-top:10px"><label for="pf-telefone">Telefone ou WhatsApp (opcional)</label><input type="text" id="pf-telefone" data-pf="telefone" inputmode="tel" maxlength="24" value="${esc(d.telefone)}"></div></fieldset>
-      <fieldset><legend>Links</legend><div class="hint">Endereços completos, começando com https://.</div>
-        <div><label for="pf-linkedin">LinkedIn</label><input type="url" id="pf-linkedin" data-pf="linkedin" maxlength="200" placeholder="https://" value="${esc(d.linkedin)}"></div>
-        <div style="margin-top:10px"><label for="pf-lattes">Currículo Lattes</label><input type="url" id="pf-lattes" data-pf="lattes" maxlength="200" placeholder="https://" value="${esc(d.lattes)}"></div>
-        <div style="margin-top:10px"><label for="pf-github">GitHub</label><input type="url" id="pf-github" data-pf="github" maxlength="200" placeholder="https://" value="${esc(d.github)}"></div>
-        <div style="margin-top:10px"><label for="pf-link">Currículo online (Drive etc.)</label><input type="url" id="pf-link" data-pf="link" maxlength="200" placeholder="https://" value="${esc(d.link)}"></div>
-        <div style="margin-top:10px"><label for="pf-outro">Outro link (portfólio, Instagram...)</label><input type="url" id="pf-outro" data-pf="outro" maxlength="200" placeholder="https://" value="${esc(d.outro)}"></div></fieldset>
+      <div><label for="pf-skills">Habilidades e idiomas</label><div class="hint">Separe por vírgula. Exemplo: Python, MATLAB, SolidWorks, inglês intermediário.</div><input type="text" id="pf-skills" data-pf="skills" maxlength="200" autocomplete="off" value="${esc(d.skills)}"></div>
+      <fieldset id="pf-sec-links"><legend>Links</legend><div class="hint">Adicione quantos quiser: Lattes, LinkedIn, GitHub, portfólio, Instagram. Endereço completo, com https://.</div>
+        ${d.links.map((l,i)=>`<div class="lrow"><div class="row2"><div><label for="l-links-${i}-r">Nome do link</label><input type="text" id="l-links-${i}-r" data-pfl="links:${i}:r" maxlength="40" value="${esc(l.r)}" placeholder="Lattes"></div><div><label for="l-links-${i}-u">Endereço</label><input type="url" id="l-links-${i}-u" data-pfl="links:${i}:u" maxlength="250" value="${esc(l.u)}" placeholder="https://"></div></div><button class="btn" type="button" id="del-links-${i}" data-pfl-del="links:${i}">Remover este link</button></div>`).join("")}
+        ${d.links.length<12?'<div class="actions"><button class="btn" type="button" id="add-links" data-pfl-add="links">+ Adicionar link</button></div>':""}</fieldset>
+      <fieldset id="pf-sec-exps"><legend>Experiências e projetos</legend><div class="hint">IC anterior, monitoria, extensão, equipe de competição, estágio.</div>
+        ${d.exps.map((x,i)=>`<div class="lrow"><div><label for="l-exps-${i}-t">O que foi</label><input type="text" id="l-exps-${i}-t" data-pfl="exps:${i}:t" maxlength="100" value="${esc(x.t)}"></div><div class="row2"><div><label for="l-exps-${i}-o">Onde</label><input type="text" id="l-exps-${i}-o" data-pfl="exps:${i}:o" maxlength="100" value="${esc(x.o)}"></div><div><label for="l-exps-${i}-p">Período</label><input type="text" id="l-exps-${i}-p" data-pfl="exps:${i}:p" maxlength="40" value="${esc(x.p)}" placeholder="2023 a 2024"></div></div><div><label for="l-exps-${i}-d">Descrição (opcional)</label><textarea id="l-exps-${i}-d" data-pfl="exps:${i}:d" maxlength="220" rows="2" class="ta">${esc(x.d)}</textarea></div><button class="btn" type="button" id="del-exps-${i}" data-pfl-del="exps:${i}">Remover esta experiência</button></div>`).join("")}
+        ${d.exps.length<10?'<div class="actions"><button class="btn" type="button" id="add-exps" data-pfl-add="exps">+ Adicionar experiência</button></div>':""}</fieldset>
+      <fieldset id="pf-sec-certs"><legend>Certificados</legend><div class="hint">O site não confere certificados: aparecem como informados por você. Se o emissor tem página de validação, coloque o link. O arquivo (PDF ou imagem, até 3 MB) fica só neste aparelho.</div>
+        ${d.certs.map((c,i)=>`<div class="lrow"><div><label for="l-certs-${i}-t">Nome do certificado</label><input type="text" id="l-certs-${i}-t" data-pfl="certs:${i}:t" maxlength="120" value="${esc(c.t)}"></div><div class="row2"><div><label for="l-certs-${i}-e">Quem emitiu</label><input type="text" id="l-certs-${i}-e" data-pfl="certs:${i}:e" maxlength="100" value="${esc(c.e)}"></div><div><label for="l-certs-${i}-a">Ano</label><input type="text" id="l-certs-${i}-a" data-pfl="certs:${i}:a" inputmode="numeric" maxlength="4" value="${esc(c.a)}" style="max-width:100px"></div></div><div><label for="l-certs-${i}-u">Link de validação (opcional)</label><input type="url" id="l-certs-${i}-u" data-pfl="certs:${i}:u" maxlength="250" value="${esc(c.u)}" placeholder="https://"></div>
+          <div class="cfile">${c.f?`<span id="cf-${i}">${esc(c.f.name)} (${kb(c.f.size)})</span> <button class="btn" type="button" id="cget-${i}" data-cert-get="${i}">Baixar</button> <button class="btn" type="button" id="cfdel-${i}" data-cert-fdel="${i}">Remover arquivo</button>`:`<label for="cfile-${i}">Arquivo (opcional)</label><input type="file" id="cfile-${i}" data-cert-file="${i}" accept=".pdf,image/*">`}</div>
+          <button class="btn" type="button" id="del-certs-${i}" data-pfl-del="certs:${i}">Remover este certificado</button></div>`).join("")}
+        ${d.certs.length<20?'<div class="actions"><button class="btn" type="button" id="add-certs" data-pfl-add="certs">+ Adicionar certificado</button></div>':""}</fieldset>
       <div class="cvbox"><label for="pf-cv">Currículo em arquivo</label><div class="hint">PDF, DOC, DOCX ou ODT, até 3 MB. Fica guardado só neste aparelho.</div>
         ${cv?`<p id="cvinfo" style="margin:8px 0">${esc(cv.name)} (${kb(cv.size)}), anexado em ${esc(cv.date)}</p><div class="actions"><button class="btn" type="button" id="cv-get" data-pf-cvget>Baixar</button><button class="btn" type="button" id="cv-del" data-pf-cvdel>Remover</button></div>`:""}
         <input type="file" id="pf-cv" data-pf-cv accept=".pdf,.doc,.docx,.odt" style="margin-top:8px"></div>
@@ -1505,8 +1538,10 @@ function mensagemProf(o){
   if (p.sobre) L.push(p.sobre);
   const proc = p.procura.map(x => x === "bolsa" ? "com bolsa" : "voluntária"); if (proc.length) L.push("Procuro iniciação científica " + listaPt(proc) + (p.horas ? ", e consigo dedicar cerca de " + p.horas + " horas por semana." : "."));
   else if (p.horas) L.push("Consigo dedicar cerca de " + p.horas + " horas por semana.");
-  const ref = [["Currículo", p.link], ["Lattes", p.lattes], ["LinkedIn", p.linkedin], ["GitHub", p.github], ["Outro", p.outro]].filter(x => x[1]).map(x => x[0] + ": " + x[1]);
-  if (ref.length) { L.push(""); L.push(ref.join("\n")); }
+  if (p.skills) L.push("Habilidades: " + p.skills + ".");
+  if (p.exps.length) L.push("Experiência: " + p.exps.slice(0,4).map(x => x.t + (x.o ? " (" + x.o + (x.p ? ", " + x.p : "") + ")" : x.p ? " (" + x.p + ")" : "")).join("; ") + ".");
+  if (p.certs.length) L.push("Certificados: " + p.certs.slice(0,5).map(c => c.t + (c.e || c.a ? " (" + [c.e, c.a].filter(Boolean).join(", ") + ")" : "")).join("; ") + ".");
+  if (p.links.length) { L.push(""); L.push(p.links.map(l => l.r + ": " + l.u).join("\n")); }
   const ct = [p.email, p.telefone].filter(Boolean); if (ct.length) { L.push(""); L.push("Contato: " + ct.join(" · ")); }
   L.push(""); L.push("Obrigado(a) pela atenção.");
   return L.join("\n");
@@ -1623,7 +1658,8 @@ function render(){
   const lock = gated(); document.body.classList.toggle("locked", lock);
   if (lock) { html = (AUTH.checked || AUTH.failed) ? viewEntrar() : viewCarregando(); nav = "entrar"; }
   else if (r === "explorar") html = viewExplorar();
-  else if (r === "eventos") html = viewEventos();
+  else if (r === "eventos") { html = viewEventos(); nav = "explorar"; }
+  else if (r === "adicionar") html = viewAdicionar();
   else if (r === "perfil") html = viewPerfil();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
@@ -1668,10 +1704,15 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-close-filters]")) { filtersOpen = false; render(); $("#openF")?.focus(); return; }
   if (e.target.closest("#clearF")) { clearFilters(); render(); return; }
 });
-document.addEventListener("input", e => { const f = e.target.closest("[data-pf]"); if (f && pfDraft) pfDraft[f.dataset.pf] = f.value; });
+document.addEventListener("input", e => { const f = e.target.closest("[data-pf]"); if (f && pfDraft) pfDraft[f.dataset.pf] = f.value; const g = e.target.closest("[data-pfl]"); if (g && pfDraft) { const [l,i,k] = g.dataset.pfl.split(":"); if (pfDraft[l] && pfDraft[l][+i]) pfDraft[l][+i][k] = g.value; } });
+const PF_BLANK = {links:()=>({r:"",u:""}), exps:()=>({t:"",o:"",p:"",d:""}), certs:()=>({id:uid(),t:"",e:"",a:"",u:""})};
+function pfAdd(l, focusIt){ if (!pfDraft) return; pfDraft[l].push(PF_BLANK[l]()); render(); const n = pfDraft[l].length - 1, el = document.getElementById("l-" + l + "-" + n + "-" + (l === "links" ? "r" : "t")); if (el) { el.focus(); if (focusIt) el.scrollIntoView({block:"center"}); } }
 document.addEventListener("change", async e => {
   const f = e.target.closest("[data-pf]"); if (f && pfDraft) { pfDraft[f.dataset.pf] = f.value; return; }
   const pr = e.target.closest("[data-pf-proc]"); if (pr && pfDraft) { const k = pr.dataset.pfProc; pfDraft.procura = pr.checked ? [...new Set([...pfDraft.procura, k])] : pfDraft.procura.filter(x => x !== k); return; }
+  const cf = e.target.closest("[data-cert-file]"); if (cf && cf.files && cf.files[0] && pfDraft) { const c = pfDraft.certs[+cf.dataset.certFile], file = cf.files[0]; if (!c) return;
+    if (file.size > 3*1024*1024) { pfMsg("O arquivo tem " + kb(file.size) + ". O limite é 3 MB.", true); cf.value = ""; return; }
+    if (!c.id) c.id = uid(); try { await filePut("cert-" + c.id, file); c.f = {name:file.name, size:file.size}; render(); pfMsg("Arquivo guardado neste aparelho. Clique em Salvar perfil para confirmar.", false); } catch(_) { pfMsg("Não foi possível guardar o arquivo neste navegador.", true); } return; }
   const ft = e.target.closest("[data-pf-foto]"); if (ft && ft.files && ft.files[0]) { try { const u = await fotoFrom(ft.files[0]); if (pfDraft) pfDraft.foto = u; render(); } catch(_) { pfMsg("Não foi possível usar essa imagem.", true); } return; }
   const fi = e.target.closest("[data-pf-cv]"); if (fi && fi.files && fi.files[0]) {
     const file = fi.files[0], ext = (file.name.split(".").pop() || "").toLowerCase();
@@ -1686,12 +1727,21 @@ document.addEventListener("click", async e => {
   if (e.target.closest("[data-pf-save]") && pfDraft) {
     const d = pfDraft;
     if (d.ingresso && d.formatura && +d.formatura < +d.ingresso) { pfMsg("O ano de formatura não pode ser anterior ao de ingresso.", true); return; }
-    for (const k of ["link","linkedin","lattes","github","outro"]) if (d[k] && !/^https?:\/\//i.test(d[k])) { pfMsg("Os links precisam começar com http:// ou https://.", true); return; }
+    d.links = d.links.map(l => ({r:(l.r||"").trim(), u:(l.u||"").trim()})).filter(l => l.r || l.u);
+    d.exps = d.exps.map(x => Object.assign({}, x, {t:(x.t||"").trim()})).filter(x => x.t);
+    d.certs = d.certs.filter(c => (c.t||"").trim() || c.f).map(c => Object.assign({}, c, {t:(c.t||"").trim() || "Certificado sem nome"}));
+    for (const l of d.links) { if (!/^https?:\/\//i.test(l.u)) { pfMsg("O link \"" + (l.r || l.u) + "\" precisa de um endereço que comece com http:// ou https://.", true); return; } if (!l.r) { try { l.r = new URL(l.u).hostname.replace(/^www\./,""); } catch(_) { l.r = "Link"; } } }
+    for (const c of d.certs) if (c.u && !/^https?:\/\//i.test(c.u)) { pfMsg("O link de validação de \"" + c.t + "\" precisa começar com http:// ou https://.", true); return; }
     if (d.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) { pfMsg("O e-mail não parece válido.", true); return; }
     if (d.horas && !/^\d{1,2}$/.test(d.horas)) { pfMsg("Horas por semana: use só números, por exemplo 10.", true); return; }
     perfil = Object.assign({}, perfil || {}, d); pfSave(); pfDraft = null; toast("Perfil salvo neste navegador."); render(); return;
   }
-  if (e.target.closest("[data-pf-clear]")) { if (!pfClear) { pfClear = true; render(); return; } try { await cvDel(); } catch(_) {} perfil = null; pfDraft = null; pfClear = false; try { localStorage.removeItem("icconnect-perfil"); localStorage.removeItem("icconnect-interesses"); } catch(_) {} toast("Perfil e currículo apagados deste navegador."); render(); return; }
+  if (e.target.closest("[data-pf-clear]")) { if (!pfClear) { pfClear = true; render(); return; } try { await cvDel(); } catch(_) {} for (const c of ((perfil && perfil.certs) || [])) if (c.id) await fileDel("cert-" + c.id); perfil = null; pfDraft = null; pfClear = false; try { localStorage.removeItem("icconnect-perfil"); localStorage.removeItem("icconnect-interesses"); } catch(_) {} toast("Perfil e currículo apagados deste navegador."); render(); return; }
+  const ad = e.target.closest("[data-pfl-add]"); if (ad) { pfAdd(ad.dataset.pflAdd); return; }
+  const dl = e.target.closest("[data-pfl-del]"); if (dl && pfDraft) { const [l,i] = dl.dataset.pflDel.split(":"); const it = pfDraft[l][+i]; if (l === "certs" && it && it.id && it.f) await fileDel("cert-" + it.id); pfDraft[l].splice(+i, 1); render(); return; }
+  const cg = e.target.closest("[data-cert-get]"); if (cg && pfDraft) { const c = pfDraft.certs[+cg.dataset.certGet]; try { const f = c && await fileGet("cert-" + c.id); if (!f) { pfMsg("Arquivo não encontrado neste navegador.", true); return; } const u = URL.createObjectURL(f), a = document.createElement("a"); a.href = u; a.download = c.f.name; a.click(); setTimeout(() => URL.revokeObjectURL(u), 4000); } catch(_) { pfMsg("Não foi possível abrir o arquivo.", true); } return; }
+  const cx = e.target.closest("[data-cert-fdel]"); if (cx && pfDraft) { const c = pfDraft.certs[+cx.dataset.certFdel]; if (c && c.id) await fileDel("cert-" + c.id); if (c) delete c.f; render(); return; }
+  const go2 = e.target.closest("[data-addto]"); if (go2) { go("perfil"); pfAdd(go2.dataset.addto, true); return; }
   if (e.target.closest("[data-pf-fotodel]") && pfDraft) { pfDraft.foto = ""; render(); return; }
   const cp = e.target.closest("[data-copymsg]"); if (cp) { const o = cp.dataset.copymsg ? byId[cp.dataset.copymsg] : null; const t = mensagemProf(o); try { await navigator.clipboard.writeText(t); toast("Mensagem copiada. Cole no e-mail e revise antes de enviar."); } catch(_) { const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand("copy"); } catch(__) {} ta.remove(); toast(ok ? "Mensagem copiada. Cole no e-mail e revise antes de enviar." : "Não foi possível copiar automaticamente."); } return; }
   if (e.target.closest("[data-pf-cvdel]")) { try { await cvDel(); } catch(_) {} if (perfil) { delete perfil.cv; pfSave(); } toast("Currículo removido."); render(); return; }
