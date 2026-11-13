@@ -1028,7 +1028,7 @@ const F = {onlyOpen:true, sort:"status", limit:12, q:"", status:new Set(), area:
 let feedTopic = "";
 
 function bolsaCat(o){ if (o.scholarship === null) return "ni"; if (/^n[aã]o/i.test(o.scholarship)) return "vol"; if (/^sim/i.test(o.scholarship)) return "sim"; return "ni"; }
-function modCat(o){ const m = norm(o.modality); if (!m) return "ni"; const c=[]; if (m.includes("presencial")) c.push("presencial"); if (m.includes("remot")) c.push("remota"); if (m.includes("hibrid")) c.push("hibrida"); return c.length?c:["ni"]; }
+function modCat(o){ const m = norm(o.modality); if (!m) return ["ni"]; const c=[]; if (m.includes("presencial")) c.push("presencial"); if (m.includes("remot")) c.push("remota"); if (m.includes("hibrid")) c.push("hibrida"); return c.length?c:["ni"]; }
 function haystack(o){ return norm([o.title,o.institution,o.short,o.summary,o.group,o.advisor,(o.areas||[]).join(" "),(o.tags||[]).join(" "),o.location,o.researcherName,(o.researcherResearchAreas||[]).join(" "),o.researcherGroup].join(" ")); }
 
 const isOpenNow = o => (o.status === "aberta" && !(daysLeft(o) !== null && daysLeft(o) < 0)) || o.status === "cadastro";
@@ -1833,7 +1833,7 @@ document.addEventListener("change", e => {
   const nt = e.target.closest("[data-note]");
   if (nt) { const id = nt.dataset.note; funil[id] = Object.assign({}, funil[id], {n: nt.value.slice(0,140)}); lsSet("icconnect-funil", funil); return; }
   const c = e.target.closest("[data-f]");
-  if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); F.limit = 12; render(); return; }
+  if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); F.limit = 12; const st = $("#filters")?.scrollTop || 0; render(); const pn = $("#filters"); if (pn) pn.scrollTop = st; return; }
   const sel = e.target.closest("[data-sel]");
   if (sel) { const k = {fArea:"area", fInst:"inst", fLocal:"local"}[sel.id]; F[k] = sel.value; F.limit = 12; render(); return; }
   if (e.target.id === "fSort") { F.sort = e.target.value; F.limit = 12; render(); }
