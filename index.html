@@ -107,6 +107,7 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .what{display:flex;flex-direction:column;gap:2px}
 .what .lbl{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .what p{margin:0;max-width:70ch}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .clamp1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
 .beg{display:inline-flex;align-self:flex-start;gap:6px;align-items:center;font-size:13px;font-weight:600;color:var(--open);background:var(--open-soft);padding:4px 10px;border-radius:999px}
@@ -302,6 +303,18 @@ ul.plain{margin:0;padding-left:18px}
 .fcard select,.fcard input.note{width:100%;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 .fcard label{font-size:12px;color:var(--muted)}
 .fsum{margin:6px 0 14px;font-size:14px}
+
+/* identidade: azul só para ação e marca; laranja só para prazo e novidade */
+:root{--hot:#b4400a;--hot-soft:#fdece3;--hot-fg:#ffffff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--hot:#f4a574;--hot-soft:#3b2416;--hot-fg:#1c1008}}
+:root[data-theme="dark"]{--hot:#f4a574;--hot-soft:#3b2416;--hot-fg:#1c1008}
+.urg{background:var(--hot-soft);color:var(--hot);border-color:var(--hot)}
+.newb{background:var(--hot);color:var(--hot-fg)}
+.newline{color:var(--hot)}
+.proto{margin:6px 0 0;font-size:13px;color:var(--muted);max-width:62ch}
+.thumb,.hero{filter:saturate(.82) contrast(1.03);border:1px solid var(--line)}
+.iab{font-size:11px;padding:1px 5px;font-weight:500;letter-spacing:.01em}
+@media (max-width:720px){h1{font-size:21px}.lede{font-size:14px}}
 </style>
 
 <header class="top">
@@ -930,8 +943,7 @@ function card(o, ctx){
     <div class="card-head">${pill(o)}${urg(o)}${novoB(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}${auditFlag(o)}</div>
     <div class="titlerow">${thumb(o)}<h2><a href="#op-${o.id}">${esc(o.title)}</a></h2></div>
     <div class="tags">${o.areas.slice(0,3).map(a=>`<span class="tag">${esc(a)}</span>`).join("")}${o.areas.length>3?`<span class="tag">+${o.areas.length-3}</span>`:""}</div>
-    <div class="what"><span class="lbl">${o.activities?"O que o aluno fará":(o.hist?"Contexto":"Sobre")}</span><p class="clamp3">${esc(what)}</p></div>
-    ${o.hist&&!req?"":`<div class="what"><span class="lbl">Requisitos</span>${req?`<p>${esc(req[0])}${o.requirements.length>1?` <span class="more">+${o.requirements.length-1} no detalhe</span>`:""}</p>`:'<p class="na">Não informado na fonte</p>'}</div>`}
+    <div class="what"><span class="lbl">${o.activities?"O que o aluno fará":(o.hist?"Contexto":"Sobre")}</span><p class="clamp2">${esc(what)}</p></div>
     ${o.beginner?`<span class="beg"><i aria-hidden="true">✓</i> Aceita iniciante: ${esc(o.beginner)}</span>`:""}
     ${o.externosNote && o.externos !== "Não" ? `<div class="warnline">${esc(o.externosNote)}</div>` : ""}
     ${ctx==="pesq"?"":cardPesquisador(o)}
@@ -986,7 +998,8 @@ function viewInicio(){
   const acompanhar = sorted(REAL.filter(o => o.status === "encerrada" || o.status === "confirmar" || (o.status === "aberta" && !isOpenNow(o))));
   return `
     <h1>Oportunidades de iniciação científica</h1>
-    <p class="lede">Veja o que o aluno faz em cada projeto e o que é exigido. Protótipo acadêmico: dados reais de fontes públicas; itens simulados e ilustrações geradas por IA são sempre identificados.</p>
+    <p class="lede">Veja o que o aluno faz em cada projeto e o que é exigido.</p>
+    <p class="proto">Protótipo acadêmico. Dados de fontes públicas; itens simulados e ilustrações de IA vêm identificados.</p>
     <div class="section">
       <span class="eyebrow" id="topicsLabel">Explorar por assunto</span>
       <div class="chips scroll" role="group" aria-labelledby="topicsLabel">
