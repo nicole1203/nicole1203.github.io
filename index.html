@@ -297,7 +297,16 @@ body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
 @media (max-width:860px){.closefilters{display:inline-flex}}
 
 .detail{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start;margin-top:14px}
-@media (max-width:860px){.detail{grid-template-columns:minmax(0,1fr)}}
+.dsk{display:contents}.detbar{display:none}
+@media (max-width:860px){.detail{grid-template-columns:minmax(0,1fr)}.detail aside{order:-1}}
+@media (max-width:720px){
+  .herow,.herow.low{max-width:132px;margin:8px 0}
+  .dsk{display:none}
+  .detbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:calc(57px + env(safe-area-inset-bottom,0px));z-index:19;padding:8px 12px;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -4px 12px rgba(0,0,0,.08)}
+  .detbar .btn{flex:1;min-height:44px;justify-content:center;text-align:center}
+  .detbar .btn.primary{flex:2}
+  main:has(.detbar){padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))!important}
+}
 .block{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 .block h2{font-size:15px;margin-bottom:6px}
 .block p{margin:0}
@@ -1194,6 +1203,8 @@ function viewDetalhe(o){
   const known = facts.filter(f => f[1]), missing = facts.filter(f => !f[1]).map(f => f[0].toLowerCase());
   const blocks = o.hist ? [["Contexto",o.summary],["Para o estudante",o.forStudent]] : [["O que o aluno fará",o.activities],["Sobre o projeto",o.summary],["Processo seletivo",o.selection],["Como participar",o.howTo]];
   const sigla = /PIBIC|PIBITI|PROBIC|PICT|PIBICT/.test(o.title+o.summary);
+  const cta = (canApply && !o.hist ? `<a class="btn primary" href="${esc(o.applicationUrl)}"${o.prof?' target="_blank" rel="noopener noreferrer"':""}>Candidatar-se</a>` : "") + (o.prof?"":`<a class="btn${canApply?"":" primary"}" href="${esc(o.sourceUrl)}" ${o.sim?"":'target="_blank" rel="noopener noreferrer"'}>${esc(o.ctaLabel||"Ver fonte oficial")}</a>`);
+  idSfx = "-bar"; const barSave = o.hist ? "" : actionBtn(o) + followBtn(o); idSfx = "";
   return `
     <a class="back" href="#explorar">← Voltar para Explorar</a>
     <div class="who big">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span>${o.group?`<span class="who-g">${groupLink(o)}</span>`:""}</div></div>
@@ -1210,6 +1221,11 @@ function viewDetalhe(o){
         ${o.desiredSkills?`<section class="block"><h2>Conhecimentos desejáveis</h2>${list(o.desiredSkills)}</section>`:""}
         <section class="block"><h2>Área e temas</h2><div class="tags">${[...o.areas,...o.tags].map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div></section>
         ${sigla?GLOSS:""}
+        ${o.auditStatus?`<section class="auditbox" aria-labelledby="h-audit"><h2 id="h-audit">Conferência dos dados</h2><dl class="kv">
+          <div><dt>Status</dt><dd>${AUDIT_LABEL[o.auditStatus]}</dd></div>
+          <div><dt>Data da conferência</dt><dd class="mono">${esc(o.auditDate)}</dd></div>
+          <div><dt>Nota</dt><dd>${esc(o.auditNote)}</dd></div>
+          <div><dt>Fonte consultada</dt><dd>${srcLink}</dd></div></dl></section>`:""}
       </div>
       <aside class="block" aria-label="Resumo da oportunidade">
         <dl class="kv">
@@ -1218,21 +1234,16 @@ function viewDetalhe(o){
           <div><dt>${o.fonteTipo?"Fonte consultada (divulgação)":"Fonte oficial"}</dt><dd>${srcLink}</dd></div>
           <div><dt>Validação interna da equipe</dt><dd>${AUDITED.has(o.id)?"conferido":"pendente"}</dd><dd class="mono">${AUDITED.has(o.id)?"Conferido na fonte em ":"Dado do levantamento de "}${esc(o.verifiedAt)}</dd></div>
         </dl>
-        ${o.auditStatus?`<section class="auditbox" aria-labelledby="h-audit"><h2 id="h-audit">Conferência dos dados</h2><dl class="kv">
-          <div><dt>Status</dt><dd>${AUDIT_LABEL[o.auditStatus]}</dd></div>
-          <div><dt>Data da conferência</dt><dd class="mono">${esc(o.auditDate)}</dd></div>
-          <div><dt>Nota</dt><dd>${esc(o.auditNote)}</dd></div>
-          <div><dt>Fonte consultada</dt><dd>${srcLink}</dd></div></dl></section>`:""}
         ${o.externosNote?`<p class="warnline" style="margin-top:12px">${esc(o.externosNote)}</p>`:""}
         <div class="actions" style="margin-top:14px">
-          ${canApply && !o.hist ? `<a class="btn primary" href="${esc(o.applicationUrl)}"${o.prof?' target="_blank" rel="noopener noreferrer"':""}>Candidatar-se</a>` : ""}
-          ${o.prof?"":`<a class="btn${canApply?"":" primary"}" href="${esc(o.sourceUrl)}" ${o.sim?"":'target="_blank" rel="noopener noreferrer"'}>${esc(o.ctaLabel||"Ver fonte oficial")}</a>`}
-          ${o.hist?"":actionBtn(o)+followBtn(o)+(o.sim?"":likeBtn(o))}
+          <span class="dsk">${cta}${o.hist?"":actionBtn(o)+followBtn(o)}</span>
+          ${o.hist||o.sim?"":likeBtn(o)}
           ${o.hist||o.sim||!perfil?"":`<button class="btn" type="button" id="cm-${o.id}" data-copymsg="${o.id}">Copiar mensagem para o orientador</button>`}
         </div>
       </aside>
     </div>
-    ${sectionPesquisador(o)}`;
+    ${sectionPesquisador(o)}
+    <div class="detbar" role="group" aria-label="Ações da oportunidade">${cta}${barSave}</div>`;
 }
 
 function viewFonteSim(o){
