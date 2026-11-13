@@ -286,6 +286,7 @@ body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
 .filters-head{display:flex;justify-content:space-between;align-items:center}
 .linkbtn{background:none;border:0;color:var(--accent);cursor:pointer;padding:4px;font-size:14px}
 .resultbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+@media (max-width:720px){.resultbar{flex-wrap:nowrap;gap:8px;margin-bottom:8px}.resultbar>span{white-space:nowrap;font-size:14px}.sortt{position:absolute;left:-9999px}.sortl select{max-width:150px}.resultbar .openfilters{margin-left:auto;white-space:nowrap}.openbar{margin:0 0 10px;font-size:13px}.explore h1{margin-bottom:0}}
 .openfilters{display:none}
 .scrim{display:none}
 @media (max-width:860px){
@@ -1047,7 +1048,7 @@ function matches(o, ignoreOpen){
   return true;
 }
 const order = {aberta:0, cadastro:1, andamento:2, confirmar:3, encerrada:4, historico:5};
-const sorted = list => [...list].sort((a,b)=> (order[a.status]*2+(a.sim?1:0))-(order[b.status]*2+(b.sim?1:0)));
+const sorted = list => [...list].sort((a,b)=> ((a.sim?1:0)-(b.sim?1:0)) || (order[a.status]-order[b.status]));
 function activeCount(){ return F.status.size+F.origin.size+F.externos.size+F.bolsa.size+F.mod.size+(F.area?1:0)+(F.inst?1:0)+(F.local?1:0); }
 
 /* ===================== telas ===================== */
@@ -1158,7 +1159,7 @@ function viewPesquisadores(){
 }
 function viewExplorar(){
   let results = sorted(ALL.filter(o => matches(o)));
-  if (F.sort === "prazo") results = [...results].sort((a,b) => deadlineKey(a) - deadlineKey(b));
+  if (F.sort === "prazo") results = [...results].sort((a,b) => ((a.sim?1:0)-(b.sim?1:0)) || (deadlineKey(a) - deadlineKey(b)));
   const hiddenN = (F.onlyOpen && !F.status.size) ? ALL.filter(o => matches(o, true) && !isOpenNow(o)).length : 0;
   const total = results.length; results = results.slice(0, F.limit);
   const areas = [...new Set(ALL.flatMap(o=>o.areas))].sort((a,b)=>a.localeCompare(b,"pt"));
@@ -1168,7 +1169,7 @@ function viewExplorar(){
   return `
     ${segTabs("vagas")}
     <h1>Explorar</h1>
-    <p class="lede">Busque e combine filtros. Por padrão, mostramos só o que está aberto agora. <a href="#ajuda">O que significam os selos?</a></p>
+    <p class="lede">Combine filtros para achar a oportunidade. <a href="#ajuda">O que significam os selos?</a></p>
     <div class="explore">
       <div class="scrim ${filtersOpen?"open":""}" data-close-filters></div>
       <aside class="filters ${filtersOpen?"open":""}" id="filters" aria-label="Filtros">
@@ -1186,7 +1187,7 @@ function viewExplorar(){
       <section style="min-width:0">
         <div class="resultbar">
           <span aria-live="polite"><strong class="mono">${total}</strong> resultado${total===1?"":"s"}</span>
-          <label class="sortl">Ordenar <select id="fSort" data-sort><option value="status"${F.sort==="status"?" selected":""}>Situação</option><option value="prazo"${F.sort==="prazo"?" selected":""}>Prazo mais próximo</option></select></label>
+          <label class="sortl"><span class="sortt">Ordenar</span> <select id="fSort" aria-label="Ordenar" data-sort><option value="status"${F.sort==="status"?" selected":""}>Situação</option><option value="prazo"${F.sort==="prazo"?" selected":""}>Prazo mais próximo</option></select></label>
           <button class="btn openfilters" type="button" id="openF" aria-controls="filters">Filtros${chips.length?` (${chips.length})`:""}</button>
         </div>
         ${chips.length?`<div class="fchips" aria-label="Filtros ativos">${chips.map(([k,l])=>`<button class="fchip" type="button" id="rm-${slug(k)}" data-rm="${esc(k)}" aria-label="Remover filtro ${esc(l)}">${esc(l)} <span aria-hidden="true">×</span></button>`).join("")}</div>`:""}
