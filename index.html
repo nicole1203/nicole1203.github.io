@@ -349,6 +349,7 @@ ul.plain{margin:0;padding-left:18px}
 .newline{margin:8px 0 0;font-size:14px;color:var(--accent);font-weight:600}
 .match{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
 .pf{display:grid;gap:14px;max-width:640px}.pf>*,.pf fieldset,.pf .row2>*{min-width:0}.pf input[type=file]{max-width:100%}.pf label,.pf legend{font-weight:600;font-size:14px}.pf input[type=text],.pf input[type=url],.pf select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:4px}.pf fieldset{border:0;padding:0;margin:0}.pf .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:480px){.pf .row2{grid-template-columns:1fr}}.pf .chips{flex-wrap:wrap;margin-top:6px}.pf .chk{display:flex;gap:8px;align-items:center;font-weight:400;margin-top:6px}.pf .hint{font-size:13px;color:var(--muted);font-weight:400}.pf .cvbox{border:1px dashed var(--line);border-radius:var(--r);padding:12px;background:var(--surface)}
+.pfmore{border:1px solid var(--line);border-radius:var(--r);padding:0 14px;background:var(--surface)}.pfmore>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-weight:600;font-size:15px}.pfmore[open]>summary{border-bottom:1px solid var(--line);margin-bottom:14px}.pfinner{padding-bottom:14px}.pfview dl.kv{margin:0}
 .fotobox{display:flex;gap:14px;align-items:center}.fotobox>div{flex:1 1 0;min-width:0}.fotobox input[type=file]{width:100%;max-width:100%}.foto{flex-shrink:0;width:96px;height:96px;border-radius:50%;overflow:hidden;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent);font-size:32px;font-weight:700}.foto img{width:96px;height:96px;object-fit:cover;display:block}
 .myint{font-size:14px;color:var(--muted);margin:8px 0 0}
 .myint button{background:none;border:0;color:var(--accent);text-decoration:underline;cursor:pointer;padding:0}
@@ -733,7 +734,7 @@ function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = fals
 function lsGet(k,d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }
 function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
 let liked = lsGet("icconnect-curtidas", []);
-let pfDraft = null, pfClear = false;
+let pfDraft = null, pfClear = false, pfEdit = false, pfMore = false;
 const pfEmpty = () => ({foto:"", nome:"", faculdade:"", curso:"", ingresso:"", formatura:"", sobre:"", interesses:[], procura:[], horas:"", email:"", telefone:"", skills:"", links:[], exps:[], certs:[]});
 const PF_LEG = [["linkedin","LinkedIn"],["lattes","Lattes"],["github","GitHub"],["link","Currículo online"],["outro","Outro"]];
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,6);
@@ -1550,7 +1551,32 @@ async function cvGet(){ const db = await idb(); return new Promise((res,rej)=>{ 
 async function cvDel(){ const db = await idb(); return new Promise((res,rej)=>{ const tx = db.transaction("cv","readwrite"); tx.objectStore("cv").delete("cv"); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
 const kb = n => n < 1024*1024 ? Math.max(1, Math.round(n/1024)) + " KB" : (n/1024/1024).toFixed(1).replace(".",",") + " MB";
 function pfSave(){ lsSet("icconnect-perfil", perfil); }
+function viewPerfilLeitura(){
+  const p = Object.assign(pfEmpty(), perfil), cv = p.cv;
+  const row = (k,v) => v ? `<div><dt>${k}</dt><dd>${v}</dd></div>` : "";
+  const anos = [p.ingresso && "ingresso em " + esc(p.ingresso), p.formatura && "formatura prevista em " + esc(p.formatura)].filter(Boolean).join(", ");
+  const proc = p.procura.map(x => x === "bolsa" ? "IC com bolsa" : "IC voluntária").join(" e ");
+  const ur = u => /^https?:\/\//i.test(u) ? esc(u) : "#";
+  return `
+    <h1>Perfil</h1>
+    <p class="proto">O perfil e o currículo ficam só neste navegador. Não são enviados ao site nem a professores.</p>
+    <div class="pf pfview" style="margin-top:16px">
+      <div class="fotobox"><span class="foto">${p.foto?`<img src="${p.foto}" alt="Sua foto" width="96" height="96">`:'<span aria-hidden="true">?</span>'}</span><div><h2 style="margin:0">${esc(p.nome) || "Sem nome"}</h2><div class="na">${[esc(p.curso), esc(p.faculdade)].filter(Boolean).join(" · ")}</div>${anos?`<div class="na">${anos}</div>`:""}</div></div>
+      ${p.interesses.length?`<div><h3 class="sec">Interesses</h3><div class="chips">${p.interesses.map(t=>`<span class="chip" style="cursor:default">${esc(t)}</span>`).join("")}</div></div>`:'<p class="hint">Escolha seus interesses para ver o que combina com você primeiro na tela inicial.</p>'}
+      ${p.sobre?`<div><h3 class="sec">Sobre</h3><p style="margin:0">${esc(p.sobre)}</p></div>`:""}
+      <dl class="kv">${row("Procura", proc)}${row("Horas por semana", esc(p.horas))}${row("Habilidades e idiomas", esc(p.skills))}${row("E-mail", esc(p.email))}${row("Telefone", esc(p.telefone))}</dl>
+      ${p.links.length?`<div><h3 class="sec">Links</h3><ul class="plain">${p.links.map(l=>`<li><a href="${ur(l.u)}" target="_blank" rel="noopener noreferrer">${esc(l.r)}</a></li>`).join("")}</ul></div>`:""}
+      ${p.exps.length?`<div><h3 class="sec">Experiências e projetos</h3><ul class="plain">${p.exps.map(x=>`<li><strong>${esc(x.t)}</strong>${x.o||x.p?" · "+[esc(x.o),esc(x.p)].filter(Boolean).join(", "):""}${x.d?`<div class="na">${esc(x.d)}</div>`:""}</li>`).join("")}</ul></div>`:""}
+      ${p.certs.length?`<div><h3 class="sec">Certificados <span class="na">(informados por você, sem conferência)</span></h3><ul class="plain">${p.certs.map(c=>`<li><strong>${esc(c.t)}</strong>${c.e||c.a?" · "+[esc(c.e),esc(c.a)].filter(Boolean).join(", "):""}${c.u&&/^https?:\/\//i.test(c.u)?` · <a href="${esc(c.u)}" target="_blank" rel="noopener noreferrer">validar</a>`:""}</li>`).join("")}</ul></div>`:""}
+      ${cv?`<p style="margin:0">Currículo: ${esc(cv.name)} (${kb(cv.size)}) <button class="btn" type="button" id="cv-get" data-pf-cvget>Baixar</button></p>`:""}
+      <div class="actions"><button class="btn primary" type="button" id="pf-edit" data-pf-edit>Editar perfil</button><button class="btn" type="button" id="pf-copy" data-copymsg="">Copiar apresentação para um professor</button><button class="btn" type="button" id="pf-clear" data-pf-clear>${pfClear?"Confirmar: apagar tudo deste navegador":"Apagar perfil e currículo"}</button></div>
+      <p class="hint">${AUTH.user ? `Você está conectada como <strong>${esc(AUTH.user.username||"")}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>` : ""}</p>
+      <h2 class="sec" style="margin-top:22px">Mais</h2>
+      <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Conta (para professores que divulgam vagas)</a></li></ul>
+    </div>`;
+}
 function viewPerfil(){
+  if (perfil && !pfEdit) return viewPerfilLeitura();
   if (!pfDraft) pfDraft = pfMigrate(JSON.parse(JSON.stringify(perfil || {})));
   const d = pfDraft, y = new Date().getFullYear();
   const yrs = (a,b,cur) => `<option value="">Selecione</option>` + Array.from({length:b-a+1},(_,k)=>a+k).map(v=>`<option value="${v}"${String(cur)===String(v)?" selected":""}>${v}</option>`).join("");
@@ -1561,14 +1587,15 @@ function viewPerfil(){
     <p class="lede">Preencha o que quiser. As áreas de interesse e o que você procura mudam o que aparece primeiro na tela inicial.</p>
     <p class="proto">O perfil e o currículo ficam só neste navegador. Não são enviados ao site nem a professores. Se você limpar os dados do navegador, eles somem.</p>
     <div class="pf" style="margin-top:16px">
-      <div class="fotobox"><span class="foto">${d.foto?`<img src="${d.foto}" alt="Sua foto" width="96" height="96">`:'<span aria-hidden="true">?</span>'}</span><div><label for="pf-foto">Foto (opcional)</label><div class="hint">Fica só neste aparelho. É reduzida para 192 px.</div><input type="file" id="pf-foto" data-pf-foto accept="image/*" style="margin-top:6px">${d.foto?'<div class="actions" style="margin-top:6px"><button class="btn" type="button" id="foto-del" data-pf-fotodel>Remover foto</button></div>':""}</div></div>
       <div><label for="pf-nome">Nome</label><input type="text" id="pf-nome" data-pf="nome" maxlength="80" autocomplete="off" value="${esc(d.nome)}"></div>
-      <div><label for="pf-faculdade">Faculdade</label><input type="text" id="pf-faculdade" data-pf="faculdade" list="pf-facs" maxlength="80" autocomplete="off" value="${esc(d.faculdade)}"><datalist id="pf-facs"><option value="UNIFEI"><option value="USP"><option value="Unicamp"><option value="UFMG"><option value="UFJF"><option value="UFLA"><option value="UFSCar"><option value="Unesp"><option value="UFRJ"></datalist></div>
       <div><label for="pf-curso">Curso</label><input type="text" id="pf-curso" data-pf="curso" maxlength="80" autocomplete="off" value="${esc(d.curso)}"></div>
+      <fieldset><legend>Seus interesses</legend><div class="hint">Escolha quantos quiser.</div><div class="chips" role="group" aria-label="Interesses">${DISCOVER.map(t=>`<button class="chip" type="button" id="pi-${slug(t)}" data-pf-int="${esc(t)}" aria-pressed="${d.interesses.includes(t)}">${esc(t)}</button>`).join("")}</div></fieldset>
+      <details class="pfmore" id="pf-more"${pfMore?" open":""}><summary>Mais sobre você <span class="na">(opcional: foto, faculdade, sobre, contato, links, certificados, currículo)</span></summary><div class="pf pfinner">
+      <div class="fotobox"><span class="foto">${d.foto?`<img src="${d.foto}" alt="Sua foto" width="96" height="96">`:'<span aria-hidden="true">?</span>'}</span><div><label for="pf-foto">Foto (opcional)</label><div class="hint">Fica só neste aparelho. É reduzida para 192 px.</div><input type="file" id="pf-foto" data-pf-foto accept="image/*" style="margin-top:6px">${d.foto?'<div class="actions" style="margin-top:6px"><button class="btn" type="button" id="foto-del" data-pf-fotodel>Remover foto</button></div>':""}</div></div>
+      <div><label for="pf-faculdade">Faculdade</label><input type="text" id="pf-faculdade" data-pf="faculdade" list="pf-facs" maxlength="80" autocomplete="off" value="${esc(d.faculdade)}"><datalist id="pf-facs"><option value="UNIFEI"><option value="USP"><option value="Unicamp"><option value="UFMG"><option value="UFJF"><option value="UFLA"><option value="UFSCar"><option value="Unesp"><option value="UFRJ"></datalist></div>
       <div class="row2"><div><label for="pf-ingresso">Ano de ingresso</label><select id="pf-ingresso" data-pf="ingresso">${yrs(2015,y,d.ingresso)}</select></div>
       <div><label for="pf-formatura">Ano previsto de formatura</label><select id="pf-formatura" data-pf="formatura">${yrs(y,y+8,d.formatura)}</select></div></div>
       <div><label for="pf-sobre">Sobre você</label><div class="hint">Duas ou três frases: o que já fez, o que quer aprender. Máximo de 300 caracteres.</div><textarea id="pf-sobre" data-pf="sobre" maxlength="300" rows="3" style="width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:4px;font:inherit">${esc(d.sobre)}</textarea></div>
-      <fieldset><legend>Seus interesses</legend><div class="hint">Escolha quantos quiser.</div><div class="chips" role="group" aria-label="Interesses">${DISCOVER.map(t=>`<button class="chip" type="button" id="pi-${slug(t)}" data-pf-int="${esc(t)}" aria-pressed="${d.interesses.includes(t)}">${esc(t)}</button>`).join("")}</div></fieldset>
       <fieldset><legend>O que você procura</legend><label class="chk"><input type="checkbox" data-pf-proc="bolsa"${d.procura.includes("bolsa")?" checked":""}> IC com bolsa</label><label class="chk"><input type="checkbox" data-pf-proc="voluntaria"${d.procura.includes("voluntaria")?" checked":""}> IC voluntária (sem bolsa)</label></fieldset>
       <div><label for="pf-horas">Horas por semana que consegue dedicar</label><input type="text" id="pf-horas" data-pf="horas" inputmode="numeric" maxlength="3" value="${esc(d.horas)}" style="max-width:120px"></div>
       <fieldset><legend>Contato</legend><div class="hint">Só entra na mensagem que você mesma copiar para enviar a um professor.</div>
@@ -1589,8 +1616,9 @@ function viewPerfil(){
       <div class="cvbox"><label for="pf-cv">Currículo em arquivo</label><div class="hint">PDF, DOC, DOCX ou ODT, até 3 MB. Fica guardado só neste aparelho.</div>
         ${cv?`<p id="cvinfo" style="margin:8px 0">${esc(cv.name)} (${kb(cv.size)}), anexado em ${esc(cv.date)}</p><div class="actions"><button class="btn" type="button" id="cv-get" data-pf-cvget>Baixar</button><button class="btn" type="button" id="cv-del" data-pf-cvdel>Remover</button></div>`:""}
         <input type="file" id="pf-cv" data-pf-cv accept=".pdf,.doc,.docx,.odt" style="margin-top:8px"></div>
+      </div></details>
       <p id="pfmsg" role="status" class="hint"></p>
-      <div class="actions"><button class="btn primary" type="button" id="pf-save" data-pf-save>Salvar perfil</button>${perfil?`<button class="btn" type="button" id="pf-copy" data-copymsg="">Copiar apresentação para um professor</button>`:""}${perfil?`<button class="btn" type="button" id="pf-clear" data-pf-clear>${pfClear?"Confirmar: apagar perfil e currículo":"Apagar perfil e currículo"}</button>`:""}</div>
+      <div class="actions"><button class="btn primary" type="button" id="pf-save" data-pf-save>Salvar perfil</button>${perfil?`<button class="btn" type="button" id="pf-cancel" data-pf-cancel>Cancelar</button>`:""}${perfil?`<button class="btn" type="button" id="pf-copy" data-copymsg="">Copiar apresentação para um professor</button>`:""}${perfil?`<button class="btn" type="button" id="pf-clear" data-pf-clear>${pfClear?"Confirmar: apagar perfil e currículo":"Apagar perfil e currículo"}</button>`:""}</div>
       <p class="hint">${conta}</p>
       <h2 class="sec" style="margin-top:22px">Mais</h2>
       <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Conta (para professores que divulgam vagas)</a></li><li><a href="#diretrizes">Diretrizes de uso</a></li></ul>
@@ -1754,7 +1782,7 @@ function render(){
 }
 let lastRoute = route();
 function onRoute(){
-  const r = route(); filtersOpen = false; if (r !== "perfil") { pfDraft = null; pfClear = false; } render();
+  const r = route(); filtersOpen = false; if (r !== "perfil") { pfDraft = null; pfClear = false; pfEdit = false; pfMore = false; } render();
   if (r !== lastRoute) { window.scrollTo(0,0); $("#app").focus({preventScroll:true}); const ap = $("#app"); ap.classList.remove("enter"); void ap.offsetWidth; ap.classList.add("enter"); }
   lastRoute = r;
 }
@@ -1780,7 +1808,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("input", e => { const f = e.target.closest("[data-pf]"); if (f && pfDraft) pfDraft[f.dataset.pf] = f.value; const g = e.target.closest("[data-pfl]"); if (g && pfDraft) { const [l,i,k] = g.dataset.pfl.split(":"); if (pfDraft[l] && pfDraft[l][+i]) pfDraft[l][+i][k] = g.value; } });
 const PF_BLANK = {links:()=>({r:"",u:""}), exps:()=>({t:"",o:"",p:"",d:""}), certs:()=>({id:uid(),t:"",e:"",a:"",u:""})};
-function pfAdd(l, focusIt){ if (!pfDraft) return; pfDraft[l].push(PF_BLANK[l]()); render(); const n = pfDraft[l].length - 1, el = document.getElementById("l-" + l + "-" + n + "-" + (l === "links" ? "r" : "t")); if (el) { el.focus(); if (focusIt) el.scrollIntoView({block:"center"}); } }
+function pfAdd(l, focusIt){ pfEdit = true; pfMore = true; if (!pfDraft) pfDraft = pfMigrate(JSON.parse(JSON.stringify(perfil || {}))); if (!pfDraft) return; pfDraft[l].push(PF_BLANK[l]()); render(); const n = pfDraft[l].length - 1, el = document.getElementById("l-" + l + "-" + n + "-" + (l === "links" ? "r" : "t")); if (el) { el.focus(); if (focusIt) el.scrollIntoView({block:"center"}); } }
 document.addEventListener("change", async e => {
   const f = e.target.closest("[data-pf]"); if (f && pfDraft) { pfDraft[f.dataset.pf] = f.value; return; }
   const pr = e.target.closest("[data-pf-proc]"); if (pr && pfDraft) { const k = pr.dataset.pfProc; pfDraft.procura = pr.checked ? [...new Set([...pfDraft.procura, k])] : pfDraft.procura.filter(x => x !== k); return; }
@@ -1798,6 +1826,8 @@ document.addEventListener("change", async e => {
 });
 document.addEventListener("click", async e => {
   const pi = e.target.closest("[data-pf-int]"); if (pi && pfDraft) { const t = pi.dataset.pfInt; pfDraft.interesses = pfDraft.interesses.includes(t) ? pfDraft.interesses.filter(x => x !== t) : [...pfDraft.interesses, t]; render(); return; }
+  if (e.target.closest("[data-pf-edit]")) { pfEdit = true; pfMore = false; pfDraft = null; render(); window.scrollTo(0,0); return; }
+  if (e.target.closest("[data-pf-cancel]")) { pfEdit = false; pfMore = false; pfDraft = null; render(); window.scrollTo(0,0); return; }
   if (e.target.closest("[data-pf-save]") && pfDraft) {
     const d = pfDraft;
     if (d.ingresso && d.formatura && +d.formatura < +d.ingresso) { pfMsg("O ano de formatura não pode ser anterior ao de ingresso.", true); return; }
@@ -1808,14 +1838,14 @@ document.addEventListener("click", async e => {
     for (const c of d.certs) if (c.u && !/^https?:\/\//i.test(c.u)) { pfMsg("O link de validação de \"" + c.t + "\" precisa começar com http:// ou https://.", true); return; }
     if (d.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) { pfMsg("O e-mail não parece válido.", true); return; }
     if (d.horas && !/^\d{1,2}$/.test(d.horas)) { pfMsg("Horas por semana: use só números, por exemplo 10.", true); return; }
-    perfil = Object.assign({}, perfil || {}, d); pfSave(); pfDraft = null; toast("Perfil salvo neste navegador."); render(); return;
+    perfil = Object.assign({}, perfil || {}, d); pfSave(); pfDraft = null; pfEdit = false; pfMore = false; toast("Perfil salvo neste navegador."); render(); window.scrollTo(0,0); return;
   }
   if (e.target.closest("[data-pf-clear]")) { if (!pfClear) { pfClear = true; render(); return; } try { await cvDel(); } catch(_) {} for (const c of ((perfil && perfil.certs) || [])) if (c.id) await fileDel("cert-" + c.id); perfil = null; pfDraft = null; pfClear = false; try { localStorage.removeItem("icconnect-perfil"); localStorage.removeItem("icconnect-interesses"); } catch(_) {} toast("Perfil e currículo apagados deste navegador."); render(); return; }
   const ad = e.target.closest("[data-pfl-add]"); if (ad) { pfAdd(ad.dataset.pflAdd); return; }
   const dl = e.target.closest("[data-pfl-del]"); if (dl && pfDraft) { const [l,i] = dl.dataset.pflDel.split(":"); const it = pfDraft[l][+i]; if (l === "certs" && it && it.id && it.f) await fileDel("cert-" + it.id); pfDraft[l].splice(+i, 1); render(); return; }
   const cg = e.target.closest("[data-cert-get]"); if (cg && pfDraft) { const c = pfDraft.certs[+cg.dataset.certGet]; try { const f = c && await fileGet("cert-" + c.id); if (!f) { pfMsg("Arquivo não encontrado neste navegador.", true); return; } const u = URL.createObjectURL(f), a = document.createElement("a"); a.href = u; a.download = c.f.name; a.click(); setTimeout(() => URL.revokeObjectURL(u), 4000); } catch(_) { pfMsg("Não foi possível abrir o arquivo.", true); } return; }
   const cx = e.target.closest("[data-cert-fdel]"); if (cx && pfDraft) { const c = pfDraft.certs[+cx.dataset.certFdel]; if (c && c.id) await fileDel("cert-" + c.id); if (c) delete c.f; render(); return; }
-  const go2 = e.target.closest("[data-addto]"); if (go2) { go("perfil"); pfAdd(go2.dataset.addto, true); return; }
+  const go2 = e.target.closest("[data-addto]"); if (go2) { pfEdit = true; pfMore = true; go("perfil"); pfAdd(go2.dataset.addto, true); return; }
   if (e.target.closest("[data-pf-fotodel]") && pfDraft) { pfDraft.foto = ""; render(); return; }
   const cp = e.target.closest("[data-copymsg]"); if (cp) { const o = cp.dataset.copymsg ? byId[cp.dataset.copymsg] : null; const t = mensagemProf(o); try { await navigator.clipboard.writeText(t); toast("Mensagem copiada. Cole no e-mail e revise antes de enviar."); } catch(_) { const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand("copy"); } catch(__) {} ta.remove(); toast(ok ? "Mensagem copiada. Cole no e-mail e revise antes de enviar." : "Não foi possível copiar automaticamente."); } return; }
   if (e.target.closest("[data-pf-cvdel]")) { try { await cvDel(); } catch(_) {} if (perfil) { delete perfil.cv; pfSave(); } toast("Currículo removido."); render(); return; }
@@ -1844,6 +1874,7 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-onlyopen]")) { F.onlyOpen = true; F.limit = 12; render(); return; }
   if (e.target.closest("[data-more]")) { F.limit += 12; render(); return; }
 });
+document.addEventListener("toggle", e => { if (e.target && e.target.id === "pf-more") pfMore = e.target.open; }, true);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && filtersOpen) { filtersOpen = false; render(); $("#openF")?.focus(); } });
 document.addEventListener("input", e => { const f = e.target.closest("[data-rq]"); if (!f) return; const words = norm(f.value).split(/\s+/).filter(Boolean); let n = 0;
   document.querySelectorAll("#rlist [data-hay]").forEach(c => { const ok = words.every(w => c.dataset.hay.includes(w)); c.hidden = !ok; if (ok) n++; });
