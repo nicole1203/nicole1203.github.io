@@ -74,7 +74,7 @@ button,input,select{font:inherit;color:inherit}
 .helpbtn[aria-current="page"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
 .topnav a.addtop{background:var(--accent);color:var(--accent-fg);margin-left:6px}.topnav a.addtop[aria-current="page"]{background:var(--accent);color:var(--accent-fg);box-shadow:0 0 0 2px var(--accent-soft)}
 .rcard[hidden],#rnone[hidden]{display:none!important}
-.rq{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}.rq::placeholder{color:var(--muted);opacity:1}
+.rq{width:100%;padding:9px 10px;border:1.5px solid var(--muted);border-radius:8px;background:var(--surface);color:var(--text)}.rq::placeholder{color:var(--muted);opacity:1}
 .seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);margin:0 0 14px}
 .seg a{padding:7px 16px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:600;font-size:14px}.seg a[aria-current="page"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .lrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;display:grid;gap:10px;background:var(--surface)}
@@ -322,7 +322,8 @@ body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
 .back{display:inline-block;margin-bottom:10px;text-decoration:none;font-weight:500}
 ul.plain{margin:0;padding-left:18px}
 
-.masc.sm{width:60px;float:left;margin:0 14px 4px 0}.onb{display:grid;grid-template-columns:64px 1fr;column-gap:14px;align-items:start}.onb .masc.sm{grid-row:1/4;float:none;margin:0;width:64px}.onb>:not(.masc){grid-column:2}
+.evsel{display:grid;grid-template-columns:1fr 1fr;gap:10px}.evsel label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;min-width:0}.evsel select{width:100%;min-height:44px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);font:inherit;font-weight:400}
+.masc.sm{width:60px;float:left;margin:0 14px 4px 0}.onb{display:grid;grid-template-columns:44px 1fr;column-gap:14px;align-items:start}.onb .masc.sm{grid-row:1/4;float:none;margin:0;width:44px}.onb>:not(.masc){grid-column:2}
 .masc{display:block;width:92px;height:auto;margin:0 auto 10px}
 .prz{border-left:3px solid var(--amber);padding-left:10px}
 .empty.compact{padding:14px 16px;text-align:left;font-size:14px}
@@ -772,7 +773,7 @@ function forYou(){
 function combina(o){ const set = interestSet(); return set.size && !o.hist && !o.sim && o.areas.some(a => set.has(a)); }
 function combinaB(o){ return combina(o) ? '<span class="match">Combina com você</span>' : ""; }
 function perfilCta(){
-  if (!perfil || (!perfil.curso && !perfil.faculdade && !(perfil.interesses||[]).length)) return `<section class="onb" aria-labelledby="h-onb">${MASC.replace("class=\"masc\"","class=\"masc sm\"")}<h2 id="h-onb">Monte seu perfil</h2><p class="sub">Informe curso, faculdade e interesses para priorizar oportunidades que combinam com você. Os dados ficam salvos apenas neste navegador.</p><div class="actions"><a class="btn primary" href="#perfil">Montar perfil</a></div></section>`;
+  if (!perfil || (!perfil.curso && !perfil.faculdade && !(perfil.interesses||[]).length)) return `<section class="onb" aria-labelledby="h-onb">${MASC.replace("class=\"masc\"","class=\"masc sm\"")}<h2 id="h-onb">Monte seu perfil</h2><p class="sub">Curso e interesses ajudam a mostrar primeiro o que combina com você. Fica só neste navegador.</p><div class="actions"><a class="btn primary" href="#perfil">Montar perfil</a></div></section>`;
   const t = [perfil.curso, perfil.faculdade].filter(Boolean).map(esc).join(", ");
   return `<p class="myint">${t ? "Seu perfil: "+t+". " : ""}<a href="#perfil">Editar perfil</a></p>`;
 }
@@ -1155,7 +1156,7 @@ function viewPesquisadores(){
   return `${segTabs("pesquisadores")}
     <h1>Pesquisadores</h1>
     <p class="lede">Quem pesquisa cada tema e em qual instituição. Os resumos vêm de fontes públicas e não substituem o currículo oficial.</p>
-    <div class="section"><label for="rq" class="eyebrow">Filtrar por nome, tema ou instituição</label><input type="search" id="rq" class="rq" data-rq autocomplete="off" maxlength="60"><p class="fsum" id="rqn" role="status">${ids.length} pesquisador${ids.length>1?"es":""}</p></div>
+    <div class="section"><label for="rq" class="eyebrow">Filtrar por nome, tema ou instituição</label><input type="search" id="rq" class="rq" data-rq autocomplete="off" maxlength="60" placeholder="Ex.: Itajubá, drones, nome"><p class="fsum" id="rqn" role="status">${ids.length} pesquisador${ids.length>1?"es":""}</p></div>
     <div class="stack" id="rlist">${ids.map(card).join("")}</div>
     <p class="vazio" id="rnone" hidden>Nenhum pesquisador encontrado para esse filtro.</p>`;
 }
@@ -1496,7 +1497,7 @@ function viewSalvos(){
   const cols = ETAPAS.map((n,k) => ({n, items: list.filter(o => stageOf(o) === k).sort((a,b) => deadlineKey(a) - deadlineKey(b))}));
   return `
     <h1>Salvos</h1>
-    <p class="lede">Os itens ficam salvos apenas neste navegador. Mova cada vaga de etapa conforme avança.</p>
+    <p class="lede">Os itens ficam salvos apenas neste navegador.${list.length?" Mova cada vaga de etapa conforme avança.":""}</p>
     ${list.length ? `<p class="fsum" role="status">${list.length} salva${list.length>1?"s":""}${urgentes.length?`, <strong>${urgentes.length} encerra${urgentes.length>1?"m":""} em até 7 dias</strong>`:""}.</p>
     <section class="section" aria-label="Andamento das candidaturas"><div class="funil">${cols.map(c => `<div class="fcol"><h3>${c.n} <span class="n mono">${c.items.length}</span></h3>${c.items.length ? c.items.map(fcard).join("") : '<p class="vazio">Nenhuma nesta etapa.</p>'}</div>`).join("")}</div></section>`
     : `<section class="section"><div class="empty">${MASC}<strong>Você ainda não salvou oportunidades.</strong><br>Salve as que interessarem para encontrá-las rapidamente depois. <p><button class="btn primary" type="button" id="go-prazo" data-goprazo>Ver oportunidades com prazo próximo</button></p></div></section>`}
@@ -1533,10 +1534,9 @@ function viewEventos(){
   const chip = (k,v,l,cur) => `<button class="chip" type="button" id="ev-${k}-${v||"todos"}" data-ev-${k}="${v}" aria-pressed="${cur===v}">${l}</button>`;
   return `
     <h1>Congressos, simpósios e eventos</h1>
-    <p class="lede">Jornadas de iniciação científica, simpósios, congressos e conferências para aprender, apresentar trabalho ou conhecer pesquisadores. Cada item traz a fonte oficial, com a data do evento e o prazo de submissão separados.</p>
-    <p class="proto">Datas e prazos mudam. Confirme sempre na página oficial antes de se inscrever. Onde a fonte não informa o público ou a inscrição, está escrito assim.</p>
-    <div class="chips" role="group" aria-label="Situação" style="margin-top:14px">${chip("sit","prox","Em breve e acontecendo",EV.sit)}${chip("sit","passou","Já ocorreram",EV.sit)}${chip("sit","todos","Todos",EV.sit)}</div>
-    <div class="chips" role="group" aria-label="Organização" style="margin-top:8px">${chip("org","","Todas as instituições",EV.org)}${chip("org","unifei","UNIFEI",EV.org)}${chip("org","fora","Outras instituições",EV.org)}</div>
+    <p class="lede">Congressos e simpósios para aprender, apresentar trabalho ou conhecer pesquisadores. A data do evento e o prazo de submissão aparecem separados.</p>
+    <p class="proto">Datas e prazos mudam: confirme na página oficial antes de se inscrever.</p>
+    <div class="evsel" style="margin-top:14px"><label>Mostrar <select id="ev-sit-sel" data-evsel="sit"><option value="prox"${EV.sit==="prox"?" selected":""}>Próximos</option><option value="passou"${EV.sit==="passou"?" selected":""}>Já ocorreram</option><option value="todos"${EV.sit==="todos"?" selected":""}>Todos</option></select></label><label>Instituição <select id="ev-org-sel" data-evsel="org"><option value=""${EV.org===""?" selected":""}>Todas</option><option value="unifei"${EV.org==="unifei"?" selected":""}>UNIFEI</option><option value="fora"${EV.org==="fora"?" selected":""}>Outras</option></select></label></div>
     ${EV.sit!=="passou"?`<section class="section" aria-labelledby="h-evup"><h2 id="h-evup" class="sec">Em breve e acontecendo <span class="n mono">${show.length}</span></h2>${show.length?`<div class="stack">${show.map(evCard).join("")}</div>`:'<div class="empty">'+MASC+'Nenhum evento nesta seleção. Não encontrei, nas fontes consultadas, datas de 2027 para os congressos recorrentes.</div>'}</section>`:""}
     ${EV.sit!=="prox"?`<section class="section" aria-labelledby="h-evpa"><h2 id="h-evpa" class="sec">Já ocorreram <span class="n mono">${showP.length}</span></h2>${showP.length?`<div class="stack">${showP.map(evCard).join("")}</div>`:'<div class="empty">'+MASC+'Nenhum evento nesta seleção.</div>'}</section>`:""}`;
 }
@@ -1868,6 +1868,7 @@ document.addEventListener("change", e => {
   if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); F.limit = 12; const st = $("#filters")?.scrollTop || 0; render(); const pn = $("#filters"); if (pn) pn.scrollTop = st; return; }
   const sel = e.target.closest("[data-sel]");
   if (sel) { const k = {fArea:"area", fInst:"inst", fLocal:"local"}[sel.id]; F[k] = sel.value; F.limit = 12; render(); return; }
+  const evs = e.target.closest("[data-evsel]"); if (evs) { EV[evs.dataset.evsel] = evs.value; render(); const n = document.getElementById(evs.id); if (n) n.focus(); return; }
   if (e.target.id === "fSort") { F.sort = e.target.value; F.limit = 12; render(); }
 });
 document.addEventListener("click", e => {
