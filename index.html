@@ -232,7 +232,11 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .st-andamento{color:var(--run);background:var(--run-soft)}
 .typ{font-size:13px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:999px}
 .simbadge{font-size:13px;font-weight:600;color:var(--sim);background:var(--sim-soft);padding:3px 8px;border-radius:6px}
-.hgroup{margin-top:22px;padding-left:14px;border-left:4px solid var(--accent)}
+.hgroup{margin-top:14px;padding:2px 0 2px 14px;border-left:4px solid var(--accent)}
+.hgroup>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;min-height:44px}.hgroup>summary::-webkit-details-marker{display:none}
+.hgroup>summary::after{content:"+";margin-left:auto;font-weight:700;color:var(--accent);font-size:20px;padding:0 6px}.hgroup[open]>summary::after{content:"−"}
+.hstart{margin-top:18px}.hq{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:4px 14px}
+.hq>summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}.hq p,.hq ol{margin:0 0 12px;max-width:70ch}.steps{padding-left:20px;display:grid;gap:8px}
 .hg1{border-left-color:var(--warn)}.hg2{border-left-color:var(--sim)}
 .hgroup h2{margin:0;font-size:18px}.hsub{margin:2px 0 12px;color:var(--muted);font-size:14px}
 .hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
@@ -1287,8 +1291,12 @@ function viewAjuda(){
    ]]
   ];
   return `<div style="display:flex;gap:14px;align-items:center">${MASC.replace("class=\"masc\"","class=\"masc sm\" style=\"float:none;margin:0\"")}<div><h1>Ajuda</h1></div></div><p class="lede">Entenda os rótulos usados no IC Connect. Os selos coloridos de situação e de conferência são os mesmos dos cartões.</p>
-   ${G.map((g,k)=>`<section class="hgroup hg${k}" aria-labelledby="h-g${k}"><h2 id="h-g${k}">${g[0]}</h2><p class="hsub">${g[1]}</p>
-    <div class="hgrid">${g[2].map(([demo,t,d])=>`<article class="hcard"><div class="hdemo" aria-hidden="true">${demo}</div><h3>${t}</h3><p>${d}</p></article>`).join("")}</div></section>`).join("")}
+   <section class="hstart" aria-labelledby="h-start"><h2 id="h-start" class="sec">Comece aqui</h2>
+    <details class="hq" open><summary>O que é iniciação científica?</summary><p>É a participação de um estudante de graduação em um projeto de pesquisa, com a orientação de um pesquisador. A IC pode ter bolsa (de programas como PIBIC e PIBITI, do CNPq, ou de agências estaduais e das próprias instituições) ou ser voluntária, sem bolsa. Cada oportunidade tem regras próprias, descritas no edital.</p></details>
+    <details class="hq" open><summary>Como começo?</summary><ol class="steps"><li><strong>Escolha um tema.</strong> Use “Explorar por assunto” na tela inicial ou a busca.</li><li><strong>Veja a situação.</strong> “Vaga aberta” tem prazo em curso. “Programa recorrente” costuma abrir novos ciclos, mas pode não ter vaga agora. “Pesquisa em andamento” serve para conhecer o grupo.</li><li><strong>Leia os requisitos e o prazo.</strong> Confirme tudo na fonte oficial antes de se candidatar.</li><li><strong>Fale com o orientador, quando a fonte indicar.</strong> Se você tem perfil, o botão “Copiar mensagem para o orientador” prepara uma apresentação.</li></ol><p class="hint"><a href="#explorar">Ver oportunidades</a> · <a href="#pesquisadores">Ver pesquisadores</a> · <a href="#perfil">Montar perfil</a></p></details>
+   </section>
+   ${G.map((g,k)=>`<details class="hgroup hg${k}"${k===0?" open":""}><summary><h2 id="h-g${k}">${g[0]}</h2></summary><p class="hsub">${g[1]}</p>
+    <div class="hgrid">${g[2].map(([demo,t,d])=>{ const same = demo.replace(/<i[^>]*>.*?<\/i>/g,"").replace(/<[^>]+>/g,"").trim() === t; return `<article class="hcard">${same ? `<h3 class="hdemo">${demo}</h3>` : `<div class="hdemo" aria-hidden="true">${demo}</div><h3>${t}</h3>`}<p>${d}</p></article>`; }).join("")}</div></details>`).join("")}
    <section class="hconf" aria-labelledby="h-conf"><h2 id="h-conf">Sempre confirme na fonte</h2>
     <p>Prazos, requisitos e bolsas podem mudar. Antes de se candidatar, consulte o edital ou a página indicada. O IC Connect é um protótipo acadêmico e não substitui o edital.</p>
     <p>Quem divulga vagas deve ler as <a href="#diretrizes">diretrizes de uso</a>.</p>
