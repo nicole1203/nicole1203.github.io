@@ -1149,10 +1149,10 @@ function viewPesquisadores(){
   const card = id => { const r = RES[id], n = relatedTo(id).length;
     return `<article class="card rcard" data-hay="${esc(norm([r.name, r.role, r.institution, r.group||"", (r.areas||[]).join(" ")].join(" ")))}">
       <h2><a href="#pesquisador-${id}">${esc(r.name)}</a></h2>
-      <p class="rsub" style="margin:2px 0 0">${esc(r.role)}. ${esc(r.institution)}.</p>
-      <div class="tags">${r.areas.slice(0,4).map(a=>`<span class="tag">${esc(a)}</span>`).join("")}${r.areas.length>4?`<span class="tag">+${r.areas.length-4}</span>`:""}</div>
-      <p class="meta">${n ? n+" oportunidade"+(n>1?"s":"")+" relacionada"+(n>1?"s":"") : "Nenhuma oportunidade relacionada no momento"}</p>
-      <div class="actions"><a class="btn primary" href="#pesquisador-${id}">Ver perfil</a></div></article>`; };
+      <p class="rsub" style="margin:2px 0 0">${esc(r.institution)}</p>
+      <div class="tags">${r.areas.slice(0,3).map(a=>`<span class="tag">${esc(a)}</span>`).join("")}${r.areas.length>3?`<span class="tag">+${r.areas.length-3}</span>`:""}</div>
+      <p class="meta" style="margin:8px 0 0">${n ? n+" oportunidade"+(n>1?"s":"")+" relacionada"+(n>1?"s":"") : "Nenhuma oportunidade relacionada no momento"} · <a href="#pesquisador-${id}" aria-label="Ver perfil de ${esc(r.name)}">Ver perfil</a></p>
+    </article>`; };
   return `${segTabs("pesquisadores")}
     <h1>Pesquisadores</h1>
     <p class="lede">Quem pesquisa cada tema e em qual instituição. Os resumos vêm de fontes públicas e não substituem o currículo oficial.</p>
