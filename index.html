@@ -1805,7 +1805,7 @@ document.addEventListener("click", e => {
   if (rm) { const [k,v] = rm.dataset.rm.split(/:(.*)/s); if (F[k] instanceof Set) F[k].delete(v); else { F[k] = ""; if (k==="q") $("#q").value=""; } render(); return; }
   if (e.target.closest("#openF")) { filtersOpen = true; render(); $("#filters")?.querySelector("input,select")?.focus(); return; }
   if (e.target.closest("[data-close-filters]")) { filtersOpen = false; render(); $("#openF")?.focus(); return; }
-  if (e.target.closest("#clearF")) { clearFilters(); render(); return; }
+  if (e.target.closest("#clearF")) { clearFilters(); F.onlyOpen = false; render(); return; }
 });
 document.addEventListener("input", e => { const f = e.target.closest("[data-pf]"); if (f && pfDraft) pfDraft[f.dataset.pf] = f.value; const g = e.target.closest("[data-pfl]"); if (g && pfDraft) { const [l,i,k] = g.dataset.pfl.split(":"); if (pfDraft[l] && pfDraft[l][+i]) pfDraft[l][+i][k] = g.value; } });
 const PF_BLANK = {links:()=>({r:"",u:""}), exps:()=>({t:"",o:"",p:"",d:""}), certs:()=>({id:uid(),t:"",e:"",a:"",u:""})};
