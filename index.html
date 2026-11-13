@@ -326,14 +326,14 @@ const REAIS = [
   advisor:NI, group:NI, sourceName:"Programa de Iniciação Científica — CDTN", sourceUrl:"https://www.gov.br/cdtn/pt-br/ensino/programa-de-iniciacao-cientifica",
   applicationUrl:NI, verifiedAt:"03/11/2026"},
  {id:"cbpf", title:"PIBICT no CBPF", institution:"Centro Brasileiro de Pesquisas Físicas (CBPF)", short:"CBPF",
-  origin:"externa", type:"Edital / Programa", status:"encerrada", statusNote:"O portal já mostra o resultado de 2026.2. Em geral há duas chamadas por ano.",
+  origin:"externa", type:"Edital / Programa", status:"encerrada", statusNote:"Chamada 2026-2 encerrada (inscrições de 15 a 30/07/2026). Em geral há duas chamadas por ano; a próxima ainda não foi divulgada na fonte consultada.",
   areas:["Física","Materiais","Computação"], tags:["computação científica","nanotecnologia","sistemas complexos","cosmologia","matéria condensada"],
   summary:"O candidato escolhe até três projetos científicos em ordem de prioridade, envia documentação e carta de motivação e, se pré-selecionado, faz entrevista com o pesquisador.",
-  activities:NI, requirements:["Matrícula em qualquer período de instituição de ensino superior"],
-  desiredSkills:NI, scholarship:"Conforme edital", scholarshipValue:NI, duration:NI, weeklyHours:NI,
+  activities:NI, requirements:["Graduação regularmente matriculada em Física ou área afim (edital 2026-2)","Currículo Lattes atualizado","Sem vínculo empregatício"],
+  desiredSkills:NI, scholarship:"Conforme edital", scholarshipValue:NI, duration:"01/09/2026 a 31/08/2027 (chamada 2026-2)", weeklyHours:NI,
   modality:"Presencial; alguns projetos aceitam bolsista remoto", location:"Rio de Janeiro/RJ", externos:"Sim",
   externosNote:"Para quem está fora do Rio, verifique no edital quais projetos aceitam bolsista remoto.",
-  deadline:"Chamada atual encerrada", selection:"Documentação, carta de motivação, escolha de até 3 projetos, pré-seleção interna e entrevista.",
+  deadline:"Encerrado em 30/07/2026", selection:"Documentação, carta de motivação, escolha de até 3 projetos, pré-seleção interna e entrevista.",
   howTo:"Acompanhar a próxima chamada na fonte oficial.", advisor:NI, group:NI,
   sourceName:"PIBIC e PIBIT — CBPF", sourceUrl:"https://www.gov.br/cbpf/pt-br/formacao-cientifica/educacao-cientifica/pibic-e-pibit",
   applicationUrl:NI, verifiedAt:"03/11/2026"},
@@ -470,6 +470,26 @@ const IPEN_BASE = {institution:"Instituto de Pesquisas Energéticas e Nucleares 
   sourceName:"Escola Politécnica da USP — divulgação das bolsas no IPEN", sourceUrl:"https://www.poli.usp.br/en/noticias/oportunidades/oportunidades-graduacao/ipen-oferece-bolsas-de-iniciacao-cientifica/",
   applicationUrl:NI, verifiedAt:"03/11/2026"};
 const NOVOS = [
+ {id:"cti", title:"PIBIC no CTI Renato Archer", institution:"Centro de Tecnologia da Informação Renato Archer (CTI)", short:"CTI Renato Archer", origin:"externa",
+  type:"Edital / Programa", status:"encerrada", statusNote:"Chamada 2026-2027 encerrada: formulário de interesse dos estudantes até 24/07/2026 e candidaturas dos orientadores até 03/08/2026. Programa recorrente; a próxima chamada ainda não foi divulgada.",
+  areas:["Sistemas Embarcados","Computação","Materiais","Energia","Saúde"], tags:["RISC-V","microeletrônica","antenas e RF","manufatura aditiva","energy harvesting","IA em saúde"],
+  summary:"O edital 2026-2027 listava 56 projetos, em áreas como IA e ciência de dados em saúde, biomateriais, manufatura aditiva, antenas e RF, microeletrônica e sistemas embarcados (RISC-V) e coleta de energia. Cada projeto indica os cursos elegíveis.",
+  activities:NI, requirements:["Graduação regular em instituição pública ou privada, em um dos cursos listados para o projeto (Anexo A do edital)","Indicação por pesquisador do CTI","Sem vínculo empregatício","Currículo Lattes atualizado nos últimos 6 meses"],
+  desiredSkills:NI, scholarship:"Sim", scholarshipValue:"R$ 700,00/mês (ciclo 2026-2027)", duration:"Até 12 meses (01/09/2026 a 31/08/2027)", weeklyHours:"No mínimo 16 horas semanais",
+  modality:NI, location:NI, externos:"Sim", deadline:"Encerrado em 03/08/2026 (candidaturas dos orientadores)",
+  selection:"O orientador indica e ordena os candidatos; resultado preliminar, recursos e resultado final em agosto.", howTo:"Acompanhar a página do PIBIC do CTI até a próxima chamada. Contato informado no edital: pibic@cti.gov.br.",
+  advisor:NI, group:NI, sourceName:"CTI Renato Archer lança edital PIBIC para o período 2026-2027", sourceUrl:"https://www.gov.br/cti/pt-br/assuntos/noticias/cti-renato-archer-lanca-edital-pibic-para-o-periodo-2026-2027",
+  applicationUrl:NI, verifiedAt:"13/11/2026"},
+ {id:"isd-ppgn", title:"PIBIC e PIBITI no Instituto Santos Dumont (Neuroengenharia)", institution:"Instituto Santos Dumont (ISD), Programa de Pós-Graduação em Neuroengenharia", short:"ISD", origin:"externa",
+  type:"Edital / Programa", status:"encerrada", statusNote:"Edital PPGN 04/2026 encerrado (inscrições de 14 a 20/08/2026; resultado final em 02/09/2026).",
+  areas:["Saúde","Engenharia"], tags:["neuroengenharia","neurociências"],
+  summary:"Processo seletivo para 7 bolsas de iniciação científica e tecnológica: 3 PIBIC e 4 PIBITI, com vagas de ampla concorrência e vagas reservadas a pessoas negras ou indígenas. A proposta é avaliada pela aderência às linhas do programa.",
+  activities:NI, requirements:["Graduação regular em instituição pública","Currículo Lattes atualizado","Sem vínculo empregatício nem outra bolsa de agência de fomento","Dedicação de 16 horas semanais"],
+  desiredSkills:NI, scholarship:"Sim", scholarshipValue:"R$ 700,00/mês", duration:"Setembro de 2026 a agosto de 2027", weeklyHours:"16 horas semanais",
+  modality:"Presencial", location:"Macaíba/RN", externos:"Sim", externosNote:"O edital aceita estudantes de outras instituições, desde que públicas.", deadline:"Encerrado em 20/08/2026",
+  selection:"Análise documental e entrevista online. Exige proposta de pesquisa de até 2 páginas e carta de motivação.", howTo:"Acompanhar o ISD até o próximo edital. Dúvidas: secretaria.academica@isd.org.br.",
+  advisor:NI, group:NI, sourceName:"Edital PPGN 04/2026 — Instituto Santos Dumont", sourceUrl:"https://institutosantosdumont.org.br/wp-content/uploads/2026/08/Edital-ICIT-ISD-2026.pdf",
+  applicationUrl:NI, verifiedAt:"13/11/2026"},
  {id:"funed", title:"Banco de candidatos para IC na FUNED", institution:"Fundação Ezequiel Dias (FUNED)", short:"FUNED", origin:"externa",
   type:"Programa recorrente / Cadastro de interesse", status:"cadastro", statusNote:"Não é vaga aberta: o estudante cadastra o currículo no banco da FUNED e a seleção ocorre no futuro, quando houver oportunidade.",
   areas:["Saúde"], tags:["biotecnologia","laboratório","saúde pública"],
@@ -670,7 +690,7 @@ function art(o, big){
   return `<svg class="art${big?" big":""}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${g}</svg>`;
 }
 
-const AV = {"sim-visao":"SA","sim-energia":"SB","sim-drone":"SA",cdtn:"CDTN",cbpf:"CBPF",ird:"IRD",on:"ON",iec:"IEC",embrapa:"EI",inpe:"INPE",lndc:"LNDC",bn:"BN",funed:"FUNED",cetem:"CETEM",inma:"INMA","inma-primate":"INMA","inma-bioinfo":"INMA","inma-beija":"INMA","inma-dados":"INMA",lncc:"LNCC","ipen-arqueo":"IPEN","ipen-mat":"IPEN",inmetro:"INM",mast:"MAST","on-instr":"ON"};
+const AV = {cti:"CTI","isd-ppgn":"ISD","sim-visao":"SA","sim-energia":"SB","sim-drone":"SA",cdtn:"CDTN",cbpf:"CBPF",ird:"IRD",on:"ON",iec:"IEC",embrapa:"EI",inpe:"INPE",lndc:"LNDC",bn:"BN",funed:"FUNED",cetem:"CETEM",inma:"INMA","inma-primate":"INMA","inma-bioinfo":"INMA","inma-beija":"INMA","inma-dados":"INMA",lncc:"LNCC","ipen-arqueo":"IPEN","ipen-mat":"IPEN",inmetro:"INM",mast:"MAST","on-instr":"ON"};
 const LAB = "Laboratório Demonstrativo de Visão e Robótica";
 function avatar(o){ return `<span class="avatar${o.sim?" s":""}" aria-hidden="true">${esc(AV[o.id]||(o.prof?"PR":o.hist?"UF":"?"))}</span>`; }
 function groupLink(o){ return o.group === LAB ? `<a href="#grupo-demo">${esc(o.group)}</a>` : esc(o.group); }
@@ -684,6 +704,9 @@ const RES_VERIFIED = "03/11/2026";
 const AUDIT_LABEL = {confirmado:"Auditoria externa: confirmado", parcialmente_confirmado:"Auditoria externa: parcialmente confirmado", divergencia_na_fonte:"Auditoria externa: divergência na própria fonte", a_confirmar:"Auditoria externa: a confirmar"};
 const AUDIT_DATE = "03/11/2026";
 const AUDIT = {
+ cti:{s:"a_confirmar", d:"13/11/2026", n:"Dados lidos do edital em 13/11/2026 por leitura automatizada; ainda sem conferência humana. O local não consta na fonte lida."},
+ "isd-ppgn":{s:"a_confirmar", d:"13/11/2026", n:"Dados lidos do edital em 13/11/2026 por leitura automatizada; ainda sem conferência humana."},
+ cbpf:{s:"a_confirmar", d:"13/11/2026", n:"Prazos, vigência e requisito de curso atualizados pelo edital da chamada 2026-2, lido em 13/11/2026 por leitura automatizada. O valor da bolsa não consta no edital."},
  bn:{s:"divergencia_na_fonte", n:"Prazo divergente no edital: 06/11/2026 (item 6.1) e 15/11/2026 (cronograma). Vagas, bolsa, duração, carga horária e inelegibilidade conferidas."},
  funed:{s:"confirmado", n:"Programa recorrente com cadastro de interesse; não é vaga aberta."},
  cetem:{s:"confirmado", n:"A fonte confirma o PIBIC-CETEM; não há fonte específica para PIBITI neste card."},
@@ -699,7 +722,7 @@ const AUDIT = {
  mast:{s:"confirmado", n:"Edital encerrado em 09/10/2026."},
  "on-instr":{s:"confirmado", n:"Notícia sobre pesquisa em andamento; não é oportunidade de candidatura."}
 };
-ALL.forEach(o => { if (o.sim || o.hist) return; const a = AUDIT[o.id] || {s:"a_confirmar", n:"Dado do levantamento da equipe; a fonte ainda não passou por conferência externa."}; o.auditStatus = a.s; o.auditNote = a.n; o.auditDate = AUDIT_DATE; });
+ALL.forEach(o => { if (o.sim || o.hist) return; const a = AUDIT[o.id] || {s:"a_confirmar", n:"Dado do levantamento da equipe; a fonte ainda não passou por conferência externa."}; o.auditStatus = a.s; o.auditNote = a.n; o.auditDate = a.d || AUDIT_DATE; });
 const AUDITED = new Set(["bn"]);
 function verifLabel(id, date){
   return AUDITED.has(id) ? `Validação interna da equipe: conferido em <span class="mono">${date}</span>` : `Validação interna da equipe: pendente (dado do levantamento de <span class="mono">${date}</span>)`;
@@ -759,7 +782,7 @@ const CONTACT_IPEN = {name:"Iberê Ribeiro / Luiz Oliveira", institution:"IPEN/C
   fonteNome:"Divulgação das vagas — Poli-USP", fonteUrl:"https://www.poli.usp.br/en/noticias/oportunidades/oportunidades-graduacao/ipen-oferece-bolsas-de-iniciacao-cientifica/"};
 const NOTE_SEM_NOME = {lndc:"A chamada pública não informa orientador individual.", lncc:"A chamada fornece contato institucional, sem nome de orientador."};
 const NOTE_PROGRAMA = {inma:"O programa reúne 23 orientadores; o perfil de cada um aparece no post do respectivo plano."};
-const PROGRAMAS = ["cdtn","cbpf","ird","on","iec","embrapa","inpe","bn","funed","cetem","inma","inmetro"];
+const PROGRAMAS = ["cti","isd-ppgn","cdtn","cbpf","ird","on","iec","embrapa","inpe","bn","funed","cetem","inma","inmetro"];
 ALL.forEach(o => {
   if (o.sim) return;
   const r = RES[ROPP[o.id]];
