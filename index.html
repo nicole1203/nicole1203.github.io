@@ -17,7 +17,7 @@
 :root{
   --bg:#f5f7fa; --surface:#ffffff; --surface-2:#eef2f7; --fg:#0d1b3d; --muted:#55627a; --line:#d9e0e8;
   --navy:#0d1b3d; --amber:#f59e0b; --warm:#fff5e6; --teal:#0f8b8d;
-  --accent:#2563eb; --accent-fg:#ffffff; --accent-soft:#e7effd;
+  --accent:#2563eb; --accent-fg:#ffffff; --accent-soft:#eff5ff;
   --open:#1d7a46; --open-soft:#e2f3e9; --closed:#5d6670; --closed-soft:#eceff2;
   --warn:#8a5a00; --warn-soft:#fbf0d9; --run:#2f4bd8; --run-soft:#e6eafc;
   --sim:#7a3e9d; --sim-soft:#f3e8f9;
@@ -293,6 +293,8 @@ ul.plain{margin:0;padding-left:18px}
 
 .masc.sm{width:60px;float:left;margin:0 14px 4px 0}.onb::after{content:"";display:block;clear:both}
 .masc{display:block;width:92px;height:auto;margin:0 auto 10px}
+.prz{border-left:3px solid var(--amber);padding-left:10px}
+.empty.compact{padding:14px 16px;text-align:left;font-size:14px}
 .empty{background:var(--warm);border:1px dashed var(--line);border-radius:var(--r);padding:24px;text-align:center;color:var(--muted)}
 .foot{max-width:1080px;margin:0 auto;padding-block:0 32px;font-size:13px;color:var(--muted);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -315,8 +317,8 @@ ul.plain{margin:0;padding-left:18px}
 .onb .chips{margin:12px 0}
 .newline{margin:8px 0 0;font-size:14px;color:var(--accent);font-weight:600}
 .match{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
-.pf{display:grid;gap:14px;max-width:640px}.pf label,.pf legend{font-weight:600;font-size:14px}.pf input[type=text],.pf input[type=url],.pf select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:4px}.pf fieldset{border:0;padding:0;margin:0}.pf .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:480px){.pf .row2{grid-template-columns:1fr}}.pf .chips{flex-wrap:wrap;margin-top:6px}.pf .chk{display:flex;gap:8px;align-items:center;font-weight:400;margin-top:6px}.pf .hint{font-size:13px;color:var(--muted);font-weight:400}.pf .cvbox{border:1px dashed var(--line);border-radius:var(--r);padding:12px;background:var(--surface)}
-.fotobox{display:flex;gap:14px;align-items:center}.foto{flex-shrink:0;width:96px;height:96px;border-radius:50%;overflow:hidden;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent);font-size:32px;font-weight:700}.foto img{width:96px;height:96px;object-fit:cover;display:block}
+.pf{display:grid;gap:14px;max-width:640px}.pf>*,.pf fieldset,.pf .row2>*{min-width:0}.pf input[type=file]{max-width:100%}.pf label,.pf legend{font-weight:600;font-size:14px}.pf input[type=text],.pf input[type=url],.pf select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:4px}.pf fieldset{border:0;padding:0;margin:0}.pf .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:480px){.pf .row2{grid-template-columns:1fr}}.pf .chips{flex-wrap:wrap;margin-top:6px}.pf .chk{display:flex;gap:8px;align-items:center;font-weight:400;margin-top:6px}.pf .hint{font-size:13px;color:var(--muted);font-weight:400}.pf .cvbox{border:1px dashed var(--line);border-radius:var(--r);padding:12px;background:var(--surface)}
+.fotobox{display:flex;gap:14px;align-items:center}.fotobox>div{flex:1 1 0;min-width:0}.fotobox input[type=file]{width:100%;max-width:100%}.foto{flex-shrink:0;width:96px;height:96px;border-radius:50%;overflow:hidden;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent);font-size:32px;font-weight:700}.foto img{width:96px;height:96px;object-fit:cover;display:block}
 .myint{font-size:14px;color:var(--muted);margin:8px 0 0}
 .myint button{background:none;border:0;color:var(--accent);text-decoration:underline;cursor:pointer;padding:0}
 .funil{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;align-items:start}
@@ -360,7 +362,7 @@ ul.plain{margin:0;padding-left:18px}
 </header>
 
 <main id="app" tabindex="-1"></main>
-<p class="foot"><a href="#diretrizes">Diretrizes de uso</a> · Protótipo acadêmico da disciplina de Engenharia de Usabilidade (UNIFEI); não é um sistema oficial. As imagens são ilustrações genéricas, não fotos das instituições. Os dados vêm de um levantamento e ainda não foram todos conferidos pela equipe nas fontes: confirme prazos e requisitos no edital oficial.</p>
+<p class="foot"><a href="#diretrizes">Diretrizes de uso</a> · <a href="#sobre">Sobre</a> · Protótipo acadêmico da disciplina de Engenharia de Usabilidade (UNIFEI); não é um sistema oficial. As imagens são ilustrações genéricas, não fotos das instituições. Os dados vêm de um levantamento e ainda não foram todos conferidos pela equipe nas fontes: confirme prazos e requisitos no edital oficial.</p>
 
 <nav class="bottomnav" aria-label="Principal (celular)">
   <a href="#inicio" data-nav="inicio">Início</a>
@@ -685,8 +687,8 @@ try { saved = JSON.parse(localStorage.getItem("icconnect-salvos") || "[]"); } ca
 function persist(){ try { localStorage.setItem("icconnect-salvos", JSON.stringify(saved)); } catch(e) {} }
 function isSaved(id){ return saved.includes(id); }
 function toggleSave(id){
-  if (isSaved(id)) { saved = saved.filter(x => x !== id); delete funil[id]; lsSet("icconnect-funil", funil); toast("Removida dos salvos"); }
-  else { saved.push(id); popId = "sv-"+id; toast("Salvo. Acompanhe o andamento em Salvos."); }
+  if (isSaved(id)) { saved = saved.filter(x => x !== id); delete funil[id]; lsSet("icconnect-funil", funil); toast("Removida dos salvos."); }
+  else { saved.push(id); popId = "sv-"+id; toast("Oportunidade salva. Veja em Salvos."); }
   persist(); render();
 }
 let toastTimer;
@@ -954,11 +956,13 @@ let alerts = [];
 try { alerts = JSON.parse(localStorage.getItem("icconnect-alertas") || "[]"); } catch(e) { alerts = []; }
 function hasAlert(id){ return alerts.includes(id); }
 function toggleAlert(id){
-  if (hasAlert(id)) { alerts = alerts.filter(x => x !== id); toast("Programa removido do acompanhamento"); }
-  else { alerts.push(id); toast("Programa marcado para acompanhar. No protótipo, nenhum aviso é enviado."); }
+  if (hasAlert(id)) { alerts = alerts.filter(x => x !== id); toast("Programa removido dos acompanhados."); }
+  else { alerts.push(id); toast("Programa adicionado aos acompanhados. Neste protótipo, nenhum aviso é enviado."); }
   try { localStorage.setItem("icconnect-alertas", JSON.stringify(alerts)); } catch(e) {}
   render();
 }
+const followable = o => !o.hist && !o.sim && (o.status === "encerrada" || o.status === "confirmar" || (o.status === "aberta" && !isOpenNow(o)));
+function followBtn(o){ if (!followable(o)) return ""; const on = hasAlert(o.id); return `<button class="btn" type="button" id="al-${o.id}${idSfx}" data-alert="${o.id}" aria-pressed="${on}">${on ? "Acompanhando" : "Acompanhar programa"}</button>`; }
 function actionBtn(o){
   return `<button class="btn" type="button" id="sv-${o.id}${idSfx}" data-save="${o.id}" aria-pressed="${isSaved(o.id)}">${isSaved(o.id)?"Salvo":"Salvar"}</button>`;
 }
@@ -970,13 +974,14 @@ function card(o, ctx){
     <div class="who">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span>${o.group?`<span class="who-g">${groupLink(o)}</span>`:""}</div></div>
     <div class="card-head">${pill(o)}${urg(o)}${novoB(o)}${combinaB(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}${auditFlag(o)}</div>
     <div class="titlerow">${thumb(o)}<h2><a href="#op-${o.id}">${esc(o.title)}</a></h2></div>
+    ${o.hist&&o.status==="historico"?'<p class="meta">Registro antigo — não é uma oportunidade atual.</p>':(o.status==="confirmar"&&!o.hist?'<p class="meta">Informação ainda não confirmada na fonte consultada.</p>':"")}
     <div class="tags">${o.areas.slice(0,3).map(a=>`<span class="tag">${esc(a)}</span>`).join("")}${o.areas.length>3?`<span class="tag">+${o.areas.length-3}</span>`:""}</div>
     <div class="what"><span class="lbl">${o.activities?"O que o aluno fará":(o.hist?"Contexto":"Sobre")}</span><p class="clamp2">${esc(what)}</p></div>
     ${o.beginner?`<span class="beg"><i aria-hidden="true">✓</i> Aceita iniciante: ${esc(o.beginner)}</span>`:""}
     ${o.externosNote && o.externos !== "Não" ? `<div class="warnline">${esc(o.externosNote)}</div>` : ""}
     ${ctx==="pesq"?"":cardPesquisador(o)}
     ${o.hist?`<p class="meta">Fonte: ${esc(o.sourceName)}</p>`:`<dl class="keyfacts"><div><dt>Prazo</dt><dd>${dl(o)}</dd></div><div><dt>Bolsa</dt><dd>${bolsaShort(o)}</dd></div><div><dt>Modalidade e local</dt><dd>${modLoc(o)}</dd></div></dl>`}
-    <div class="actions"><a class="btn primary" href="#op-${o.id}">Ver detalhes</a>${o.hist?`<a class="btn" href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Ver fonte oficial de ${esc(o.title)} (abre em nova aba)">Ver fonte oficial <span aria-hidden="true">↗</span></a>`:actionBtn(o)+(o.sim?"":likeBtn(o))}</div>
+    <div class="actions"><a class="btn primary" href="#op-${o.id}">Ver detalhes</a>${o.hist?`<a class="btn" href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Ver fonte oficial de ${esc(o.title)} (abre em nova aba)">Ver fonte oficial <span aria-hidden="true">↗</span></a>`:actionBtn(o)+followBtn(o)+(o.sim?"":likeBtn(o))}</div>
   </article>`;
 }
 
@@ -994,9 +999,10 @@ function haystack(o){ return norm([o.title,o.institution,o.short,o.summary,o.gro
 
 const isOpenNow = o => (o.status === "aberta" && !(daysLeft(o) !== null && daysLeft(o) < 0)) || o.status === "cadastro";
 function deadlineKey(o){ const m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(o.deadline||""); return m ? +(m[3]+m[2]+m[1]) : 99999999; }
+const SEARCH_ALIASES = { "ia": "inteligencia artificial", "ic": "iniciacao cientifica", "bioinfo": "bioinformatica" };
 function matches(o, ignoreOpen){
   if (!ignoreOpen && F.onlyOpen && !F.status.size && !isOpenNow(o)) return false;
-  if (F.q) { const words = norm(F.q).split(/\s+/).filter(Boolean); const h = haystack(o); if (!words.every(w => h.includes(w))) return false; }
+  if (F.q) { const words = norm(F.q).split(/\s+/).filter(Boolean); const h = haystack(o); if (!words.every(w => SEARCH_ALIASES[w] ? h.includes(SEARCH_ALIASES[w]) : h.includes(w))) return false; }
   if (F.status.size && !F.status.has(o.status)) return false;
   if (F.area && !o.areas.includes(F.area)) return false;
   if (F.inst && o.short !== F.inst) return false;
@@ -1050,7 +1056,7 @@ function viewInicio(){
     </section>
     <section class="section" aria-labelledby="h-ac">
       <h2 id="h-ac" class="sec">Programas para acompanhar <span class="n mono">${acompanhar.length}</span></h2>
-      <p class="sub">Inscrições fechadas ou sem data confirmada. Acompanhe estes programas para consultar novamente depois.</p>
+      <p class="sub">Inscrições fechadas ou sem nova data confirmada. Acompanhe estes programas para consultá-los novamente depois.</p>
       <div class="stack">${acompanhar.map(card).join("")}</div>
     </section>
     <section class="section" aria-labelledby="h-hist">
@@ -1084,6 +1090,14 @@ function activeChips(){
   return out;
 }
 function segTabs(cur){ return `<nav class="seg" aria-label="Vagas ou eventos"><a href="#explorar"${cur==="vagas"?' aria-current="page"':""}>Vagas</a><a href="#eventos"${cur==="eventos"?' aria-current="page"':""}>Eventos</a></nav>`; }
+function viewSobre(){
+  return `<h1>Sobre o IC Connect</h1>
+    <p class="lede">Um protótipo acadêmico, feito na disciplina de Engenharia de Usabilidade da UNIFEI, para reunir oportunidades de iniciação científica, pesquisadores e eventos em um só lugar.</p>
+    <section class="block"><h2>O que ele não é</h2><ul class="plain"><li>Não é um sistema oficial de nenhuma instituição.</li><li>Não substitui o edital. Prazos, requisitos e bolsas devem ser conferidos na fonte indicada em cada item.</li><li>Não envia avisos nem notificações.</li></ul></section>
+    <section class="block"><h2>De onde vêm os dados</h2><p>De páginas públicas das instituições e de um levantamento da equipe. Cada item mostra a fonte e o quanto os dados foram conferidos. Itens marcados como simulados existem só para o teste de usabilidade. As imagens são ilustrações, não fotos.</p></section>
+    <section class="block"><h2>O que fica no seu navegador</h2><p>Salvos, programas acompanhados, curtidas e perfil ficam apenas neste navegador. Nada disso é enviado a um servidor.</p></section>
+    <p><a class="btn" href="#ajuda">Ver a Ajuda</a> <a class="btn" href="#diretrizes">Diretrizes de uso</a></p>`;
+}
 function viewAdicionar(){
   const prof = AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin");
   const op = (a,t,d) => `<button class="addopt" type="button" id="ad-${a}" data-addto="${a}"><b>${t}</b><span>${d}</span></button>`;
@@ -1113,7 +1127,7 @@ function viewExplorar(){
           <span><button class="linkbtn" type="button" id="clearF">Limpar</button><button class="btn closefilters" type="button" data-close-filters>Ver ${total} resultado${total===1?"":"s"}</button></span></div>
         ${selectF("fArea","Área",areas,F.area)}
         ${checks("Status",[["aberta","Vaga aberta"],["cadastro","Cadastro disponível"],["andamento","Pesquisa em andamento"],["confirmar","Status a confirmar"],["encerrada","Encerrada"],["historico","Histórico"]],"status")}
-        ${checks("Aceita aluno de outra instituição",[["Sim","Sim"],["A confirmar","A confirmar"],["ni","Não informado"]],"externos")}
+        ${checks("Aceita aluno de outra instituição",[["Sim","Sim"],["A confirmar","A confirmar (não confirmado na fonte)"],["ni","Não informado"]],"externos")}
         ${checks("Bolsa",[["sim","Com bolsa"],["vol","Voluntária"],["ni","Não informado / conforme edital"]],"bolsa")}
         ${checks("Modalidade",[["presencial","Presencial"],["remota","Remota"],["hibrida","Híbrida"],["ni","Não informada"]],"mod")}
         ${selectF("fLocal","Local",locais,F.local)}
@@ -1139,7 +1153,7 @@ function viewDetalhe(o){
   const srcLink = o.prof ? esc(o.sourceName) : o.sim ? `<a href="${o.sourceUrl}">${esc(o.sourceName)}</a>` : `<a href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(o.sourceName)} ↗</a>`;
   const canApply = o.status === "aberta" && o.applicationUrl;
   const facts = o.hist ? [["Tipo",o.type],["Confirmação",o.confirmation],["Bolsa",o.scholarship],["Valor da bolsa",o.scholarshipValue],["Vigência",o.duration]] : [["Prazo",o.deadline],["Bolsa",o.scholarship],["Valor da bolsa",o.scholarshipValue],["Carga horária",o.weeklyHours],["Duração",o.duration],
-    ["Modalidade",o.modality],["Local",o.location],["Aceita aluno de outra instituição",o.externos]];
+    ["Modalidade",o.modality],["Local",o.location],["Aceita aluno de outra instituição",o.externos === "A confirmar" ? "A confirmar. Informação ainda não confirmada na fonte consultada." : o.externos]];
   if (!o.researcherId) facts.push(["Orientador(a)",o.advisor]);
   const known = facts.filter(f => f[1]), missing = facts.filter(f => !f[1]).map(f => f[0].toLowerCase());
   const blocks = o.hist ? [["Contexto",o.summary],["Para o estudante",o.forStudent]] : [["O que o aluno fará",o.activities],["Sobre o projeto",o.summary],["Processo seletivo",o.selection],["Como participar",o.howTo]];
@@ -1149,6 +1163,7 @@ function viewDetalhe(o){
     <div class="who big">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span>${o.group?`<span class="who-g">${groupLink(o)}</span>`:""}</div></div>
     <div class="card-head" style="margin-top:12px">${pill(o)}${urg(o)}${novoB(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}</div>
     <h1 style="margin-top:8px">${esc(o.title)}</h1>
+    ${o.hist&&o.status==="historico"?'<p class="meta" style="margin:4px 0 8px">Registro antigo — não é uma oportunidade atual.</p>':(o.status==="confirmar"&&!o.hist?'<p class="meta" style="margin:4px 0 8px">Informação ainda não confirmada na fonte consultada.</p>':"")}
     ${IMG[o.id]?`<figure class="herow${LOWRES.has(o.id)?" low":""}"><img class="hero" src="${IMG[o.id]}" alt="Ilustração sobre o tema da oportunidade, não é foto da instituição" width="640" height="360"><figcaption class="iab">Ilustração</figcaption></figure>`:""}
     <p class="lede">${esc(o.statusNote)}</p>
     ${o.beginner?`<p><span class="beg"><i aria-hidden="true">✓</i> Aceita iniciante: ${esc(o.beginner)}</span></p>`:""}
@@ -1176,7 +1191,7 @@ function viewDetalhe(o){
         <div class="actions" style="margin-top:14px">
           ${canApply && !o.hist ? `<a class="btn primary" href="${esc(o.applicationUrl)}"${o.prof?' target="_blank" rel="noopener noreferrer"':""}>Candidatar-se</a>` : ""}
           ${o.prof?"":`<a class="btn${canApply?"":" primary"}" href="${esc(o.sourceUrl)}" ${o.sim?"":'target="_blank" rel="noopener noreferrer"'}>${esc(o.ctaLabel||"Ver fonte oficial")}</a>`}
-          ${o.hist?"":actionBtn(o)+(o.sim?"":likeBtn(o))}
+          ${o.hist?"":actionBtn(o)+followBtn(o)+(o.sim?"":likeBtn(o))}
           ${o.hist||o.sim||!perfil?"":`<button class="btn" type="button" id="cm-${o.id}" data-copymsg="${o.id}">Copiar mensagem para o orientador</button>`}
         </div>
       </aside>
@@ -1205,9 +1220,9 @@ function viewAjuda(){
   const G = [
    ["Situação da oportunidade","O selo colorido no topo de cada cartão diz em que pé está a oportunidade.",[
     [P("aberta"),"Vaga aberta","Há uma oportunidade específica com prazo de candidatura ainda em curso, conforme a fonte consultada."],
-    [P("cadastro"),"Programa recorrente / cadastro","A instituição mantém um programa ou cadastro, mas não necessariamente existe uma vaga específica aberta naquele momento."],
-    [P("andamento"),"Pesquisa em andamento","Projeto já em execução. Serve para conhecer tema, pesquisador ou grupo, mas não indica vaga disponível."],
-    [P("confirmar"),"Status a confirmar","A fonte consultada não permite confirmar a situação atual. Consulte a fonte antes de decidir."],
+    [P("cadastro"),"Programa recorrente / cadastro","Programa que costuma abrir novos ciclos de seleção, mas que pode não ter vaga disponível neste momento."],
+    [P("andamento"),"Pesquisa em andamento","Projeto já em execução. Serve para conhecer o tema, o grupo ou o pesquisador, mas não indica necessariamente uma vaga aberta."],
+    [P("confirmar"),"Status a confirmar","A fonte consultada não permite confirmar o status atual. Consulte a fonte antes de decidir."],
     [P("encerrada","Encerrada / histórica"),"Encerrada","Edital ou chamada que já terminou. Fica como exemplo do que a instituição costuma oferecer, não como oportunidade atual."],
     [P("historico"),"Histórico da UNIFEI","Registros de editais e programas de IC de anos anteriores, mantidos para mostrar a evolução da IC. Não são oportunidades atuais."]
    ]],
@@ -1219,7 +1234,8 @@ function viewAjuda(){
    ]],
    ["Fontes, imagens e dados de teste","Pistas para saber de onde vem cada coisa.",[
     ['<span class="hchip">Fonte oficial</span>',"Fonte oficial e fonte consultada","“Fonte oficial” é a página da instituição responsável ou o edital. “Fonte consultada” é uma página de divulgação ou notícia usada no levantamento."],
-    ['<span class="hchip ia">Ilustração</span>',"Ilustração","A imagem é apenas representativa do tema e não é fotografia real da instituição ou do projeto."],
+    ['<span class="hchip ia">Ilustração</span>',"Ilustração IA","A imagem foi gerada com ajuda de inteligência artificial e é apenas representativa do tema. Não é fotografia real da instituição ou do projeto."],
+    ['<span class="hchip">Acompanhar programa</span>',"Acompanhar programa","Salva o programa neste navegador para você consultá-lo novamente depois. O protótipo não envia notificações."],
     ['<span class="simbadge">Dados simulados para teste de usabilidade</span>',"Dados simulados","Itens inventados só para as tarefas do teste de usabilidade. Não são oportunidades reais."]
    ]]
   ];
@@ -1422,12 +1438,12 @@ function viewSalvos(){
   const cols = ETAPAS.map((n,k) => ({n, items: list.filter(o => stageOf(o) === k).sort((a,b) => deadlineKey(a) - deadlineKey(b))}));
   return `
     <h1>Salvos</h1>
-    <p class="lede">Ficam guardados só neste navegador. Mova cada vaga de etapa conforme avança.</p>
+    <p class="lede">Os itens ficam salvos apenas neste navegador. Mova cada vaga de etapa conforme avança.</p>
     ${list.length ? `<p class="fsum" role="status">${list.length} salva${list.length>1?"s":""}${urgentes.length?`, <strong>${urgentes.length} encerra${urgentes.length>1?"m":""} em até 7 dias</strong>`:""}.</p>
     <section class="section" aria-label="Andamento das candidaturas"><div class="funil">${cols.map(c => `<div class="fcol"><h3>${c.n} <span class="n mono">${c.items.length}</span></h3>${c.items.length ? c.items.map(fcard).join("") : '<p class="vazio">Nenhuma nesta etapa.</p>'}</div>`).join("")}</div></section>`
-    : `<section class="section"><div class="empty">${MASC_BOOK}Você ainda não salvou nenhuma oportunidade. Use <strong>Salvar</strong> numa vaga aberta e acompanhe aqui cada etapa. <p><button class="btn primary" type="button" data-goprazo>Ver as que encerram primeiro</button></p></div></section>`}
+    : `<section class="section"><div class="empty">${MASC}<strong>Você ainda não salvou oportunidades.</strong><br>Salve as que interessarem para encontrá-las rapidamente depois. <p><button class="btn primary" type="button" id="go-prazo" data-goprazo>Ver oportunidades com prazo próximo</button></p></div></section>`}
     <section class="section"><h2 class="sec">Programas acompanhados <span class="n mono">${al.length}</span></h2>
-      <div class="stack">${al.length ? al.map(o=>mini(o,`<button class="btn" type="button" id="al-${o.id}" data-alert="${o.id}" aria-pressed="true">Parar de acompanhar</button>`)).join("") : `<div class="empty">${MASC}Nenhum programa acompanhado. Use <strong>Acompanhar programa</strong> num programa encerrado ou a confirmar.</div>`}</div></section>
+      <div class="stack">${al.length ? al.map(o=>mini(o,`<button class="btn" type="button" id="al-${o.id}" data-alert="${o.id}" aria-pressed="true">Parar de acompanhar</button>`)).join("") : `<div class="empty compact"><strong>Nenhum programa acompanhado ainda.</strong><br>Você pode acompanhar programas encerrados ou sem nova data confirmada para consultá-los depois.</div>`}</div></section>
     ${cur.length ? `<section class="section"><h2 class="sec">Curtidas <span class="n mono">${cur.length}</span></h2><ul class="plain">${cur.map(o=>`<li><a href="#op-${o.id}">${esc(o.title)}</a></li>`).join("")}</ul></section>` : ""}`;
 }
 
@@ -1443,9 +1459,9 @@ function evCard(x){
   return `<article class="card evc">
     <div class="card-head"><span class="pill ${st==="passou"?"st-encerrada":"st-aberta"}">${lab}</span><span class="typ">${esc(x.t)}</span>${x.o==="UNIFEI"?'<span class="typ">UNIFEI</span>':""}</div>
     <div class="titlerow">${EVIMG[x.id]?`<span class="imgw"><img class="thumb" src="${EVIMG[x.id]}" alt="" width="128" height="72"><span class="iab">Ilustração</span></span>`:""}<h2>${esc(x.n)}</h2></div>
-    <dl class="keyfacts"><div><dt>Quando</dt><dd>${esc(x.w)}</dd></div><div><dt>Onde</dt><dd>${esc(x.p)}</dd></div><div><dt>Organização</dt><dd>${esc(x.org)}</dd></div></dl>
+    <dl class="keyfacts"><div><dt>Data do evento</dt><dd>${esc(x.w)}</dd></div><div><dt>Local</dt><dd>${esc(x.p)}</dd></div><div><dt>Organização</dt><dd>${esc(x.org)}</dd></div></dl>
     <div class="what"><span class="lbl">Quem pode participar</span><p>${esc(x.who)}</p></div>
-    <div class="what"><span class="lbl">Inscrição e prazos</span><p>${esc(x.how)}</p></div>
+    <div class="what prz"><span class="lbl">Prazo de submissão e inscrição</span><p>${esc(x.how)}</p></div>
     ${x.nt?`<div class="warnline">${esc(x.nt)}</div>`:""}
     <p class="meta">Conferido na fonte em ${esc(x.v)}${x.c?` · Contato: ${esc(x.c)}`:""}</p>
     <div class="actions"><a class="btn primary" href="${esc(x.u)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir fonte: ${esc(x.sn)} (abre em nova aba)">Abrir fonte oficial <span aria-hidden="true">↗</span></a></div>
@@ -1460,7 +1476,7 @@ function viewEventos(){
   return `
     ${segTabs("eventos")}
     <h1>Congressos, simpósios e eventos</h1>
-    <p class="lede">Eventos em que estudantes de graduação podem aprender, apresentar trabalho ou conhecer pesquisadores. Cada item tem a fonte oficial e a data da conferência.</p>
+    <p class="lede">Eventos em que estudantes de graduação podem aprender, apresentar trabalho ou conhecer pesquisadores. O foco são jornadas de iniciação científica, simpósios, congressos e conferências. Cada item tem a fonte oficial e a data da conferência. A data do evento e o prazo de submissão aparecem separados.</p>
     <p class="proto">Datas e prazos mudam. Confirme sempre na página oficial antes de se inscrever. Onde a fonte não informa o público ou a inscrição, está escrito assim.</p>
     <div class="chips" role="group" aria-label="Situação" style="margin-top:14px">${chip("sit","prox","Em breve e acontecendo",EV.sit)}${chip("sit","passou","Já ocorreram",EV.sit)}${chip("sit","todos","Todos",EV.sit)}</div>
     <div class="chips" role="group" aria-label="Organização" style="margin-top:8px">${chip("org","","Todas as instituições",EV.org)}${chip("org","unifei","UNIFEI",EV.org)}${chip("org","fora","Outras instituições",EV.org)}</div>
@@ -1521,6 +1537,8 @@ function viewPerfil(){
       <p id="pfmsg" role="status" class="hint"></p>
       <div class="actions"><button class="btn primary" type="button" id="pf-save" data-pf-save>Salvar perfil</button>${perfil?`<button class="btn" type="button" id="pf-copy" data-copymsg="">Copiar apresentação para um professor</button>`:""}${perfil?`<button class="btn" type="button" id="pf-clear" data-pf-clear>${pfClear?"Confirmar: apagar perfil e currículo":"Apagar perfil e currículo"}</button>`:""}</div>
       <p class="hint">${conta}</p>
+      <h2 class="sec" style="margin-top:22px">Mais</h2>
+      <ul class="plain morelinks"><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Conta (para professores que divulgam vagas)</a></li><li><a href="#diretrizes">Diretrizes de uso</a></li></ul>
     </div>`;
 }
 function fotoFrom(file){ return new Promise((res,rej)=>{ const r = new FileReader(); r.onerror = () => rej(r.error); r.onload = () => { const im = new Image(); im.onerror = () => rej(new Error("img")); im.onload = () => { const c = document.createElement("canvas"); c.width = c.height = 192; const m = Math.min(im.width, im.height), sx = (im.width - m)/2, sy = (im.height - m)/2; c.getContext("2d").drawImage(im, sx, sy, m, m, 0, 0, 192, 192); res(c.toDataURL("image/jpeg", .82)); }; im.src = r.result; }; r.readAsDataURL(file); }); }
@@ -1659,6 +1677,7 @@ function render(){
   else if (r === "explorar") html = viewExplorar();
   else if (r === "eventos") { html = viewEventos(); nav = "explorar"; }
   else if (r === "adicionar") html = viewAdicionar();
+  else if (r === "sobre") { html = viewSobre(); nav = "perfil"; }
   else if (r === "perfil") html = viewPerfil();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
