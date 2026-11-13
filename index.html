@@ -73,6 +73,8 @@ button,input,select{font:inherit;color:inherit}
 .helpbtn{flex-shrink:0;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;text-decoration:none;color:var(--muted);font-weight:700}
 .helpbtn[aria-current="page"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
 .topnav a.addtop{background:var(--accent);color:var(--accent-fg);margin-left:6px}.topnav a.addtop[aria-current="page"]{background:var(--accent);color:var(--accent-fg);box-shadow:0 0 0 2px var(--accent-soft)}
+.rcard[hidden],#rnone[hidden]{display:none!important}
+.rq{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}.rq::placeholder{color:var(--muted);opacity:1}
 .seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);margin:0 0 14px}
 .seg a{padding:7px 16px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:600;font-size:14px}.seg a[aria-current="page"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .lrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;display:grid;gap:10px;background:var(--surface)}
@@ -1107,7 +1109,7 @@ function activeChips(){
   if (F.q) out.push(["q:", `Busca: ${F.q}`]);
   return out;
 }
-function segTabs(cur){ return ""; /* removido: Eventos tem item próprio na navegação */ const _x = `<nav class="seg" aria-label="Vagas ou eventos"><a href="#explorar"${cur==="vagas"?' aria-current="page"':""}>Vagas</a><a href="#eventos"${cur==="eventos"?' aria-current="page"':""}>Eventos</a></nav>`; }
+function segTabs(cur){ return `<nav class="seg" aria-label="Vagas ou pesquisadores"><a href="#explorar"${cur==="vagas"?' aria-current="page"':""}>Vagas</a><a href="#pesquisadores"${cur==="pesquisadores"?' aria-current="page"':""}>Pesquisadores</a></nav>`; }
 function viewSobre(){
   return `<h1>Sobre o IC Connect</h1>
     <p class="lede">Um protótipo acadêmico, feito na disciplina de Engenharia de Usabilidade da UNIFEI, para reunir oportunidades de iniciação científica, pesquisadores e eventos em um só lugar.</p>
@@ -1124,6 +1126,22 @@ function viewAdicionar(){
     <div class="addopts">${op("certs","Certificado","Curso, minicurso, evento ou prova de proficiência.")}${op("exps","Experiência ou projeto","IC anterior, monitoria, extensão, equipe, estágio.")}${op("links","Link","Lattes, LinkedIn, GitHub, portfólio ou outro.")}</div>
     <h2 class="sec" style="margin-top:22px">Oportunidades</h2>
     <div class="addopts">${prof ? `<a class="addopt" id="ad-vaga" href="#publicar"><b>Divulgar uma vaga</b><span>Passa por moderação antes de aparecer para todos.</span></a>` : `<p class="hint" id="ad-sug">Hoje só professores com conta divulgam vagas. A sugestão de vagas por alunos ainda não existe neste protótipo.</p><a class="addopt" id="ad-prof" href="#entrar"><b>Sou professor ou orientador</b><span>Entre para divulgar uma vaga.</span></a>`}</div>`;
+}
+function viewPesquisadores(){
+  const ids = Object.keys(RES).sort((a,b) => RES[a].name.localeCompare(RES[b].name, "pt"));
+  const card = id => { const r = RES[id], n = relatedTo(id).length;
+    return `<article class="card rcard" data-hay="${esc(norm([r.name, r.role, r.institution, r.group||"", (r.areas||[]).join(" ")].join(" ")))}">
+      <h2><a href="#pesquisador-${id}">${esc(r.name)}</a></h2>
+      <p class="rsub" style="margin:2px 0 0">${esc(r.role)}. ${esc(r.institution)}.</p>
+      <div class="tags">${r.areas.slice(0,4).map(a=>`<span class="tag">${esc(a)}</span>`).join("")}${r.areas.length>4?`<span class="tag">+${r.areas.length-4}</span>`:""}</div>
+      <p class="meta">${n ? n+" oportunidade"+(n>1?"s":"")+" relacionada"+(n>1?"s":"") : "Nenhuma oportunidade relacionada no momento"}</p>
+      <div class="actions"><a class="btn primary" href="#pesquisador-${id}">Ver perfil</a></div></article>`; };
+  return `${segTabs("pesquisadores")}
+    <h1>Pesquisadores</h1>
+    <p class="lede">Quem pesquisa cada tema e em qual instituição. Os resumos vêm de fontes públicas e não substituem o currículo oficial.</p>
+    <div class="section"><label for="rq" class="eyebrow">Filtrar por nome, tema ou instituição</label><input type="search" id="rq" class="rq" data-rq autocomplete="off" maxlength="60"><p class="fsum" id="rqn" role="status">${ids.length} pesquisador${ids.length>1?"es":""}</p></div>
+    <div class="stack" id="rlist">${ids.map(card).join("")}</div>
+    <p class="vazio" id="rnone" hidden>Nenhum pesquisador encontrado para esse filtro.</p>`;
 }
 function viewExplorar(){
   let results = sorted(ALL.filter(o => matches(o)));
@@ -1492,7 +1510,6 @@ function viewEventos(){
   const show = EV.sit === "passou" ? [] : up, showP = EV.sit === "prox" ? [] : past;
   const chip = (k,v,l,cur) => `<button class="chip" type="button" id="ev-${k}-${v||"todos"}" data-ev-${k}="${v}" aria-pressed="${cur===v}">${l}</button>`;
   return `
-    ${segTabs("eventos")}
     <h1>Congressos, simpósios e eventos</h1>
     <p class="lede">Jornadas de iniciação científica, simpósios, congressos e conferências para aprender, apresentar trabalho ou conhecer pesquisadores. Cada item traz a fonte oficial, com a data do evento e o prazo de submissão separados.</p>
     <p class="proto">Datas e prazos mudam. Confirme sempre na página oficial antes de se inscrever. Onde a fonte não informa o público ou a inscrição, está escrito assim.</p>
@@ -1694,6 +1711,7 @@ function render(){
   if (lock) { html = (AUTH.checked || AUTH.failed) ? viewEntrar() : viewCarregando(); nav = "entrar"; }
   else if (r === "explorar") html = viewExplorar();
   else if (r === "eventos") html = viewEventos();
+  else if (r === "pesquisadores") { html = viewPesquisadores(); nav = "explorar"; }
   else if (r === "adicionar") { html = viewAdicionar(); nav = window.matchMedia("(max-width:720px)").matches ? "perfil" : "adicionar"; }
   else if (r === "sobre") { html = viewSobre(); nav = "perfil"; }
   else if (r === "perfil") html = viewPerfil();
@@ -1807,6 +1825,9 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-more]")) { F.limit += 12; render(); return; }
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && filtersOpen) { filtersOpen = false; render(); $("#openF")?.focus(); } });
+document.addEventListener("input", e => { const f = e.target.closest("[data-rq]"); if (!f) return; const words = norm(f.value).split(/\s+/).filter(Boolean); let n = 0;
+  document.querySelectorAll("#rlist [data-hay]").forEach(c => { const ok = words.every(w => c.dataset.hay.includes(w)); c.hidden = !ok; if (ok) n++; });
+  $("#rqn").textContent = n + " pesquisador" + (n === 1 ? "" : "es"); $("#rnone").hidden = n > 0; });
 function searchOpen(on){ const t = document.querySelector(".top"), b = $("#searchBtn"); t.classList.toggle("searching", on); b.setAttribute("aria-expanded", String(on)); if (on) $("#q").focus(); else b.focus(); }
 $("#searchBtn").addEventListener("click", () => searchOpen(true));
 $("#searchClose").addEventListener("click", () => searchOpen(false));
