@@ -276,6 +276,32 @@ ul.plain{margin:0;padding-left:18px}
 .foot{max-width:1080px;margin:0 auto;padding-block:0 32px;font-size:13px;color:var(--muted);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:50}
+
+:root{--heart:#c0264b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--heart:#f27a98}}
+:root[data-theme="dark"]{--heart:#f27a98}
+.urg{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.newb{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent);color:var(--accent-fg)}
+.like[aria-pressed="true"] span{color:var(--heart)}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+.btn.pop{animation:pop .28s ease-out}
+.like.pop span{display:inline-block;animation:pop .4s ease-out}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+#app.enter{animation:fadein .2s ease-out}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.onb{background:var(--surface);border:1px solid var(--accent);border-radius:var(--r);padding:16px;margin:16px 0}
+.onb h2{margin:0 0 4px;font-size:17px}
+.onb .chips{margin:12px 0}
+.newline{margin:8px 0 0;font-size:14px;color:var(--accent);font-weight:600}
+.myint{font-size:14px;color:var(--muted);margin:8px 0 0}
+.myint button{background:none;border:0;color:var(--accent);text-decoration:underline;cursor:pointer;padding:0}
+.funil{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;align-items:start}
+.fcol{background:var(--surface-2);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.fcol h3{margin:0;font-size:14px;display:flex;justify-content:space-between}
+.fcol .vazio{font-size:13px;color:var(--muted);margin:0}
+.fcard select,.fcard input.note{width:100%;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.fcard label{font-size:12px;color:var(--muted)}
+.fsum{margin:6px 0 14px;font-size:14px}
 </style>
 
 <header class="top">
@@ -624,12 +650,54 @@ try { saved = JSON.parse(localStorage.getItem("icconnect-salvos") || "[]"); } ca
 function persist(){ try { localStorage.setItem("icconnect-salvos", JSON.stringify(saved)); } catch(e) {} }
 function isSaved(id){ return saved.includes(id); }
 function toggleSave(id){
-  if (isSaved(id)) { saved = saved.filter(x => x !== id); toast("Removida dos salvos"); }
-  else { saved.push(id); toast("Salvo. Veja em Salvos."); }
+  if (isSaved(id)) { saved = saved.filter(x => x !== id); delete funil[id]; lsSet("icconnect-funil", funil); toast("Removida dos salvos"); }
+  else { saved.push(id); popId = "sv-"+id; toast("Salvo. Acompanhe o andamento em Salvos."); }
   persist(); render();
 }
 let toastTimer;
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(()=> t.hidden = true, 4500); }
+
+
+/* ===== retorno e engajamento (tudo local, neste navegador) ===== */
+function lsGet(k,d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }
+function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+let liked = lsGet("icconnect-curtidas", []);
+let interests = lsGet("icconnect-interesses", null);
+let draftInt = new Set(interests || []);
+let funil = lsGet("icconnect-funil", {});
+let popId = null;
+let idSfx = "";
+const cardIn = sfx => o => { idSfx = sfx; const h = card(o); idSfx = ""; return h; };
+const ETAPAS = ["Salvei","Falei com o professor","Enviei a candidatura","Resultado"];
+const VISIT = (() => { const now = Date.now(); const v = lsGet("icconnect-visita", null); let prev = v ? v.prev : null; if (v && now - v.last > 30*60e3) prev = v.last; lsSet("icconnect-visita", {last: now, prev: prev}); return prev; })();
+function parseBR(s){ const m = /(\d{2})\/(\d{2})\/(\d{4})/.exec(s||""); return m ? new Date(+m[3], +m[2]-1, +m[1]) : null; }
+function isNovo(o){
+  if (!VISIT || o.hist || o.sim) return false;
+  const d = parseBR(o.verifiedAt); if (!d) return false;
+  const p = new Date(VISIT); p.setHours(0,0,0,0);
+  return d.getTime() >= p.getTime() + 864e5;
+}
+function urg(o){ const d = daysLeft(o); if (d === null || d < 0 || d > 7) return ""; return `<span class="urg">${d===0?"Encerra hoje":d===1?"Encerra amanhã":"Encerra em "+d+" dias"}</span>`; }
+function novoB(o){ return isNovo(o) ? '<span class="newb">Novo</span>' : ""; }
+function isLiked(id){ return liked.includes(id); }
+function toggleLike(id){
+  if (isLiked(id)) liked = liked.filter(x => x !== id); else { liked.push(id); popId = "lk-"+id; }
+  lsSet("icconnect-curtidas", liked); render();
+}
+function likeBtn(o){ const l = isLiked(o.id); return `<button class="btn like" type="button" id="lk-${o.id}${idSfx}" data-like="${o.id}" aria-pressed="${l}"><span aria-hidden="true">${l?"♥":"♡"}</span> ${l?"Curtido":"Curtir"}</button>`; }
+function interestSet(){ const s = new Set(interests || []); liked.forEach(id => byId[id] && byId[id].areas.forEach(a => s.add(a))); return s; }
+function forYou(){
+  const set = interestSet(); if (!set.size) return null;
+  return sorted(ALL.filter(o => !o.sim && !o.hist && (isOpenNow(o) || o.status === "andamento") && o.areas.some(a => set.has(a)))).slice(0,3);
+}
+function onboardingHtml(topics){
+  if (interests === null) return `<section class="onb" aria-labelledby="h-onb"><h2 id="h-onb">O que você quer pesquisar?</h2>
+    <p class="sub">Escolha os assuntos que interessam. A tela inicial passa a mostrar primeiro o que combina. Fica salvo só neste navegador.</p>
+    <div class="chips scroll" role="group" aria-labelledby="h-onb">${topics.map(t=>`<button class="chip" type="button" id="in-${slug(t)}" data-int="${esc(t)}" aria-pressed="${draftInt.has(t)}">${esc(t)}</button>`).join("")}</div>
+    <div class="actions"><button class="btn primary" type="button" data-int-save${draftInt.size?"":" disabled"}>Salvar interesses</button><button class="btn" type="button" data-int-skip>Pular</button></div></section>`;
+  if (interests.length) return `<p class="myint">Seus assuntos: ${interests.map(esc).join(", ")}. <button type="button" data-int-edit>Editar</button></p>`;
+  return "";
+}
 
 function daysLeft(o){
   if (o.status !== "aberta" || o.sim) return null;
@@ -851,7 +919,7 @@ function toggleAlert(id){
   render();
 }
 function actionBtn(o){
-  return `<button class="btn" type="button" id="sv-${o.id}" data-save="${o.id}" aria-pressed="${isSaved(o.id)}">${isSaved(o.id)?"Salvo":"Salvar"}</button>`;
+  return `<button class="btn" type="button" id="sv-${o.id}${idSfx}" data-save="${o.id}" aria-pressed="${isSaved(o.id)}">${isSaved(o.id)?"Salvo":"Salvar"}</button>`;
 }
 
 function card(o, ctx){
@@ -859,7 +927,7 @@ function card(o, ctx){
   const req = o.requirements && o.requirements.length ? o.requirements : null;
   return `<article class="card${o.sim?" sim":""}">
     <div class="who">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span>${o.group?`<span class="who-g">${groupLink(o)}</span>`:""}</div></div>
-    <div class="card-head">${pill(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}${auditFlag(o)}</div>
+    <div class="card-head">${pill(o)}${urg(o)}${novoB(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}${auditFlag(o)}</div>
     <div class="titlerow">${thumb(o)}<h2><a href="#op-${o.id}">${esc(o.title)}</a></h2></div>
     <div class="tags">${o.areas.slice(0,3).map(a=>`<span class="tag">${esc(a)}</span>`).join("")}${o.areas.length>3?`<span class="tag">+${o.areas.length-3}</span>`:""}</div>
     <div class="what"><span class="lbl">${o.activities?"O que o aluno fará":(o.hist?"Contexto":"Sobre")}</span><p class="clamp3">${esc(what)}</p></div>
@@ -868,7 +936,7 @@ function card(o, ctx){
     ${o.externosNote && o.externos !== "Não" ? `<div class="warnline">${esc(o.externosNote)}</div>` : ""}
     ${ctx==="pesq"?"":cardPesquisador(o)}
     ${o.hist?`<p class="meta">Fonte: ${esc(o.sourceName)}</p>`:`<dl class="keyfacts"><div><dt>Prazo</dt><dd>${dl(o)}</dd></div><div><dt>Bolsa</dt><dd>${bolsaShort(o)}</dd></div><div><dt>Modalidade e local</dt><dd>${modLoc(o)}</dd></div></dl>`}
-    <div class="actions"><a class="btn primary" href="#op-${o.id}">Ver detalhes</a>${o.hist?`<a class="btn" href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Ver fonte oficial de ${esc(o.title)} (abre em nova aba)">Ver fonte oficial <span aria-hidden="true">↗</span></a>`:actionBtn(o)}</div>
+    <div class="actions"><a class="btn primary" href="#op-${o.id}">Ver detalhes</a>${o.hist?`<a class="btn" href="${esc(o.sourceUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Ver fonte oficial de ${esc(o.title)} (abre em nova aba)">Ver fonte oficial <span aria-hidden="true">↗</span></a>`:actionBtn(o)+(o.sim?"":likeBtn(o))}</div>
   </article>`;
 }
 
@@ -912,6 +980,9 @@ function viewInicio(){
   const REAL = ALL.filter(o => !o.sim && !o.hist), SIMS = ALL.filter(o => o.sim);
   const abertas = sorted(REAL.filter(isOpenNow));
   const andamento = REAL.filter(o => o.status === "andamento");
+  const novidades = REAL.filter(isNovo).length;
+  const semana = sorted(REAL.filter(o => { const d = daysLeft(o); return d !== null && d >= 0 && d <= 7; }));
+  const fy = forYou();
   const acompanhar = sorted(REAL.filter(o => o.status === "encerrada" || o.status === "confirmar" || (o.status === "aberta" && !isOpenNow(o))));
   return `
     <h1>Oportunidades de iniciação científica</h1>
@@ -922,6 +993,10 @@ function viewInicio(){
         ${topics.map(t=>`<button class="chip" type="button" id="tp-${slug(t)}" data-topic="${esc(t)}">${esc(t)}<span class="n">${counts[t]}</span></button>`).join("")}
       </div>
     </div>
+    ${novidades>0?`<p class="newline" role="status">${novidades} novidade${novidades>1?"s":""} desde a sua última visita</p>`:""}
+    ${onboardingHtml(topics)}
+    ${semana.length?`<section class="section" aria-labelledby="h-sem"><h2 id="h-sem" class="sec">Encerram esta semana <span class="n mono">${semana.length}</span></h2><div class="stack">${semana.map(cardIn("-sem")).join("")}</div></section>`:""}
+    ${fy===null?"":`<section class="section" aria-labelledby="h-fy"><h2 id="h-fy" class="sec">Para você</h2>${fy.length?`<div class="stack">${fy.map(cardIn("-fy")).join("")}</div>`:`<p class="sub">Nada aberto ou em andamento nos seus assuntos agora. Veja os programas para acompanhar mais abaixo.</p>`}</section>`}
     ${GLOSS}
     <section class="section" aria-labelledby="h-abertas">
       <h2 id="h-abertas" class="sec">Abertas agora <span class="n mono">${abertas.length}</span></h2>
@@ -1020,7 +1095,7 @@ function viewDetalhe(o){
   return `
     <a class="back" href="#explorar">← Voltar para Explorar</a>
     <div class="who big">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span>${o.group?`<span class="who-g">${groupLink(o)}</span>`:""}</div></div>
-    <div class="card-head" style="margin-top:12px">${pill(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}</div>
+    <div class="card-head" style="margin-top:12px">${pill(o)}${urg(o)}${novoB(o)}${o.type==="Vaga"?"":`<span class="typ">${esc(o.type)}</span>`}${simBadge(o)}</div>
     <h1 style="margin-top:8px">${esc(o.title)}</h1>
     ${IMG[o.id]?`<figure class="herow${LOWRES.has(o.id)?" low":""}"><img class="hero" src="${IMG[o.id]}" alt="Ilustração gerada por IA sobre o tema da oportunidade, não é foto da instituição" width="640" height="360"><figcaption class="iab">Ilustração gerada por IA</figcaption></figure>`:""}
     <p class="lede">${esc(o.statusNote)}</p>
@@ -1049,7 +1124,7 @@ function viewDetalhe(o){
         <div class="actions" style="margin-top:14px">
           ${canApply && !o.hist ? `<a class="btn primary" href="${esc(o.applicationUrl)}"${o.prof?' target="_blank" rel="noopener noreferrer"':""}>Candidatar-se</a>` : ""}
           ${o.prof?"":`<a class="btn${canApply?"":" primary"}" href="${esc(o.sourceUrl)}" ${o.sim?"":'target="_blank" rel="noopener noreferrer"'}>${esc(o.ctaLabel||"Ver fonte oficial")}</a>`}
-          ${o.hist?"":actionBtn(o)}
+          ${o.hist?"":actionBtn(o)+(o.sim?"":likeBtn(o))}
         </div>
       </aside>
     </div>
@@ -1274,19 +1349,33 @@ document.addEventListener("change", e => { if (e.target.id === "showPw") { const
 function viewSalvos(){
   const list = saved.map(id => byId[id]).filter(Boolean);
   const al = alerts.map(id => byId[id]).filter(Boolean);
+  const cur = liked.map(id => byId[id]).filter(Boolean);
+  const urgentes = list.filter(o => { const d = daysLeft(o); return d !== null && d >= 0 && d <= 7; });
+  const stageOf = o => Math.min(3, Math.max(0, (funil[o.id] && funil[o.id].s) || 0));
+  const fcard = o => `<article class="card fcard${o.sim?" sim":""}">
+      <div class="who">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span></div></div>
+      <div class="card-head">${pill(o)}${urg(o)}</div>
+      <h2><a href="#op-${o.id}">${esc(o.title)}</a></h2>
+      <p class="meta">Prazo: ${dl(o)}</p>
+      <div><label for="st-${o.id}">Etapa</label><select id="st-${o.id}" data-stage="${o.id}">${ETAPAS.map((n,k)=>`<option value="${k}"${k===stageOf(o)?" selected":""}>${n}</option>`).join("")}</select></div>
+      <div><label for="nt-${o.id}">Anotação</label><input class="note" id="nt-${o.id}" data-note="${o.id}" maxlength="140" placeholder="Ex.: e-mail enviado dia 15" value="${esc((funil[o.id] && funil[o.id].n) || "")}"></div>
+      <div class="actions"><a class="btn primary" href="#op-${o.id}">Ver detalhes</a><button class="btn" type="button" id="sv-${o.id}" data-save="${o.id}" aria-pressed="true">Remover</button></div></article>`;
   const mini = (o, btn) => `<article class="card${o.sim?" sim":""}">
       <div class="who">${avatar(o)}<div class="who-t"><span class="who-n">${esc(o.institution)}</span></div></div>
       <div class="card-head">${pill(o)}${simBadge(o)}</div>
       <h2><a href="#op-${o.id}">${esc(o.title)}</a></h2>
       <p class="meta">Prazo: ${dl(o)}</p>
       <div class="actions"><a class="btn primary" href="#op-${o.id}">Ver detalhes</a>${btn}</div></article>`;
+  const cols = ETAPAS.map((n,k) => ({n, items: list.filter(o => stageOf(o) === k).sort((a,b) => deadlineKey(a) - deadlineKey(b))}));
   return `
     <h1>Salvos</h1>
-    <p class="lede">Ficam guardados só neste navegador.</p>
-    <section class="section"><h2 class="sec">Oportunidades salvas <span class="n mono">${list.length}</span></h2>
-      <div class="stack">${list.length ? list.map(o=>mini(o,`<button class="btn" type="button" id="sv-${o.id}" data-save="${o.id}" aria-pressed="true">Remover</button>`)).join("") : `<div class="empty">Nenhuma oportunidade salva. Use <strong>Salvar</strong> numa vaga aberta.</div>`}</div></section>
+    <p class="lede">Ficam guardados só neste navegador. Mova cada vaga de etapa conforme avança.</p>
+    ${list.length ? `<p class="fsum" role="status">${list.length} salva${list.length>1?"s":""}${urgentes.length?`, <strong>${urgentes.length} encerra${urgentes.length>1?"m":""} em até 7 dias</strong>`:""}.</p>
+    <section class="section" aria-label="Andamento das candidaturas"><div class="funil">${cols.map(c => `<div class="fcol"><h3>${c.n} <span class="n mono">${c.items.length}</span></h3>${c.items.length ? c.items.map(fcard).join("") : '<p class="vazio">Nenhuma nesta etapa.</p>'}</div>`).join("")}</div></section>`
+    : `<section class="section"><div class="empty">Você ainda não salvou nenhuma oportunidade. Use <strong>Salvar</strong> numa vaga aberta e acompanhe aqui cada etapa. <p><button class="btn primary" type="button" data-goprazo>Ver as que encerram primeiro</button></p></div></section>`}
     <section class="section"><h2 class="sec">Programas acompanhados <span class="n mono">${al.length}</span></h2>
-      <div class="stack">${al.length ? al.map(o=>mini(o,`<button class="btn" type="button" id="al-${o.id}" data-alert="${o.id}" aria-pressed="true">Parar de acompanhar</button>`)).join("") : `<div class="empty">Nenhum programa acompanhado. Use <strong>Acompanhar programa</strong> num programa encerrado ou a confirmar.</div>`}</div></section>`;
+      <div class="stack">${al.length ? al.map(o=>mini(o,`<button class="btn" type="button" id="al-${o.id}" data-alert="${o.id}" aria-pressed="true">Parar de acompanhar</button>`)).join("") : `<div class="empty">Nenhum programa acompanhado. Use <strong>Acompanhar programa</strong> num programa encerrado ou a confirmar.</div>`}</div></section>
+    ${cur.length ? `<section class="section"><h2 class="sec">Curtidas <span class="n mono">${cur.length}</span></h2><ul class="plain">${cur.map(o=>`<li><a href="#op-${o.id}">${esc(o.title)}</a></li>`).join("")}</ul></section>` : ""}`;
 }
 
 function viewGrupo(){
@@ -1413,12 +1502,13 @@ function render(){
   else { html = viewInicio(); nav = "inicio"; }
   $("#app").innerHTML = html;
   document.querySelectorAll("[data-nav]").forEach(a => { if (a.dataset.nav === nav) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  if (popId) { const el = document.getElementById(popId); popId = null; if (el && el.getAttribute("aria-pressed") === "true") { el.classList.add("pop"); el.addEventListener("animationend", () => el.classList.remove("pop"), {once:true}); } }
   if (focusId && focusId !== "q") { const el = document.getElementById(focusId); if (el) el.focus({preventScroll:true}); else if (focusId.startsWith("rm-")) $(".fchip, #openF")?.focus({preventScroll:true}); }
 }
 let lastRoute = route();
 function onRoute(){
   const r = route(); filtersOpen = false; render();
-  if (r !== lastRoute) { window.scrollTo(0,0); $("#app").focus({preventScroll:true}); }
+  if (r !== lastRoute) { window.scrollTo(0,0); $("#app").focus({preventScroll:true}); const ap = $("#app"); ap.classList.remove("enter"); void ap.offsetWidth; ap.classList.add("enter"); }
   lastRoute = r;
 }
 window.addEventListener("hashchange", () => { ROUTE_MEM = null; onRoute(); });
@@ -1441,7 +1531,19 @@ document.addEventListener("click", e => {
   if (e.target.closest("[data-close-filters]")) { filtersOpen = false; render(); $("#openF")?.focus(); return; }
   if (e.target.closest("#clearF")) { clearFilters(); render(); return; }
 });
+document.addEventListener("click", e => {
+  const lk = e.target.closest("[data-like]"); if (lk) { toggleLike(lk.dataset.like); return; }
+  const it = e.target.closest("[data-int]"); if (it) { const t = it.dataset.int; draftInt.has(t) ? draftInt.delete(t) : draftInt.add(t); render(); return; }
+  if (e.target.closest("[data-int-save]")) { interests = [...draftInt]; lsSet("icconnect-interesses", interests); toast("Interesses salvos. A tela inicial mostra primeiro o que combina."); render(); return; }
+  if (e.target.closest("[data-int-skip]")) { interests = []; lsSet("icconnect-interesses", interests); render(); return; }
+  if (e.target.closest("[data-int-edit]")) { draftInt = new Set(interests || []); interests = null; render(); return; }
+  if (e.target.closest("[data-goprazo]")) { clearFilters(); F.sort = "prazo"; go("explorar"); return; }
+});
 document.addEventListener("change", e => {
+  const st = e.target.closest("[data-stage]");
+  if (st) { const id = st.dataset.stage; funil[id] = Object.assign({}, funil[id], {s: +st.value}); lsSet("icconnect-funil", funil); toast("Movida para: " + ETAPAS[+st.value]); render(); return; }
+  const nt = e.target.closest("[data-note]");
+  if (nt) { const id = nt.dataset.note; funil[id] = Object.assign({}, funil[id], {n: nt.value.slice(0,140)}); lsSet("icconnect-funil", funil); return; }
   const c = e.target.closest("[data-f]");
   if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); F.limit = 12; render(); return; }
   const sel = e.target.closest("[data-sel]");
