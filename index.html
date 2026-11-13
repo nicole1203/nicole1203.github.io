@@ -1107,7 +1107,8 @@ function viewInicio(){
 }
 
 function checks(name, opts, set){
-  return `<fieldset><legend>${name}</legend>${opts.map(([v,l])=>`<label><input type="checkbox" id="f-${set}-${slug(v)}" data-f="${set}" value="${esc(v)}" ${F[set].has(v)?"checked":""}> ${esc(l)}</label>`).join("")}</fieldset>`;
+  const todas = set === "status" ? `<label><input type="checkbox" id="f-status-todas" data-all-status ${(!F.status.size && !F.onlyOpen)?"checked":""}> Todas</label>` : "";
+  return `<fieldset><legend>${name}</legend>${todas}${opts.map(([v,l])=>`<label><input type="checkbox" id="f-${set}-${slug(v)}" data-f="${set}" value="${esc(v)}" ${F[set].has(v)?"checked":""}> ${esc(l)}</label>`).join("")}</fieldset>`;
 }
 function selectF(id, name, opts, cur){
   return `<fieldset><legend><label for="${id}" class="sel-l">${name}</label></legend><select id="${id}" data-sel="${id}"><option value="">Todas</option>${opts.map(v=>`<option ${v===cur?"selected":""}>${esc(v)}</option>`).join("")}</select></fieldset>`;
@@ -1862,6 +1863,7 @@ document.addEventListener("change", e => {
   if (st) { const id = st.dataset.stage; funil[id] = Object.assign({}, funil[id], {s: +st.value}); lsSet("icconnect-funil", funil); toast("Movida para: " + ETAPAS[+st.value]); render(); return; }
   const nt = e.target.closest("[data-note]");
   if (nt) { const id = nt.dataset.note; funil[id] = Object.assign({}, funil[id], {n: nt.value.slice(0,140)}); lsSet("icconnect-funil", funil); return; }
+  if (e.target.closest("[data-all-status]")) { F.status.clear(); F.onlyOpen = false; F.limit = 12; const st0 = $("#filters")?.scrollTop || 0; render(); const pn0 = $("#filters"); if (pn0) pn0.scrollTop = st0; return; }
   const c = e.target.closest("[data-f]");
   if (c) { const set = F[c.dataset.f]; c.checked ? set.add(c.value) : set.delete(c.value); F.limit = 12; const st = $("#filters")?.scrollTop || 0; render(); const pn = $("#filters"); if (pn) pn.scrollTop = st; return; }
   const sel = e.target.closest("[data-sel]");
