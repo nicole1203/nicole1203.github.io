@@ -16,7 +16,8 @@ service cloud.firestore {
     // ligaram o compartilhamento. O papel 'admin' só pode ser definido manualmente no console do Firebase.
     match /users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid
-        || (isProf() && resource.data.role == 'aluno' && resource.data.compartilhar == true));
+        || (isProf() && resource.data.role == 'aluno' && resource.data.compartilhar == true)
+        || (resource.data.role == 'aluno' && resource.data.visivelAlunos == true));
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['username', 'role', 'nome', 'email', 'compartilhar'])
         && request.resource.data.role in ['aluno', 'professor']
@@ -25,11 +26,14 @@ service cloud.firestore {
         && request.resource.data.email is string && request.resource.data.email.size() <= 120
         && request.resource.data.compartilhar is bool;
       allow update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nome', 'curso', 'interesses', 'compartilhar', 'email'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nome', 'curso', 'interesses', 'compartilhar', 'visivelAlunos', 'sobre', 'skills', 'email'])
         && request.resource.data.nome is string && request.resource.data.nome.size() <= 80
         && request.resource.data.curso is string && request.resource.data.curso.size() <= 80
         && request.resource.data.interesses is list && request.resource.data.interesses.size() <= 30
         && request.resource.data.compartilhar is bool
+        && request.resource.data.visivelAlunos is bool
+        && request.resource.data.sobre is string && request.resource.data.sobre.size() <= 300
+        && request.resource.data.skills is string && request.resource.data.skills.size() <= 150
         && request.resource.data.email is string && request.resource.data.email.size() <= 120;
       allow delete: if false;
     }
@@ -59,6 +63,45 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
         && request.resource.data.status in ['aprovada', 'recusada', 'pendente'];
       allow delete: if signedIn() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+    }
+
+    // Avisos e eventos criados por professores: nascem 'pendente'; só o admin aprova; públicos (para logados) só os aprovados.
+    match /posts/{id} {
+      allow read: if signedIn() && (resource.data.status == 'aprovada' || resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if isProf()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'pendente'
+        && request.resource.data.kind in ['evento', 'aviso']
+        && request.resource.data.keys().hasOnly(['kind','title','etype','date','place','submitDeadline','text','url','contact','until','areas','ownerRole','ownerUid','ownerName','status','createdAt'])
+        && request.resource.data.title is string && request.resource.data.title.size() <= 120
+        && request.resource.data.text is string && request.resource.data.text.size() <= 600
+        && request.resource.data.contact is string && request.resource.data.contact.size() <= 200
+        && request.resource.data.areas is list && request.resource.data.areas.size() <= 16;
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['aprovada', 'recusada', 'pendente'];
+      allow delete: if signedIn() && (resource.data.ownerUid == request.auth.uid || isAdmin());
+    }
+
+    // Vínculo aluno–IC. O professor (dono da vaga) cria como 'convidado'; só o aluno convidado confirma.
+    // Confirmados são visíveis para qualquer pessoa logada; os demais, só para as duas partes e o admin.
+    match /vinculos/{id} {
+      allow read: if signedIn() && (resource.data.status == 'confirmado' || resource.data.profUid == request.auth.uid
+        || resource.data.alunoUid == request.auth.uid || isAdmin());
+      allow create: if isProf()
+        && request.resource.data.profUid == request.auth.uid
+        && request.resource.data.status == 'convidado'
+        && id == request.resource.data.vagaId + '_' + request.resource.data.alunoUid
+        && request.resource.data.keys().hasOnly(['vagaId','vagaTitulo','profUid','profName','alunoUid','alunoNome','status','createdAt'])
+        && request.resource.data.vagaTitulo is string && request.resource.data.vagaTitulo.size() <= 150
+        && request.resource.data.profName is string && request.resource.data.profName.size() <= 80
+        && request.resource.data.alunoNome is string && request.resource.data.alunoNome.size() <= 80
+        && get(/databases/$(database)/documents/vagas/$(request.resource.data.vagaId)).data.ownerUid == request.auth.uid;
+      allow update: if signedIn() && resource.data.alunoUid == request.auth.uid
+        && resource.data.status == 'convidado'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status == 'confirmado';
+      allow delete: if signedIn() && (resource.data.alunoUid == request.auth.uid || resource.data.profUid == request.auth.uid || isAdmin());
     }
   }
 }
