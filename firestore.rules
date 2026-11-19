@@ -46,40 +46,58 @@ service cloud.firestore {
         && request.resource.data.alunos is list && request.resource.data.alunos.size() <= 300;
     }
 
-    // Vagas: nascem 'pendente'; só o admin aprova ou recusa; só vagas aprovadas são públicas (para logados).
+    // Vagas: o professor publica direto (status 'aprovada'), pode editar e apagar as próprias; o admin pode ocultar/apagar.
     match /vagas/{id} {
       allow read: if signedIn() && (resource.data.status == 'aprovada' || resource.data.ownerUid == request.auth.uid || isAdmin());
       allow create: if signedIn()
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['professor', 'admin']
         && request.resource.data.ownerUid == request.auth.uid
-        && request.resource.data.status == 'pendente'
+        && request.resource.data.status == 'aprovada'
         && request.resource.data.keys().hasOnly(['title','institution','areas','summary','requirements','scholarship','modality','location','deadline','contact','applicationUrl','tipo','ownerRole','ownerUid','ownerName','status','createdAt'])
         && request.resource.data.title is string && request.resource.data.title.size() <= 150
         && request.resource.data.institution is string && request.resource.data.institution.size() <= 120
         && request.resource.data.summary is string && request.resource.data.summary.size() <= 1500
         && request.resource.data.contact is string && request.resource.data.contact.size() <= 400
         && request.resource.data.areas is list && request.resource.data.areas.size() <= 16;
-      allow update: if isAdmin()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-        && request.resource.data.status in ['aprovada', 'recusada', 'pendente'];
+      allow update: if (isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.status in ['aprovada', 'recusada', 'pendente'])
+        || (signedIn() && resource.data.ownerUid == request.auth.uid
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.keys().hasOnly(['title','institution','areas','summary','requirements','scholarship','modality','location','deadline','contact','applicationUrl','tipo','ownerRole','ownerUid','ownerName','status','createdAt'])
+          && request.resource.data.title is string && request.resource.data.title.size() <= 150
+          && request.resource.data.institution is string && request.resource.data.institution.size() <= 120
+          && request.resource.data.summary is string && request.resource.data.summary.size() <= 1500
+          && request.resource.data.contact is string && request.resource.data.contact.size() <= 400
+          && request.resource.data.areas is list && request.resource.data.areas.size() <= 16);
       allow delete: if signedIn() && (resource.data.ownerUid == request.auth.uid || isAdmin());
     }
 
-    // Avisos e eventos criados por professores: nascem 'pendente'; só o admin aprova; públicos (para logados) só os aprovados.
+    // Avisos e eventos criados por professores: publicados direto; o dono edita e apaga; o admin pode ocultar/apagar.
     match /posts/{id} {
       allow read: if signedIn() && (resource.data.status == 'aprovada' || resource.data.ownerUid == request.auth.uid || isAdmin());
       allow create: if isProf()
         && request.resource.data.ownerUid == request.auth.uid
-        && request.resource.data.status == 'pendente'
+        && request.resource.data.status == 'aprovada'
         && request.resource.data.kind in ['evento', 'aviso']
         && request.resource.data.keys().hasOnly(['kind','title','etype','date','place','submitDeadline','text','url','contact','until','areas','ownerRole','ownerUid','ownerName','status','createdAt'])
         && request.resource.data.title is string && request.resource.data.title.size() <= 120
         && request.resource.data.text is string && request.resource.data.text.size() <= 600
         && request.resource.data.contact is string && request.resource.data.contact.size() <= 200
         && request.resource.data.areas is list && request.resource.data.areas.size() <= 16;
-      allow update: if isAdmin()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-        && request.resource.data.status in ['aprovada', 'recusada', 'pendente'];
+      allow update: if (isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.status in ['aprovada', 'recusada', 'pendente'])
+        || (isProf() && resource.data.ownerUid == request.auth.uid
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.kind in ['evento', 'aviso']
+          && request.resource.data.keys().hasOnly(['kind','title','etype','date','place','submitDeadline','text','url','contact','until','areas','ownerRole','ownerUid','ownerName','status','createdAt'])
+          && request.resource.data.title is string && request.resource.data.title.size() <= 120
+          && request.resource.data.text is string && request.resource.data.text.size() <= 600
+          && request.resource.data.contact is string && request.resource.data.contact.size() <= 200
+          && request.resource.data.areas is list && request.resource.data.areas.size() <= 16);
       allow delete: if signedIn() && (resource.data.ownerUid == request.auth.uid || isAdmin());
     }
 

@@ -431,11 +431,9 @@ ul.plain{margin:0;padding-left:18px}
     <nav class="topnav" aria-label="Principal">
       <a href="#inicio" data-nav="inicio">Início</a>
       <a href="#explorar" data-nav="explorar">Explorar</a>
-      <a href="#eventos" data-nav="eventos">Eventos</a>
       <a href="#mural" data-nav="mural">Mural</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#alunos" data-nav="alunos"><span class="lbl-alunos">Comunidade</span></a>
-      <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#criar" data-nav="criar" class="addtop prof-only" hidden title="Criar vaga, aviso ou evento">+ Criar</a>
       <a href="#adicionar" data-nav="adicionar" class="addtop stu-only" title="Adicionar certificado, experiência ou link ao seu perfil">+ Adicionar ao perfil</a>
     </nav>
@@ -453,7 +451,7 @@ ul.plain{margin:0;padding-left:18px}
 <nav class="bottomnav" aria-label="Principal (celular)">
   <a href="#inicio" data-nav="inicio"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
   <a href="#explorar" data-nav="explorar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><span>Explorar</span></a>
-  <a href="#eventos" data-nav="eventos"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Eventos</span></a>
+  <a href="#mural" data-nav="mural"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v11H10l-4.5 3.5v-3.5H4z"/><path d="M8 9.5h8M8 12.5h5"/></svg><span>Mural</span></a>
   <a href="#alunos" data-nav="alunos"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.3"/><path d="M3 19.5c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M17 14.3c2.3 0 4 1.6 4 4.2"/></svg><span class="lbl-alunos">Comunidade</span></a>
   <a href="#criar" data-nav="criar" class="prof-only" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M12 8v8M8 12h8"/></svg>Criar</a>
   <a href="#salvos" data-nav="salvos" class="stu-only"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h11a1 1 0 0 1 1 1V21l-6.5-4.2L5.5 21V4.5a1 1 0 0 1 1-1z"/></svg><span>Salvos</span></a>
@@ -1125,9 +1123,10 @@ function viewInicio(){
   const semana = sorted(REAL.filter(o => { const d = daysLeft(o); return d !== null && d >= 0 && d <= 7; }));
   const fy = forYou();
   const acompanhar = sorted(REAL.filter(o => o.status === "encerrada" || o.status === "confirmar" || (o.status === "aberta" && !isOpenNow(o))));
+  const prof = isProf(), primeiro = String((AUTH.user && AUTH.user.name) || "").trim().split(/\s+/)[0];
   return `
-    <h1>Oportunidades de iniciação científica</h1>
-    <p class="lede">Veja o que o aluno faz em cada projeto e o que é exigido.</p>
+    <h1>${prof?"Olá"+(primeiro?", "+esc(primeiro):""):"Oportunidades de iniciação científica"}</h1>
+    <p class="lede">${prof?"Divulgue vagas, avisos e eventos e encontre alunos interessados na sua área.":"Veja o que o aluno faz em cada projeto e o que é exigido."}</p>
     ${conviteBanner()}${profGuide()}${muralHome()}
     <p class="proto">Protótipo acadêmico com dados de fontes públicas. As imagens são ilustrações.</p>
     <div class="section">
@@ -1186,7 +1185,7 @@ function activeChips(){
   if (F.q) out.push(["q:", `Busca: ${F.q}`]);
   return out;
 }
-function segTabs(cur){ return `<nav class="seg" aria-label="Vagas ou pesquisadores"><a href="#explorar"${cur==="vagas"?' aria-current="page"':""}>Vagas</a><a href="#pesquisadores"${cur==="pesquisadores"?' aria-current="page"':""}>Pesquisadores</a></nav>`; }
+function segTabs(cur){ const t = (h,k,l) => `<a href="#${h}"${cur===k?' aria-current="page"':""}>${l}</a>`; return `<nav class="seg" aria-label="Vagas, eventos ou pesquisadores">${t("explorar","vagas","Vagas")}${t("eventos","eventos","Eventos")}${t("pesquisadores","pesquisadores","Pesquisadores")}</nav>`; }
 function viewSobre(){
   return `<h1>Sobre o IC Connect</h1>
     <p class="lede">Um protótipo acadêmico, feito na disciplina de Engenharia de Usabilidade da UNIFEI, para reunir oportunidades de iniciação científica, pesquisadores e eventos em um só lugar.</p>
@@ -1202,7 +1201,7 @@ function viewAdicionar(){
     <h2 class="sec" style="margin-top:18px">No seu perfil</h2>
     <div class="addopts">${op("certs","Certificado","Curso, minicurso, evento ou prova de proficiência.")}${op("exps","Experiência ou projeto","IC anterior, monitoria, extensão, equipe, estágio.")}${op("links","Link","Lattes, LinkedIn, GitHub, portfólio ou outro.")}</div>
     <h2 class="sec" style="margin-top:22px">Oportunidades</h2>
-    <div class="addopts">${prof ? `<a class="addopt" id="ad-vaga" href="#publicar"><b>Divulgar uma vaga</b><span>Passa por moderação antes de aparecer para todos.</span></a>` : `<p class="hint" id="ad-sug">Hoje só contas de professor divulgam vagas. A sugestão de vagas por alunos ainda não existe neste protótipo.</p>`}</div>`;
+    <div class="addopts">${prof ? `<a class="addopt" id="ad-vaga" href="#publicar"><b>Divulgar uma vaga</b><span>Publica na hora; você pode editar ou apagar depois.</span></a>` : `<p class="hint" id="ad-sug">Hoje só contas de professor divulgam vagas. A sugestão de vagas por alunos ainda não existe neste protótipo.</p>`}</div>`;
 }
 function viewPesquisadores(){
   const ids = Object.keys(RES).sort((a,b) => RES[a].name.localeCompare(RES[b].name, "pt"));
@@ -1602,7 +1601,7 @@ function vincBlock(o){
   const L = vincConf().filter(v => v.vagaId === String(o.id).replace(/^prof-/,""));
   return `<section class="block"><h2>Alunos nesta IC</h2>${L.length?`<ul class="plain">${L.map(v => `<li>${esc(v.alunoNome)}</li>`).join("")}</ul>`:'<p class="na">Nenhum aluno confirmado ainda.</p>'}</section>`;
 }
-/* ===================== mural: avisos e eventos divulgados por professores (com moderação) ===================== */
+/* ===================== mural: avisos e eventos divulgados por professores  ===================== */
 const POSTS = {
   unsub:null, items:[],
   start(){ if (this.unsub || !AUTH.api || !AUTH.api.watchPosts) return; this.unsub = AUTH.api.watchPosts(list => { this.items = list; syncPosts(); }, () => {}, AUTH.user.uid, AUTH.user.role === "admin"); },
@@ -1616,13 +1615,13 @@ function syncPosts(){
   else if (r === "inicio") render();
 }
 const postsOk = () => POSTS.items.filter(p => p.status === "aprovada");
-const STAT_TXT = { aprovada:"Aprovada: já aparece no Mural", recusada:"Recusada: não será publicada", pendente:"Aguardando moderação" };
+const statTxt = (st, onde) => st === "aprovada" ? "Publicada: já aparece em " + onde : "Antiga, não visível (era de quando havia moderação). Apague e publique de novo.";
 function postCard(p, mine){
   const when = p.createdMs ? new Date(p.createdMs).toLocaleDateString("pt-BR") : "";
   const ev = p.kind === "evento";
   const fatos = ev ? [["Data", p.date], ["Local", p.place], ["Prazo para enviar trabalho", p.submitDeadline]].filter(x => x[1]).map(x => `<span class="na">${x[0]}: <strong>${esc(x[1])}</strong></span>`).join(" · ") : (p.until ? `<span class="na">Vale até <strong>${esc(p.until)}</strong></span>` : "");
   return `<article class="card"><p class="na" style="margin:0 0 4px">${ev?esc(p.etype||"Evento"):"Aviso"} · por ${esc(p.ownerName||"?")}${when?" · "+when:""}</p><h3 style="margin:0 0 6px">${esc(p.title)}</h3>${fatos?`<p style="margin:0 0 6px">${fatos}</p>`:""}<p style="margin:0 0 8px">${esc(p.text)}</p>${(p.areas||[]).length?`<div class="chips" style="margin:0 0 8px">${p.areas.map(t => `<span class="chip" style="cursor:default">${esc(t)}</span>`).join("")}</div>`:""}${p.contact?`<p style="margin:0 0 8px"><strong>Contato:</strong> ${esc(p.contact)}</p>`:""}${DOMAIN_OK(p.url||"")?`<p style="margin:0 0 8px"><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Abrir link ↗</a></p>`:""}`
-    + (mine ? `<p class="na" style="margin:0 0 8px"><span class="mstat ${p.status==="aprovada"?"ok":p.status==="recusada"?"no":"wait"}">${STAT_TXT[p.status]||""}</span></p><button class="btn" type="button" data-delpost="${esc(p.id)}">Remover</button>` : "") + `</article>`;
+    + (mine ? `<p class="na" style="margin:0 0 8px"><span class="mstat ${p.status==="aprovada"?"ok":"wait"}">${statTxt(p.status,"Mural")}</span></p><div class="actions"><button class="btn" type="button" data-editpost="${esc(p.id)}" data-kind="${esc(p.kind)}">Editar</button><button class="btn" type="button" data-delpost="${esc(p.id)}">Apagar</button></div>` : "") + `</article>`;
 }
 function minhasPostsHtml(){
   const mine = POSTS.items.filter(p => AUTH.user && p.ownerUid === AUTH.user.uid);
@@ -1631,7 +1630,7 @@ function minhasPostsHtml(){
 }
 function viewMural(){
   const av = postsOk().filter(p => p.kind === "aviso"), ev = postsOk().filter(p => p.kind === "evento");
-  return `<h1>Mural</h1><p class="lede">Avisos e eventos divulgados por professores, por exemplo “procuro alguém para continuar uma IC”. Tudo passa pela moderação antes de aparecer.${isProf()?' <a href="#criar">Criar um aviso ou evento</a>.':""}</p>
+  return `<h1>Mural</h1><p class="lede">Avisos e eventos divulgados por professores, por exemplo “procuro alguém para continuar uma IC”. ${isProf()?' <a href="#criar">Criar um aviso ou evento</a>.':""}</p>
   <section class="section"><h2 class="sec">Avisos</h2><div class="stack">${av.length?av.map(p => postCard(p)).join(""):'<div class="empty">'+MASC+'Nenhum aviso publicado ainda.</div>'}</div></section>
   <section class="section"><h2 class="sec">Eventos da comunidade</h2><div class="stack">${ev.length?ev.map(p => postCard(p)).join(""):'<div class="empty">'+MASC+'Nenhum evento da comunidade ainda. Os eventos oficiais estão em <a href="#eventos">Eventos</a>.</div>'}</div></section>`;
 }
@@ -1640,8 +1639,28 @@ function muralHome(){
   return `<section class="block" aria-labelledby="h-mh"><h2 id="h-mh">Mural da comunidade</h2><ul class="plain">${L.map(p => `<li><strong>${esc(p.title)}</strong> · ${p.kind==="evento"?"evento":"aviso"} de ${esc(p.ownerName||"professor(a)")}</li>`).join("")}</ul><p><a href="#mural">Ver o mural completo</a></p></section>`;
 }
 function areaChecks(name){ return DISCOVER.map(a => `<label><input type="checkbox" name="${name}" value="${esc(a)}"> ${esc(a)}</label>`).join(""); }
+const EDIT = { vaga:null, post:null, done:"" };
+const toIso = d => { const m = String(d||"").match(/^(\d{2})\/(\d{2})\/(\d{4})$/); return m ? m[3]+"-"+m[2]+"-"+m[1] : ""; };
+function applyEdit(){
+  const r = route(); let it = null, key = "";
+  if (r === "publicar" && EDIT.vaga) { it = VAGAS.items.find(v => v.id === EDIT.vaga); key = "v"+EDIT.vaga; }
+  else if ((r === "criar-aviso" || r === "criar-evento") && EDIT.post) { it = POSTS.items.find(p => p.id === EDIT.post); key = "p"+EDIT.post+r; }
+  const form = $("#app form"); if (!it || !form || form.dataset.edited === key) return;
+  const set = (id, v) => { const el = $("#"+id); if (el) el.value = v == null ? "" : v; };
+  const chk = (name, L) => document.querySelectorAll("input[name="+name+"]").forEach(c => c.checked = (L||[]).includes(c.value));
+  if (r === "publicar") { set("pTipo",it.tipo); set("pTitle",it.title); set("pInst",it.institution); set("pSummary",it.summary); set("pReq",it.requirements); set("pBolsa",it.scholarship); set("pMod",it.modality); set("pLoc",it.location); set("pDeadline",toIso(it.deadline)); set("pContact",it.contact); set("pUrl",it.applicationUrl); chk("parea", it.areas); }
+  else if (r === "criar-aviso") { set("aTitle",it.title); set("aText",it.text); set("aContact",it.contact); set("aUntil",toIso(it.until)); chk("aarea", it.areas); }
+  else { set("eTitle",it.title); set("eType",it.etype); set("eDate",toIso(it.date)); set("ePlace",it.place); set("eSub",toIso(it.submitDeadline)); set("eText",it.text); set("eUrl",it.url); set("eContact",it.contact); chk("earea", it.areas); }
+  const h1 = $("#app h1"); if (h1) h1.textContent = h1.textContent.replace(/^Criar/, "Editar");
+  const btn = $("#app form button[type=submit]"); if (btn) { btn.textContent = "Salvar alterações"; btn.insertAdjacentHTML("afterend", '<a class="btn block" href="#criar" style="margin-top:8px;text-align:center">Cancelar</a>'); }
+  form.dataset.edited = key; EDIT.done = key;
+}
+document.addEventListener("click", e => {
+  const v = e.target.closest("[data-editvaga]"); if (v) { EDIT.vaga = v.dataset.editvaga; EDIT.post = null; EDIT.done = ""; go("publicar"); return; }
+  const p = e.target.closest("[data-editpost]"); if (p) { EDIT.post = p.dataset.editpost; EDIT.vaga = null; EDIT.done = ""; go(p.dataset.kind === "evento" ? "criar-evento" : "criar-aviso"); }
+});
 function viewCriar(){
-  return `<h1>Criar</h1><p class="lede">O que você quer divulgar? <strong>Tudo passa por moderação antes de aparecer no site.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
+  return `<h1>Criar</h1><p class="lede">O que você quer divulgar? <strong>Tudo que você publica aparece na hora, e você pode editar ou apagar depois.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
   ${AUTH.dbError?'<p class="authwarn" role="alert">O banco de dados não respondeu. Não é possível publicar agora.</p>':""}
   <div class="stack" style="max-width:680px">
     <article class="card"><h3 style="margin:0 0 4px">Vaga de IC</h3><p style="margin:0 0 10px">Uma vaga nova ou a continuidade de um projeto (por exemplo, quando o aluno desiste).</p><a class="btn primary" href="#publicar">Criar vaga</a></article>
@@ -1651,17 +1670,17 @@ function viewCriar(){
   <section class="section"><h2 class="sec">Minhas publicações</h2><h3 style="margin:8px 0">Vagas</h3><div class="stack" id="minhasVagas">${minhasVagasHtml()}</div><h3 style="margin:16px 0 8px">Avisos e eventos</h3><div class="stack" id="minhasPosts">${minhasPostsHtml()}</div></section>`;
 }
 function viewCriarAviso(){
-  return `<a class="back" href="#criar">← Voltar para Criar</a><h1>Criar aviso</h1><p class="lede">Um recado curto para os alunos. Passa por moderação antes de aparecer no Mural.</p>
+  return `<a class="back" href="#criar">← Voltar para Criar</a><h1>Criar aviso</h1><p class="lede">Um recado curto para os alunos. Aparece no Mural assim que você publicar.</p>
   <form id="avForm" class="pubform authcard" novalidate style="max-width:680px"><div id="postmsg" role="status" aria-live="polite"></div>
     <label class="field"><span>Título *</span><input id="aTitle" type="text" maxlength="120" required placeholder="Ex.: Procuro aluno para continuar IC em visão computacional"></label>
     <label class="field"><span>Texto *</span><textarea id="aText" rows="4" maxlength="600" required></textarea></label>
     <fieldset class="roles"><legend>Áreas (opcional)</legend><div class="chk">${areaChecks("aarea")}</div></fieldset>
     <label class="field"><span>Contato *</span><input id="aContact" type="text" maxlength="200" required placeholder="Ex.: e-mail institucional"></label>
     <label class="field"><span>Vale até (opcional)</span><input id="aUntil" type="date"></label>
-    <button class="btn primary block" type="submit">Enviar para moderação</button></form>`;
+    <button class="btn primary block" type="submit">Publicar</button></form>`;
 }
 function viewCriarEvento(){
-  return `<a class="back" href="#criar">← Voltar para Criar</a><h1>Criar evento</h1><p class="lede">Eventos oficiais ficam em Eventos; os que professores criam aparecem no Mural depois da moderação.</p>
+  return `<a class="back" href="#criar">← Voltar para Criar</a><h1>Criar evento</h1><p class="lede">Eventos oficiais ficam em Eventos; os que professores criam aparecem no Mural assim que são publicados.</p>
   <form id="evForm" class="pubform authcard" novalidate style="max-width:680px"><div id="postmsg" role="status" aria-live="polite"></div>
     <label class="field"><span>Nome do evento *</span><input id="eTitle" type="text" maxlength="120" required></label>
     <label class="field"><span>Tipo</span><select id="eType"><option>Congresso</option><option>Simpósio</option><option>Seminário</option><option>Workshop</option><option>Palestra</option><option>Outro</option></select></label>
@@ -1672,7 +1691,7 @@ function viewCriarEvento(){
     <label class="field"><span>Descrição *</span><textarea id="eText" rows="4" maxlength="600" required></textarea></label>
     <label class="field"><span>Link (opcional, começando com https://)</span><input id="eUrl" type="text" maxlength="300" inputmode="url"></label>
     <label class="field"><span>Contato *</span><input id="eContact" type="text" maxlength="200" required></label>
-    <button class="btn primary block" type="submit">Enviar para moderação</button></form>`;
+    <button class="btn primary block" type="submit">Publicar</button></form>`;
 }
 document.addEventListener("submit", async e => {
   if (e.target.id !== "avForm" && e.target.id !== "evForm") return; e.preventDefault();
@@ -1691,30 +1710,38 @@ document.addEventListener("submit", async e => {
     data = { kind:"aviso", title:g("aTitle"), text:g("aText"), contact:g("aContact"), until:fmt(g("aUntil")), areas };
   }
   const btn = e.target.querySelector("button[type=submit]"); btn.disabled = true; msg("");
-  try { await AUTH.api.addPost(Object.assign(data, { ownerRole:"professor", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name })); e.target.reset(); msg("Enviado. Aparece no Mural assim que a moderação aprovar; acompanhe em Criar, na seção “Minhas publicações”.", "ok"); }
+  try {
+    if (EDIT.post) { await AUTH.api.updatePost(EDIT.post, data); EDIT.post = null; EDIT.done = ""; toast("Atualizado."); go("criar"); btn.disabled = false; return; }
+    await AUTH.api.addPost(Object.assign(data, { ownerRole:"professor", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name })); e.target.reset(); msg("Publicado. Já aparece no Mural. Para editar ou apagar, vá em Criar, em “Minhas publicações”.", "ok"); }
   catch (err) { msg("Não foi possível enviar. Verifique a conexão e as regras do banco.", "err"); }
   btn.disabled = false;
 });
 document.addEventListener("click", async e => {
   const d = e.target.closest("[data-delpost]"); if (!d) return;
-  if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = "Confirmar remoção (não dá para desfazer)"; setTimeout(() => { if (d.isConnected) { delete d.dataset.sure; d.textContent = "Remover"; } }, 5000); return; }
-  try { await AUTH.api.removePost(d.dataset.delpost); toast("Removido"); } catch (err) { toast("Não foi possível remover"); }
+  if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = "Confirmar: apagar (não dá para desfazer)"; setTimeout(() => { if (d.isConnected) { delete d.dataset.sure; d.textContent = "Apagar"; } }, 5000); return; }
+  try { await AUTH.api.removePost(d.dataset.delpost); toast("Apagado"); } catch (err) { toast("Não foi possível remover"); }
 });
 function profGuide(){
   if (!isProf()) return "";
-  return `<section class="onb" aria-labelledby="h-pc" style="border-color:var(--accent)"><h2 id="h-pc" style="margin:0 0 4px">Quer divulgar uma vaga de IC?</h2><p style="margin:0 0 12px">Preencha um formulário curto. A vaga é revisada pela moderação e depois aparece para os alunos.</p><div class="actions"><a class="btn primary" href="#publicar">Criar vaga</a><a class="btn" href="#criar-aviso">Criar aviso</a><a class="btn" href="#criar-evento">Criar evento</a></div></section>`+`<section class="block" aria-labelledby="h-pg"><h2 id="h-pg">Primeiros passos para professores</h2><ol class="steps"><li><a href="#criar"><strong>Criar</strong></a> uma vaga, um aviso ou um evento: tudo passa por moderação antes de aparecer.</li><li><a href="#alunos"><strong>Ver alunos</strong></a> que compartilharam o perfil, filtrar por área, selecionar e convidar para uma IC sua.</li><li><a href="#explorar"><strong>Explorar</strong></a> vagas e <a href="#eventos"><strong>eventos</strong></a> da sua área.</li><li><a href="#perfil"><strong>Perfil</strong></a>: escolha seus interesses para ver primeiro o que combina com você.</li></ol></section>`;
+  const me = AUTH.user.uid, vs = VAGAS.items.filter(v => v.ownerUid === me && v.status === "aprovada"), ps = POSTS.items.filter(p => p.ownerUid === me && p.status === "aprovada"), vc = ALUNOS.vinc.filter(v => v.profUid === me);
+  const pl = (k, a, b) => k + " " + (k === 1 ? a : b), n = st => vc.filter(x => x.status === st).length;
+  const linhas = [vs.length ? pl(vs.length,"vaga publicada","vagas publicadas") : "Nenhuma vaga publicada ainda"];
+  if (ps.length) linhas.push(pl(ps.filter(p => p.kind === "aviso").length,"aviso","avisos") + " e " + pl(ps.filter(p => p.kind === "evento").length,"evento","eventos") + " no Mural");
+  if (vc.length) linhas.push(pl(n("confirmado"),"aluno confirmado","alunos confirmados") + " nas suas ICs, " + pl(n("convidado"),"convite aguardando","convites aguardando") + " resposta");
+  return `<section class="onb" aria-labelledby="h-pc" style="border-color:var(--accent)"><h2 id="h-pc" style="margin:0 0 4px">Quer divulgar uma vaga de IC?</h2><p style="margin:0 0 12px">Preencha um formulário curto e publique. A vaga aparece na hora para os alunos, e você pode editar ou apagar depois.</p><div class="actions"><a class="btn primary" href="#publicar">Criar vaga</a><a class="btn" href="#criar-aviso">Criar aviso</a><a class="btn" href="#criar-evento">Criar evento</a></div></section>
+  <section class="block" aria-labelledby="h-pm"><h2 id="h-pm">Suas publicações e alunos</h2><ul class="plain">${linhas.map(l => `<li>${esc(l)}</li>`).join("")}</ul><p style="margin-top:10px"><a href="#criar">Ver, editar ou apagar minhas publicações</a> · <a href="#alunos">Procurar alunos</a></p></section>`;
 }
 /* converte o documento do Firestore no formato das demais oportunidades; todo texto continua passando por esc() na exibição */
 function vagaToOpp(v){
   const reqs = String(v.requirements||"").split(/\n+/).map(x=>x.trim()).filter(Boolean);
   const when = v.createdMs ? new Date(v.createdMs).toLocaleDateString("pt-BR") : "";
   return { id:"prof-"+v.id, prof:true, ownerUid:v.ownerUid, title:v.title, institution:v.institution, short:v.institution, origin:"professor", type:v.tipo==="Continuidade por desistência"?"Continuidade de projeto":"Vaga", status:"aberta",
-    statusNote:(v.tipo==="Continuidade por desistência"?"Projeto em andamento que busca quem dê continuidade. ":"")+"Divulgada por professor(a) e aprovada pela moderação do IC Connect. Confirme os detalhes diretamente com o(a) responsável.",
+    statusNote:(v.tipo==="Continuidade por desistência"?"Projeto em andamento que busca quem dê continuidade. ":"")+"Divulgada por professor(a) diretamente no IC Connect, sem conferência da equipe. Confirme os detalhes diretamente com o(a) responsável.",
     areas:Array.isArray(v.areas)&&v.areas.length?v.areas:["Engenharia"], tags:[], summary:v.summary, activities:NI, requirements:reqs.length?reqs:NI, desiredSkills:NI,
     scholarship:v.scholarship||NI, scholarshipValue:NI, duration:NI, weeklyHours:NI, modality:v.modality||NI, location:v.location||NI, externos:NI, deadline:v.deadline||NI,
     selection:NI, howTo:v.contact, advisor:v.ownerName, group:NI, sourceName:"Divulgada por "+(v.ownerName||"usuário")+(when?" em "+when:""), sourceUrl:"#explorar",
     applicationUrl: DOMAIN_OK(v.applicationUrl||"") ? v.applicationUrl : NI, verifiedAt:when||"—",
-    auditStatus:"a_confirmar", auditNote:"Aprovada pela moderação do IC Connect quanto a coerência e fonte de contato; o conteúdo vem de quem divulgou e não foi confirmado em edital oficial.", auditDate:when||"—" };
+    auditStatus:"a_confirmar", auditNote:"Publicada diretamente por quem divulgou. Não foi conferida pela equipe do site nem em edital oficial.", auditDate:when||"—" };
 }
 function syncVagas(){
   for (let i = ALL.length-1; i >= 0; i--) if (ALL[i].prof) { delete byId[ALL[i].id]; ALL.splice(i,1); }
@@ -1776,11 +1803,13 @@ async function authInit(){
           const offs = Object.entries(qs).map(([k,q]) => D.onSnapshot(q, snap => { parts[k] = map(snap); push(); }, onErr));
           return () => offs.forEach(f => f());
         },
-        addPost:data => D.addDoc(D.collection(db,"posts"), { ...data, status:"pendente", createdAt: D.serverTimestamp() }),
+        addPost:data => D.addDoc(D.collection(db,"posts"), { ...data, status:"aprovada", createdAt: D.serverTimestamp() }),
+        updatePost:(id, data) => D.updateDoc(D.doc(db,"posts",id), data),
         setPostStatus:(id, status) => D.updateDoc(D.doc(db,"posts",id), { status }),
         removePost:id => D.deleteDoc(D.doc(db,"posts",id)),
         setStatus:(id, status) => D.updateDoc(D.doc(db,"vagas",id), { status }),
-        addVaga:data => D.addDoc(D.collection(db,"vagas"), { ...data, status:"pendente", createdAt: D.serverTimestamp() }),
+        addVaga:data => D.addDoc(D.collection(db,"vagas"), { ...data, status:"aprovada", createdAt: D.serverTimestamp() }),
+        updateVaga:(id, data) => D.updateDoc(D.doc(db,"vagas",id), data),
         removeVaga:id => D.deleteDoc(D.doc(db,"vagas",id))
       };
     }
@@ -1814,7 +1843,7 @@ function viewEntrar(){
   const go = m==="criar" ? "Criar conta" : m==="reset" ? "Enviar link de redefinição" : "Entrar";
   const google = ""; /* login com Google desativado: o acesso é só por e-mail e senha */
   const extra = m==="entrar" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="reset">Esqueci a senha</button></p>' : m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
-  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico. Ninguém do site vê sua senha. Professores divulgam vagas, e toda vaga passa por moderação.</p>' : "";
+  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico. Ninguém do site vê sua senha. Professores divulgam vagas, que aparecem na hora.</p>' : "";
   return `<div class="authwrap" id="authBox"><h1>${title}</h1>${intro}${warn}<div class="authcard">
     ${m==="reset"?"":`<div class="authtabs" role="group" aria-label="Escolha"><button type="button" data-authmode="entrar" aria-pressed="${m==="entrar"}">Entrar</button><button type="button" data-authmode="criar" aria-pressed="${m==="criar"}">Criar conta</button></div>`}
     <form id="authForm" novalidate><div id="authmsg" role="status" aria-live="polite"></div>
@@ -1922,6 +1951,7 @@ function viewEventos(){
   const show = EV.sit === "passou" ? [] : up, showP = EV.sit === "prox" ? [] : past;
   const chip = (k,v,l,cur) => `<button class="chip" type="button" id="ev-${k}-${v||"todos"}" data-ev-${k}="${v}" aria-pressed="${cur===v}">${l}</button>`;
   return `
+    ${segTabs("eventos")}
     <h1>Congressos, simpósios e eventos</h1>
     <p class="lede">Congressos e simpósios para aprender, apresentar trabalho ou conhecer pesquisadores. A data do evento e o prazo de submissão aparecem separados.</p>
     <p class="proto">Datas e prazos mudam: confirme na página oficial antes de se inscrever.</p>
@@ -1981,7 +2011,6 @@ function updateAcctMenu(){
   $("#acctMenu").innerHTML = `<div class="who2"><span class="av2" style="${foto}">${foto?"":esc(iniciais(nome))}</span><div><b>${esc(nome)}</b><small>${esc(AUTH.user.email||"")}</small><span class="role">${papel}</span></div></div>
    <a role="link" href="#perfil">${icoSvg("perfil")} Meu perfil</a>
    ${role==="aluno"?`<a href="#adicionar">${icoSvg("plus")} Adicionar ao perfil</a>`:`<a href="#criar">${icoSvg("plus")} Criar vaga, aviso ou evento</a>`}
-   ${role==="admin"?`<a href="#moderacao">${icoSvg("shield")} Moderação</a>`:""}
    <a href="#diretrizes">${icoSvg("book")} Diretrizes de uso</a><a href="#ajuda">${icoSvg("help")} Ajuda</a><hr>
    <button class="out" type="button" data-auth="out">${icoSvg("out")} Sair da conta</button>`;
 }
@@ -2095,11 +2124,11 @@ function viewGrupo(){
 function minhasVagasHtml(){
   const mine = VAGAS.items.filter(v => AUTH.user && v.ownerUid === AUTH.user.uid);
   if (!mine.length) return '<div class="empty">'+MASC_CAP+'Você ainda não publicou nenhuma vaga.</div>';
-  return mine.map(v => `<article class="card"><h3 style="margin:0 0 6px">${v.status==="aprovada"?`<a href="#op-prof-${esc(v.id)}">${esc(v.title)}</a>`:esc(v.title)}</h3><p class="na" style="margin:0 0 10px">${esc(v.institution)}${v.deadline?" · prazo: "+esc(v.deadline):""} · <span class="mstat ${v.status==="aprovada"?"ok":v.status==="recusada"?"no":"wait"}">${v.status==="aprovada"?"Aprovada: já aparece em Explorar":v.status==="recusada"?"Recusada: não será publicada":"Aguardando moderação"}</span></p><button class="btn" type="button" data-delvaga="${esc(v.id)}">Remover vaga</button></article>`).join("");
+  return mine.map(v => `<article class="card"><h3 style="margin:0 0 6px">${v.status==="aprovada"?`<a href="#op-prof-${esc(v.id)}">${esc(v.title)}</a>`:esc(v.title)}</h3><p class="na" style="margin:0 0 10px">${esc(v.institution)}${v.deadline?" · prazo: "+esc(v.deadline):""} · <span class="mstat ${v.status==="aprovada"?"ok":"wait"}">${statTxt(v.status,"Explorar")}</span></p><div class="actions"><button class="btn" type="button" data-editvaga="${esc(v.id)}">Editar</button><button class="btn" type="button" data-delvaga="${esc(v.id)}">Apagar</button></div></article>`).join("");
 }
 function viewPublicar(){
   const areas = DISCOVER.map(a => `<label><input type="checkbox" name="parea" value="${esc(a)}"> ${esc(a)}</label>`).join("");
-  return `<a class="back" href="#criar">← Voltar para Criar</a><h1>Criar vaga</h1><p class="lede">Professores podem divulgar uma vaga nova ou um projeto que precisa de alguém para continuar (por exemplo, quando o aluno desiste). <strong>Toda divulgação passa por verificação da moderação antes de aparecer no site.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
+  return `<a class="back" href="#criar">← Voltar para Criar</a><h1>Criar vaga</h1><p class="lede">Professores podem divulgar uma vaga nova ou um projeto que precisa de alguém para continuar (por exemplo, quando o aluno desiste). <strong>A vaga aparece na hora para os alunos, e você pode editar ou apagar depois.</strong> Veja as <a href="#diretrizes">diretrizes de uso</a>.</p>
   ${AUTH.dbError?'<p class="authwarn" role="alert">O banco de vagas não respondeu. Não é possível publicar agora.</p>':""}
   <form id="pubForm" class="pubform authcard" novalidate style="max-width:680px"><div id="pubmsg" role="status" aria-live="polite"></div>
     <label class="field"><span>Tipo *</span><select id="pTipo"><option>Nova vaga</option><option>Continuidade por desistência</option></select></label>
@@ -2114,7 +2143,7 @@ function viewPublicar(){
     <label class="field"><span>Prazo de inscrição</span><input id="pDeadline" type="date"></label>
     <label class="field"><span>Como se candidatar / contato *</span><textarea id="pContact" rows="2" maxlength="400" required placeholder="Ex.: enviar histórico e currículo para o e-mail do professor"></textarea></label>
     <label class="field"><span>Link para inscrição (opcional, começando com https://)</span><input id="pUrl" type="text" maxlength="300" inputmode="url"></label>
-    <button class="btn primary block" type="submit">Enviar para moderação</button></form>
+    <button class="btn primary block" type="submit">Publicar</button></form>
   <section class="section"><h2 class="sec">Minhas vagas</h2><div class="stack" id="minhasVagas">${minhasVagasHtml()}</div></section>`;
 }
 document.addEventListener("submit", async e => {
@@ -2130,16 +2159,17 @@ document.addEventListener("submit", async e => {
   const deadline = dl ? dl.split("-").reverse().join("/") : "";
   const btn = e.target.querySelector("button[type=submit]"); btn.disabled = true; msg("");
   try {
-    await AUTH.api.addVaga({ title:g("pTitle"), institution:g("pInst"), areas, summary:g("pSummary"), requirements:g("pReq"), scholarship:g("pBolsa"), modality:g("pMod"),
-      location:g("pLoc"), deadline, contact:g("pContact"), applicationUrl:url, tipo:g("pTipo"), ownerRole:"professor", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name });
-    e.target.reset(); msg("Enviada. Ela aparece no site assim que a moderação aprovar; acompanhe em “Minhas vagas”.", "ok");
+    const dados = { title:g("pTitle"), institution:g("pInst"), areas, summary:g("pSummary"), requirements:g("pReq"), scholarship:g("pBolsa"), modality:g("pMod"), location:g("pLoc"), deadline, contact:g("pContact"), applicationUrl:url, tipo:g("pTipo") };
+    if (EDIT.vaga) { await AUTH.api.updateVaga(EDIT.vaga, dados); EDIT.vaga = null; EDIT.done = ""; toast("Vaga atualizada."); go("criar"); btn.disabled = false; return; }
+    await AUTH.api.addVaga(Object.assign(dados, { ownerRole:"professor", ownerUid:AUTH.user.uid, ownerName:AUTH.user.name }));
+    e.target.reset(); msg("Publicada. Ela já aparece em Explorar. Para editar ou apagar, vá em Criar, em “Minhas publicações”.", "ok");
   } catch (err) { msg("Não foi possível enviar. Verifique a conexão e as regras do banco.", "err"); }
   btn.disabled = false;
 });
 document.addEventListener("click", async e => {
   const d = e.target.closest("[data-delvaga]"); if (!d) return;
-  if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = "Confirmar remoção (não dá para desfazer)"; setTimeout(() => { if (d.isConnected) { delete d.dataset.sure; d.textContent = "Remover vaga"; } }, 5000); return; }
-  try { await AUTH.api.removeVaga(d.dataset.delvaga); toast("Vaga removida"); } catch (err) { toast("Não foi possível remover"); }
+  if (!d.dataset.sure) { d.dataset.sure = "1"; d.textContent = "Confirmar: apagar (não dá para desfazer)"; setTimeout(() => { if (d.isConnected) { delete d.dataset.sure; d.textContent = "Apagar"; } }, 5000); return; }
+  try { await AUTH.api.removeVaga(d.dataset.delvaga); toast("Vaga apagada"); } catch (err) { toast("Não foi possível remover"); }
 });
 
 /* ===================== moderação (admin) ===================== */
@@ -2166,10 +2196,10 @@ document.addEventListener("click", async e => {
 function viewDiretrizes(){
   return `<h1>Diretrizes de uso</h1><p class="lede">O IC Connect é um protótipo acadêmico, não oficial. Estas regras valem para quem divulga vagas.</p>
   <section class="block"><h2>Antes de divulgar</h2><ul class="plain"><li>Divulgue apenas vagas reais, que você tem autorização para anunciar.</li><li>Informe um contato institucional ou um link oficial para inscrição.</li><li>Não invente dados: se não souber o valor da bolsa ou o prazo, deixe em branco.</li></ul></section>
-  <section class="block"><h2>Verificação</h2><ul class="plain"><li>Toda vaga divulgada fica em “Aguardando moderação” até a equipe do site conferir.</li><li>A moderação avalia coerência e contato; ela <strong>não substitui</strong> o edital ou a confirmação com o(a) responsável.</li><li>Vagas recusadas não aparecem no site. Quem divulgou pode removê-las a qualquer momento.</li></ul></section>
+  <section class="block"><h2>Verificação</h2><ul class="plain"><li>O que o professor publica aparece na hora, sem conferência prévia da equipe do site. Quem publica é responsável pelo conteúdo.</li><li>Confirme sempre os detalhes com o(a) responsável ou no edital oficial.</li><li>Quem publicou pode editar ou apagar a vaga, o aviso ou o evento a qualquer momento.</li></ul></section>
   <section class="block"><h2>Vaga por desistência</h2><ul class="plain"><li>Só professores divulgam vagas. Se você é aluno(a) e vai deixar um projeto, peça ao(à) orientador(a) que divulgue a continuidade.</li><li>Não exponha dados pessoais de outras pessoas nem resultados ainda não publicados.</li></ul></section>
   <section class="block"><h2>Proibido</h2><ul class="plain"><li>Cobrar dinheiro, pedir senhas ou documentos pessoais para “garantir” uma vaga.</li><li>Divulgar conteúdo falso, ofensivo ou que se passe por outra pessoa ou instituição.</li></ul></section>
-  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa e-mail (de preferência o institucional) e senha. Se esquecer a senha, peça um link de redefinição na tela de entrar.</li><li>Alunos escolhem separadamente se professores e se outros alunos veem seu perfil (nome, curso, interesses, habilidades e resumo; o e-mail só vai para professores). Dá para desligar no Perfil.</li><li>O nome de um aluno só aparece como participante de uma IC depois que ele aceita o convite do professor, e ele pode sair a qualquer momento.</li><li>Avisos e eventos criados por professores passam por moderação, como as vagas.</li><li>O tipo da conta (aluno ou professor) é escolhido no cadastro e não é verificado; a moderação confere cada vaga antes de ela aparecer.</li></ul></section>`;
+  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa e-mail (de preferência o institucional) e senha. Se esquecer a senha, peça um link de redefinição na tela de entrar.</li><li>Alunos escolhem separadamente se professores e se outros alunos veem seu perfil (nome, curso, interesses, habilidades e resumo; o e-mail só vai para professores). Dá para desligar no Perfil.</li><li>O nome de um aluno só aparece como participante de uma IC depois que ele aceita o convite do professor, e ele pode sair a qualquer momento.</li><li>O tipo da conta (aluno ou professor) é escolhido no cadastro e não é verificado; por isso, o que o professor publica aparece na hora, sem conferência da equipe.</li></ul></section>`;
 }
 
 /* ===================== roteamento ===================== */
@@ -2184,7 +2214,7 @@ function render(){
   const lock = gated(); document.body.classList.toggle("locked", lock);
   if (lock) { html = (AUTH.checked || AUTH.failed) ? viewEntrar() : viewCarregando(); nav = "entrar"; }
   else if (r === "explorar") html = viewExplorar();
-  else if (r === "eventos") html = viewEventos();
+  else if (r === "eventos") { html = viewEventos(); nav = "explorar"; }
   else if (r === "pesquisadores") { html = viewPesquisadores(); nav = "explorar"; }
   else if (r === "adicionar") { html = viewAdicionar(); nav = window.matchMedia("(max-width:720px)").matches ? "perfil" : "adicionar"; }
   else if (r === "sobre") { html = viewSobre(); nav = "perfil"; }
@@ -2200,12 +2230,12 @@ function render(){
   else if (r === "diretrizes") html = viewDiretrizes();
   else if (r === "entrar") html = viewEntrar();
   else if (r === "grupo-demo") { html = viewGrupo(); nav = ""; }
-  else if (r.startsWith("evento-") && EVENTOS.some(e => e.id === r.slice(7))) { html = viewEvento(EVENTOS.find(e => e.id === r.slice(7))); nav = "eventos"; }
-  else if (r.startsWith("op-") && byId[r.slice(3)]) { html = viewDetalhe(byId[r.slice(3)]); nav = ""; }
-  else if (r.startsWith("pesquisador-") && RES[r.slice(12)]) { html = viewPesquisador(r.slice(12)); nav = ""; }
+  else if (r.startsWith("evento-") && EVENTOS.some(e => e.id === r.slice(7))) { html = viewEvento(EVENTOS.find(e => e.id === r.slice(7))); nav = "explorar"; }
+  else if (r.startsWith("op-") && byId[r.slice(3)]) { html = viewDetalhe(byId[r.slice(3)]); nav = "explorar"; }
+  else if (r.startsWith("pesquisador-") && RES[r.slice(12)]) { html = viewPesquisador(r.slice(12)); nav = "explorar"; }
   else if (r.startsWith("fonte-") && byId[r.slice(6)]?.sim) { html = viewFonteSim(byId[r.slice(6)]); nav = ""; }
   else { html = viewInicio(); nav = "inicio"; }
-  $("#app").innerHTML = html; updateAcctMenu();
+  $("#app").innerHTML = html; updateAcctMenu(); applyEdit();
   { const f = $("#fab"); if (f) f.classList.toggle("off", /^(publicar|criar|criar-aviso|criar-evento|moderacao|entrar)$/.test(r) || r.startsWith("op-") || !isProf()); }
   { const h1 = document.querySelector("#app h1"); const t = h1 ? h1.textContent.trim() : ""; document.title = (t && r !== "inicio" ? t + " · " : "") + "IC Connect"; }
   document.querySelectorAll("[data-nav]").forEach(a => { if (a.dataset.nav === nav) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
@@ -2215,7 +2245,7 @@ function render(){
 document.addEventListener("click", e => { if (e.target.closest("[data-skip]")) { e.preventDefault(); $("#app").focus(); } });
 let lastRoute = route();
 function onRoute(){
-  const r = route(); filtersOpen = false; if (r !== "perfil") { pfDraft = null; pfClear = false; pfEdit = false; pfMore = false; } render();
+  const r = route(); filtersOpen = false; if (!/^(publicar|criar-aviso|criar-evento)$/.test(r)) { EDIT.vaga = null; EDIT.post = null; EDIT.done = ""; } if (r !== "perfil") { pfDraft = null; pfClear = false; pfEdit = false; pfMore = false; } render();
   if (r !== lastRoute) { window.scrollTo(0,0); $("#app").focus({preventScroll:true}); const ap = $("#app"); ap.classList.remove("enter"); void ap.offsetWidth; ap.classList.add("enter"); }
   lastRoute = r;
 }
