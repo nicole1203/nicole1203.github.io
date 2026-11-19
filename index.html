@@ -83,6 +83,9 @@ button,input,select{font:inherit;color:inherit}
 .cfile{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cfile label{margin:0}
 .addopts{display:grid;gap:10px;margin-top:10px}.addopt{display:flex;flex-direction:column;gap:2px;text-align:left;width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:inherit;text-decoration:none;cursor:pointer}
 .addopt b{font-size:15px}.addopt span{font-size:14px;color:var(--muted)}.addopt:hover:not([aria-disabled=true]){border-color:var(--accent)}.addopt[aria-disabled=true]{opacity:.75;cursor:default;background:var(--surface-2)}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:30;display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 20px;border-radius:999px;background:var(--accent);color:var(--accent-fg);font-weight:700;text-decoration:none;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.fab[hidden],.fab.off{display:none!important}.fab:hover{filter:brightness(1.08)}
+@media (max-width:860px){.fab{bottom:calc(72px + env(safe-area-inset-bottom,0px))}}
 .acct{position:relative;flex-shrink:0}.acct[hidden]{display:none}
 .avatarbtn{width:44px;height:44px;border-radius:50%;border:2px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:700 15px/1 inherit;font-family:inherit;display:grid;place-items:center;cursor:pointer;padding:0;background-size:cover;background-position:center;overflow:hidden}
 .avatarbtn[aria-expanded="true"]{box-shadow:0 0 0 3px var(--accent-soft)}
@@ -456,6 +459,7 @@ ul.plain{margin:0;padding-left:18px}
   <a href="#salvos" data-nav="salvos" class="stu-only"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h11a1 1 0 0 1 1 1V21l-6.5-4.2L5.5 21V4.5a1 1 0 0 1 1-1z"/></svg><span>Salvos</span></a>
   <a href="#perfil" data-nav="perfil"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-3.8 3.7-5.5 7.5-5.5s6.7 1.7 7.5 5.5"/></svg><span>Perfil</span></a>
 </nav>
+<a class="fab prof-only" id="fab" href="#publicar" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Divulgar vaga</span></a>
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
@@ -1687,7 +1691,7 @@ document.addEventListener("click", async e => {
 });
 function profGuide(){
   if (!isProf()) return "";
-  return `<section class="block" aria-labelledby="h-pg"><h2 id="h-pg">Primeiros passos para professores</h2><ol class="steps"><li><a href="#criar"><strong>Criar</strong></a> uma vaga, um aviso ou um evento: tudo passa por moderação antes de aparecer.</li><li><a href="#alunos"><strong>Ver alunos</strong></a> que compartilharam o perfil, filtrar por área, selecionar e convidar para uma IC sua.</li><li><a href="#explorar"><strong>Explorar</strong></a> vagas e <a href="#eventos"><strong>eventos</strong></a> da sua área.</li><li><a href="#perfil"><strong>Perfil</strong></a>: escolha seus interesses para ver primeiro o que combina com você.</li></ol></section>`;
+  return `<section class="onb" aria-labelledby="h-pc" style="border-color:var(--accent)"><h2 id="h-pc" style="margin:0 0 4px">Quer divulgar uma vaga de IC?</h2><p style="margin:0 0 12px">Preencha um formulário curto. A vaga é revisada pela moderação e depois aparece para os alunos.</p><div class="actions"><a class="btn primary" href="#publicar">Criar vaga</a><a class="btn" href="#criar-aviso">Criar aviso</a><a class="btn" href="#criar-evento">Criar evento</a></div></section>`+`<section class="block" aria-labelledby="h-pg"><h2 id="h-pg">Primeiros passos para professores</h2><ol class="steps"><li><a href="#criar"><strong>Criar</strong></a> uma vaga, um aviso ou um evento: tudo passa por moderação antes de aparecer.</li><li><a href="#alunos"><strong>Ver alunos</strong></a> que compartilharam o perfil, filtrar por área, selecionar e convidar para uma IC sua.</li><li><a href="#explorar"><strong>Explorar</strong></a> vagas e <a href="#eventos"><strong>eventos</strong></a> da sua área.</li><li><a href="#perfil"><strong>Perfil</strong></a>: escolha seus interesses para ver primeiro o que combina com você.</li></ol></section>`;
 }
 /* converte o documento do Firestore no formato das demais oportunidades; todo texto continua passando por esc() na exibição */
 function vagaToOpp(v){
@@ -2191,6 +2195,7 @@ function render(){
   else if (r.startsWith("fonte-") && byId[r.slice(6)]?.sim) { html = viewFonteSim(byId[r.slice(6)]); nav = ""; }
   else { html = viewInicio(); nav = "inicio"; }
   $("#app").innerHTML = html; updateAcctMenu();
+  { const f = $("#fab"); if (f) f.classList.toggle("off", /^(publicar|criar|criar-aviso|criar-evento|moderacao|entrar)$/.test(r) || r.startsWith("op-") || !isProf()); }
   { const h1 = document.querySelector("#app h1"); const t = h1 ? h1.textContent.trim() : ""; document.title = (t && r !== "inicio" ? t + " · " : "") + "IC Connect"; }
   document.querySelectorAll("[data-nav]").forEach(a => { if (a.dataset.nav === nav) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
   if (popId) { const el = document.getElementById(popId); popId = null; if (el && el.getAttribute("aria-pressed") === "true") { el.classList.add("pop"); el.addEventListener("animationend", () => el.classList.remove("pop"), {once:true}); } }
