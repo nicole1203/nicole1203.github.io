@@ -59,7 +59,7 @@ button,input,select{font:inherit;color:inherit}
 .search input::placeholder{color:var(--muted);opacity:1}
 .search input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
 .topnav{display:flex;gap:4px}
-.adm-only[hidden]{display:none!important}.prof-only[hidden]{display:none!important}
+.adm-only[hidden]{display:none!important}.prof-only[hidden]{display:none!important}.stu-only[hidden]{display:none!important}
 .filters label{display:flex;align-items:center;gap:8px;min-height:44px}.filters input[type=checkbox]{width:20px;height:20px;flex:none}
 .fchip{min-height:36px}.openbar{margin:0 0 12px;color:var(--muted);font-size:14px}.sortl{display:inline-flex;gap:8px;align-items:center;font-size:14px}.sortl select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:inherit}
 .pwwarn{margin:4px 0 12px;padding:10px 12px;border:1px solid #b45309;background:#fffbeb;color:#78350f;border-radius:8px;font-size:14px}.pwwarn .showpw{margin-top:8px}
@@ -248,7 +248,7 @@ h2{font-size:17px;margin:0;text-wrap:balance}
 .hchip.ia{color:#fff;background:rgba(15,23,42,.78)}
 .hconf{margin-top:24px;background:var(--accent-soft);border-radius:12px;padding:14px 16px}
 .hconf h2{margin:0 0 6px;font-size:18px}.hconf p{margin:6px 0}
-body.locked .topnav,body.locked .bottomnav,body.locked .search{display:none}
+body.locked .topnav,body.locked .bottomnav,body.locked .search,body.locked #searchBtn{display:none}
 .authwrap{max-width:440px;margin:8px auto 0}
 .authcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
 .authtabs{display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:4px;margin-bottom:16px}
@@ -401,9 +401,10 @@ ul.plain{margin:0;padding-left:18px}
       <a href="#eventos" data-nav="eventos">Eventos</a>
       <a href="#salvos" data-nav="salvos">Salvos</a>
       <a href="#publicar" data-nav="publicar" class="prof-only" hidden>Divulgar</a>
+      <a href="#alunos" data-nav="alunos" class="prof-only" hidden>Alunos</a>
       <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#perfil" data-nav="perfil">Perfil</a>
-      <a href="#adicionar" data-nav="adicionar" class="addtop" title="Adicionar certificado, experiência ou link ao seu perfil">+ Adicionar ao perfil</a>
+      <a href="#adicionar" data-nav="adicionar" class="addtop stu-only" title="Adicionar certificado, experiência ou link ao seu perfil">+ Adicionar ao perfil</a>
     </nav>
     <a class="helpbtn" href="#ajuda" data-nav="ajuda" aria-label="Ajuda" title="Ajuda">?</a>
   </div>
@@ -416,7 +417,9 @@ ul.plain{margin:0;padding-left:18px}
   <a href="#inicio" data-nav="inicio"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
   <a href="#explorar" data-nav="explorar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><span>Explorar</span></a>
   <a href="#eventos" data-nav="eventos"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Eventos</span></a>
-  <a href="#salvos" data-nav="salvos"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h11a1 1 0 0 1 1 1V21l-6.5-4.2L5.5 21V4.5a1 1 0 0 1 1-1z"/></svg><span>Salvos</span></a>
+  <a href="#alunos" data-nav="alunos" class="prof-only" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.3"/><path d="M3 19.5c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M17 14.3c2.3 0 4 1.6 4 4.2"/></svg>Alunos</a>
+  <a href="#publicar" data-nav="publicar" class="prof-only" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M12 8v8M8 12h8"/></svg>Divulgar</a>
+  <a href="#salvos" data-nav="salvos" class="stu-only"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h11a1 1 0 0 1 1 1V21l-6.5-4.2L5.5 21V4.5a1 1 0 0 1 1-1z"/></svg><span>Salvos</span></a>
   <a href="#perfil" data-nav="perfil"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-3.8 3.7-5.5 7.5-5.5s6.7 1.7 7.5 5.5"/></svg><span>Perfil</span></a>
 </nav>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -791,7 +794,7 @@ function combina(o){ const set = interestSet(); if (!set.size || o.hist || o.sim
   const hay = norm([o.title, o.areas.join(" "), o.summary || "", o.activities || ""].join(" ")); return own.some(t => hay.includes(t)); }
 function combinaB(o){ return combina(o) ? '<span class="match">Combina com você</span>' : ""; }
 function perfilCta(){
-  if (!perfil || (!perfil.curso && !perfil.faculdade && !(perfil.interesses||[]).length)) return `<section class="onb" aria-labelledby="h-onb">${MASC.replace("class=\"masc\"","class=\"masc sm\"")}<h2 id="h-onb">Monte seu perfil</h2><p class="sub">Curso e interesses ajudam a mostrar primeiro o que combina com você. Fica só neste navegador.</p><div class="actions"><a class="btn primary" href="#perfil">Montar perfil</a></div></section>`;
+  if (!perfil || (!perfil.curso && !perfil.faculdade && !(perfil.interesses||[]).length)) return `<section class="onb" aria-labelledby="h-onb">${MASC.replace("class=\"masc\"","class=\"masc sm\"")}<h2 id="h-onb">Monte seu perfil</h2><p class="sub">${isProf() ? "Sua área e seus interesses" : "Curso e interesses"} ajudam a mostrar primeiro o que combina com você.</p><div class="actions"><a class="btn primary" href="#perfil">Montar perfil</a></div></section>`;
   const t = [perfil.curso, perfil.faculdade].filter(Boolean).map(esc).join(", ");
   return `<p class="myint">${t ? "Seu perfil: "+t+". " : ""}<a href="#perfil">Editar perfil</a></p>`;
 }
@@ -1087,6 +1090,7 @@ function viewInicio(){
   return `
     <h1>Oportunidades de iniciação científica</h1>
     <p class="lede">Veja o que o aluno faz em cada projeto e o que é exigido.</p>
+    ${profGuide()}
     <p class="proto">Protótipo acadêmico com dados de fontes públicas. As imagens são ilustrações.</p>
     <div class="section">
       <span class="eyebrow" id="topicsLabel">Explorar por assunto</span>
@@ -1150,7 +1154,7 @@ function viewSobre(){
     <p class="lede">Um protótipo acadêmico, feito na disciplina de Engenharia de Usabilidade da UNIFEI, para reunir oportunidades de iniciação científica, pesquisadores e eventos em um só lugar.</p>
     <section class="block"><h2>O que ele não é</h2><ul class="plain"><li>Não é um sistema oficial de nenhuma instituição.</li><li>Não substitui o edital. Prazos, requisitos e bolsas devem ser conferidos na fonte indicada em cada item.</li><li>Não envia avisos nem notificações.</li></ul></section>
     <section class="block"><h2>De onde vêm os dados</h2><p>De páginas públicas das instituições e de um levantamento da equipe. Cada item mostra a fonte e o quanto os dados foram conferidos. Itens marcados como simulados existem só para o teste de usabilidade. As imagens são ilustrações, não fotos.</p></section>
-    <section class="block"><h2>O que fica no seu navegador</h2><p>Salvos, programas acompanhados, curtidas e perfil ficam apenas neste navegador. Nada disso é enviado a um servidor.</p></section>
+    <section class="block"><h2>O que fica no seu navegador</h2><p>Salvos, programas acompanhados e curtidas ficam apenas neste navegador. O perfil também fica aqui; nome, curso e interesses são enviados à sua conta e só professores cadastrados os veem, se você deixar o compartilhamento ligado.</p></section>
     <p><a class="btn" href="#ajuda">Ver a Ajuda</a> <a class="btn" href="#diretrizes">Diretrizes de uso</a></p>`;
 }
 function viewAdicionar(){
@@ -1160,7 +1164,7 @@ function viewAdicionar(){
     <h2 class="sec" style="margin-top:18px">No seu perfil</h2>
     <div class="addopts">${op("certs","Certificado","Curso, minicurso, evento ou prova de proficiência.")}${op("exps","Experiência ou projeto","IC anterior, monitoria, extensão, equipe, estágio.")}${op("links","Link","Lattes, LinkedIn, GitHub, portfólio ou outro.")}</div>
     <h2 class="sec" style="margin-top:22px">Oportunidades</h2>
-    <div class="addopts">${prof ? `<a class="addopt" id="ad-vaga" href="#publicar"><b>Divulgar uma vaga</b><span>Passa por moderação antes de aparecer para todos.</span></a>` : `<p class="hint" id="ad-sug">Hoje só professores com conta divulgam vagas. A sugestão de vagas por alunos ainda não existe neste protótipo.</p><a class="addopt" id="ad-prof" href="#entrar"><b>Sou professor ou orientador</b><span>Entre para divulgar uma vaga.</span></a>`}</div>`;
+    <div class="addopts">${prof ? `<a class="addopt" id="ad-vaga" href="#publicar"><b>Divulgar uma vaga</b><span>Passa por moderação antes de aparecer para todos.</span></a>` : `<p class="hint" id="ad-sug">Hoje só contas de professor divulgam vagas. A sugestão de vagas por alunos ainda não existe neste protótipo.</p>`}</div>`;
 }
 function viewPesquisadores(){
   const ids = Object.keys(RES).sort((a,b) => RES[a].name.localeCompare(RES[b].name, "pt"));
@@ -1330,15 +1334,15 @@ function viewAjuda(){
 const FIREBASE_CONFIG = { apiKey:"AIzaSyAHwS-ZAUk4CI_kcxkvZWqBG_vPd4gX2uo", authDomain:"ic-connect-36298.firebaseapp.com", projectId:"ic-connect-36298", appId:"1:911083963854:web:c6e6e8e5da1606e487579f" };
 const AUTH = { mode:"entrar", user:null, api:null, ready:false, loading:false, checked:false, failed:false };
 /* Login obrigatório: só vale depois que as chaves do Firebase forem preenchidas. Sem chaves, o site abre normalmente. */
-/* Login só é exigido para divulgar/moderar vagas. Para voltar a travar o site inteiro, troque para true. */
-const LOGIN_OBRIGATORIO = false;
+/* Login obrigatório: o site só abre depois de entrar. Para liberar o site sem login, troque para false. */
+const LOGIN_OBRIGATORIO = true;
 const gated = () => LOGIN_OBRIGATORIO && authConfigured() && !(AUTH.user && AUTH.user.verified);
 const authConfigured = () => !!(window.__fakeAuth || FIREBASE_CONFIG.apiKey);
 const G_ICON = '<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>';
 const AUTH_ERR = {
-  "auth/invalid-credential":"Usuário ou senha incorretos.", "auth/wrong-password":"Usuário ou senha incorretos.", "auth/user-not-found":"Usuário ou senha incorretos.",
-  "auth/invalid-email":"Nome de usuário inválido.", "auth/email-already-in-use":"Esse nome de usuário já existe. Escolha outro ou use “Entrar”.",
-  "auth/weak-password":"A senha é fraca. Use pelo menos 8 caracteres.", "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos e tente de novo.",
+  "auth/invalid-credential":"E-mail ou senha incorretos.", "auth/wrong-password":"E-mail ou senha incorretos.", "auth/user-not-found":"E-mail ou senha incorretos.",
+  "auth/invalid-email":"E-mail inválido.", "auth/email-already-in-use":"Já existe uma conta com esse e-mail. Use “Entrar”.",
+  "auth/weak-password":"A senha é curta. Use pelo menos 6 caracteres.", "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos e tente de novo.",
   "auth/network-request-failed":"Sem conexão com o serviço de login. Verifique a internet.", "auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.",
   "auth/cancelled-popup-request":"A janela do Google foi fechada antes de terminar.", "auth/popup-blocked":"O navegador bloqueou a janela do Google. Permita pop-ups e tente de novo.",
   "auth/unauthorized-domain":"Este endereço ainda não está autorizado no serviço de login (veja o LEIA-ME).", "auth/operation-not-allowed":"Este método de login não está ativado no serviço (veja o LEIA-ME).",
@@ -1346,20 +1350,26 @@ const AUTH_ERR = {
 };
 const UDOM = "@icconnect.example.com";
 const uname = e => String(e||"").replace(UDOM,"");
+const dispName = e => String(e||"").endsWith(UDOM) ? uname(e) : String(e||"");
+const isProf = () => !!(AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin"));
 const toEmail = n => n + UDOM;
 const DOMAIN_OK = u => /^https?:\/\//i.test(u);
 const authErr = e => AUTH_ERR[e && e.code] || "Não foi possível concluir. Tente de novo em instantes.";
 function setMsg(text, kind){ const m = $("#authmsg"); if (!m) return; m.textContent = text || ""; m.className = kind || ""; m.setAttribute("role", kind==="err" ? "alert" : "status"); }
 function setBusy(b){ document.querySelectorAll("#authForm button, #authBox button[data-auth]").forEach(x => { x.disabled = b || (x.dataset.needsCfg === "1" && !authConfigured()); }); }
-function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".prof-only").forEach(a => a.hidden = !(AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin"))); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); }
+function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".prof-only").forEach(a => a.hidden = !(AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin"))); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); document.querySelectorAll(".stu-only").forEach(a => a.hidden = isProf()); }
 async function applyUser(u){
   const was = gated();
-  if (!u) { AUTH.user = null; VAGAS.stop(); } else {
-    let role = "aluno";
-    try { role = await AUTH.api.loadRole(u.uid, uname(u.email), AUTH.pendingRole); AUTH.dbError = false; } catch (e) { AUTH.dbError = true; }
-    AUTH.pendingRole = null;
-    AUTH.user = { uid:u.uid, email:u.email, name:uname(u.email), role, verified:true };
-    VAGAS.start();
+  if (!u) { AUTH.user = null; VAGAS.stop(); ALUNOS.stop(); } else {
+    let info = { role:"aluno", data:{} };
+    try { info = await AUTH.api.loadRole(u.uid, u.email, AUTH.pending || {}); AUTH.dbError = false; } catch (e) { AUTH.dbError = true; }
+    AUTH.pending = null;
+    const dt = info.data || {};
+    AUTH.user = { uid:u.uid, email:u.email, name:dt.nome || dispName(u.email), role:info.role, verified:true, nome:dt.nome || "", compartilhar:dt.compartilhar === true };
+    if (lsGet("icconnect-uid", null) && lsGet("icconnect-uid", null) !== u.uid) limparLocal();
+    lsSet("icconnect-uid", u.uid);
+    mergePerfilConta(dt);
+    VAGAS.start(); ALUNOS.start();
   }
   AUTH.checked = true; updateAcctLinks();
   if (was && !gated()) { go("inicio"); return; } render();
@@ -1369,6 +1379,92 @@ const VAGAS = {
   start(){ if (this.unsub || !AUTH.api.watchVagas) return; this.unsub = AUTH.api.watchVagas(list => { this.items = list; syncVagas(); }, () => { AUTH.dbError = true; }, AUTH.user.uid, AUTH.user.role === "admin"); },
   stop(){ if (this.unsub) this.unsub(); this.unsub = null; this.items = []; syncVagas(); }
 };
+/* ===== conta: perfil na nuvem e lista de alunos (professores) ===== */
+/* Salvos, perfil e anotações ficam no navegador: ao entrar uma pessoa diferente, apaga os da anterior. */
+function limparLocal(){
+  ["icconnect-salvos","icconnect-alertas","icconnect-curtidas","icconnect-funil","icconnect-perfil","icconnect-interesses"].forEach(k => { try { localStorage.removeItem(k); } catch(_) {} });
+  saved = []; alerts = []; liked = []; funil = {}; perfil = null; pfDraft = null; pfEdit = false;
+  try { indexedDB.deleteDatabase("icconnect"); } catch(_) {}
+}
+function mergePerfilConta(dt){
+  if (!dt) return;
+  const novo = {};
+  if (dt.nome && !(perfil && perfil.nome)) novo.nome = dt.nome;
+  if (dt.curso && !(perfil && perfil.curso)) novo.curso = dt.curso;
+  if (Array.isArray(dt.interesses) && dt.interesses.length && !(perfil && (perfil.interesses||[]).length)) novo.interesses = dt.interesses;
+  if (Object.keys(novo).length) { perfil = pfMigrate(Object.assign(pfEmpty(), perfil || {}, novo)); pfSave(); }
+}
+async function pfCloud(share){
+  if (!AUTH.user || !AUTH.api || !AUTH.api.saveProfile) return;
+  const dados = { nome:String((perfil && perfil.nome) || AUTH.user.nome || "").slice(0,80), curso:String((perfil && perfil.curso) || "").slice(0,80), interesses:((perfil && perfil.interesses) || []).slice(0,30).map(x => String(x).slice(0,40)), compartilhar:!!share, email:AUTH.user.email };
+  try { await AUTH.api.saveProfile(AUTH.user.uid, dados); AUTH.user.compartilhar = !!share; AUTH.user.nome = dados.nome || AUTH.user.nome; }
+  catch (err) { toast("Perfil salvo aqui, mas não foi possível atualizar sua conta."); }
+}
+const ALUNOS = {
+  unsub:null, items:[], loaded:false, err:false, sel:new Set(), q:"", area:"", onlySel:false, mine:false,
+  start(){
+    if (this.unsub || !isProf() || !AUTH.api || !AUTH.api.watchAlunos) return;
+    this.unsub = AUTH.api.watchAlunos(list => { this.items = list; this.loaded = true; this.err = false; refreshAlunos(); }, () => { this.err = true; this.loaded = true; refreshAlunos(); });
+    if (AUTH.api.getSelecao) AUTH.api.getSelecao(AUTH.user.uid).then(a => { this.sel = new Set(a || []); refreshAlunos(); }).catch(() => {});
+  },
+  stop(){ if (this.unsub) this.unsub(); this.unsub = null; this.items = []; this.loaded = false; this.err = false; this.sel = new Set(); }
+};
+function alunosFiltrados(){
+  const q = norm(ALUNOS.q), minhas = ((perfil && perfil.interesses) || []).map(norm);
+  return ALUNOS.items.filter(a => {
+    const ints = (a.interesses || []).map(norm);
+    if (ALUNOS.onlySel && !ALUNOS.sel.has(a.uid)) return false;
+    if (ALUNOS.area && !ints.includes(norm(ALUNOS.area))) return false;
+    if (ALUNOS.mine && !ints.some(t => minhas.some(m => m && (t === m || t.includes(m) || m.includes(t))))) return false;
+    if (q && !norm([a.nome, a.curso, (a.interesses || []).join(" ")].join(" ")).includes(q)) return false;
+    return true;
+  }).sort((a, b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"));
+}
+function alunosListHtml(){
+  if (ALUNOS.err) return '<p class="authwarn" role="alert">Não foi possível carregar os alunos. Verifique a internet e se as regras do Firestore foram publicadas.</p>';
+  if (!ALUNOS.loaded) return '<p class="hint" role="status">Carregando alunos…</p>';
+  if (!ALUNOS.items.length) return '<div class="empty">'+MASC+'Nenhum aluno compartilhou o perfil ainda. Os alunos aparecem aqui depois de criar conta e deixar o compartilhamento ligado.</div>';
+  const L = alunosFiltrados(), n = ALUNOS.sel.size;
+  const top = `<p class="meta" style="margin:10px 0">${L.length} de ${ALUNOS.items.length} aluno${ALUNOS.items.length>1?"s":""} · ${n} selecionado${n===1?"":"s"}${n?` · <button class="linkbtn" type="button" data-al-copy>Copiar e-mails dos selecionados</button>`:""}</p>`;
+  if (!L.length) return top + '<p class="hint">Nenhum aluno com esses filtros.</p>';
+  return top + '<div class="stack">' + L.map(a => { const on = ALUNOS.sel.has(a.uid); return `<article class="card"><h3 style="margin:0 0 4px">${esc(a.nome || "Sem nome")}</h3>${a.curso?`<p class="na" style="margin:0 0 8px">${esc(a.curso)}</p>`:""}${(a.interesses||[]).length?`<div class="chips" style="margin:0 0 8px">${a.interesses.map(t => `<span class="chip" style="cursor:default">${esc(t)}</span>`).join("")}</div>`:'<p class="na" style="margin:0 0 8px">Sem interesses informados.</p>'}${a.email?`<p style="margin:0 0 10px"><a href="mailto:${esc(a.email)}">${esc(a.email)}</a></p>`:""}<button class="btn${on?" primary":""}" type="button" data-al-sel="${esc(a.uid)}" aria-pressed="${on}">${on?"Selecionado":"Selecionar"}</button></article>`; }).join("") + '</div>';
+}
+function refreshAlunos(){ if (route() === "alunos") { const b = $("#alunosList"); if (b) b.innerHTML = alunosListHtml(); } }
+function viewAlunos(){
+  const areas = [...new Set(ALUNOS.items.flatMap(a => a.interesses || []))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const temMeus = ((perfil && perfil.interesses) || []).length > 0;
+  return `<h1>Alunos</h1><p class="lede">Alunos que criaram conta e deixaram professores verem nome, curso, e-mail e interesses. Marque os que você quer acompanhar.</p>
+  <div class="pf" style="margin-top:12px">
+    <div><label for="al-q">Buscar por nome, curso ou interesse</label><input type="search" id="al-q" maxlength="60" autocomplete="off" style="width:100%" value="${esc(ALUNOS.q)}"></div>
+    <div><label for="al-area">Área de interesse</label><select id="al-area"><option value="">Todas as áreas</option>${areas.map(t => `<option value="${esc(t)}"${ALUNOS.area===t?" selected":""}>${esc(t)}</option>`).join("")}</select></div>
+    ${temMeus?`<label class="showpw"><input type="checkbox" id="al-mine"${ALUNOS.mine?" checked":""}> Só quem tem interesse parecido com os do meu perfil</label>`:'<p class="hint">Dica: escolha seus interesses no <a href="#perfil">Perfil</a> para filtrar alunos da sua área.</p>'}
+    <label class="showpw"><input type="checkbox" id="al-sel"${ALUNOS.onlySel?" checked":""}> Mostrar só os selecionados</label>
+  </div>
+  <div id="alunosList" aria-live="polite">${alunosListHtml()}</div>`;
+}
+document.addEventListener("input", e => { if (e.target.id === "al-q") { ALUNOS.q = e.target.value; refreshAlunos(); } });
+document.addEventListener("change", e => {
+  if (e.target.id === "al-area") { ALUNOS.area = e.target.value; refreshAlunos(); }
+  else if (e.target.id === "al-mine") { ALUNOS.mine = e.target.checked; refreshAlunos(); }
+  else if (e.target.id === "al-sel") { ALUNOS.onlySel = e.target.checked; refreshAlunos(); }
+});
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-al-sel]");
+  if (b && isProf()) {
+    const id = b.dataset.alSel; if (ALUNOS.sel.has(id)) ALUNOS.sel.delete(id); else ALUNOS.sel.add(id);
+    refreshAlunos();
+    try { if (AUTH.api.setSelecao) await AUTH.api.setSelecao(AUTH.user.uid, [...ALUNOS.sel]); } catch (err) { toast("Não foi possível salvar a seleção."); }
+    return;
+  }
+  if (e.target.closest("[data-al-copy]")) {
+    const mails = ALUNOS.items.filter(a => ALUNOS.sel.has(a.uid) && a.email).map(a => a.email).join(", ");
+    try { await navigator.clipboard.writeText(mails); toast("E-mails copiados."); } catch (err) { toast("Não foi possível copiar. Selecione e copie manualmente."); }
+  }
+});
+function profGuide(){
+  if (!isProf()) return "";
+  return `<section class="block" aria-labelledby="h-pg"><h2 id="h-pg">Primeiros passos para professores</h2><ol class="steps"><li><a href="#publicar"><strong>Divulgar uma vaga</strong></a>: passa por moderação antes de aparecer.</li><li><a href="#alunos"><strong>Ver alunos</strong></a> que compartilharam o perfil, filtrar por área e selecionar.</li><li><a href="#explorar"><strong>Explorar</strong></a> vagas e <a href="#eventos"><strong>eventos</strong></a> da sua área.</li><li><a href="#perfil"><strong>Perfil</strong></a>: escolha seus interesses para ver primeiro o que combina com você.</li></ol></section>`;
+}
 /* converte o documento do Firestore no formato das demais oportunidades; todo texto continua passando por esc() na exibição */
 function vagaToOpp(v){
   const reqs = String(v.requirements||"").split(/\n+/).map(x=>x.trim()).filter(Boolean);
@@ -1404,12 +1500,17 @@ async function authInit(){
         reset:e=>A.sendPasswordResetEmail(auth,e),
         signOut:()=>A.signOut(auth),
         onChange:cb=>A.onAuthStateChanged(auth,cb),
-        loadRole: async (uid, username, wanted) => {
+        loadRole: async (uid, email, pend) => {
           const ref = D.doc(db, "users", uid), snap = await D.getDoc(ref);
-          if (snap.exists()) { const rl = snap.data().role; return rl === "admin" || rl === "professor" ? rl : "aluno"; }
-          const role = wanted === "professor" ? "professor" : "aluno";
-          await D.setDoc(ref, { username, role }); return role;
+          if (snap.exists()) { const x = snap.data(), rl = x.role; return { role: rl === "admin" || rl === "professor" ? rl : "aluno", data: x }; }
+          const role = pend.role === "professor" ? "professor" : "aluno";
+          const data = { username: email, role, nome: String(pend.nome || email.split("@")[0]).slice(0,80), email, compartilhar: pend.compartilhar === true };
+          await D.setDoc(ref, data); return { role, data };
         },
+        saveProfile: (uid, dados) => D.updateDoc(D.doc(db,"users",uid), dados),
+        watchAlunos: (cb, onErr) => D.onSnapshot(D.query(D.collection(db,"users"), D.where("role","==","aluno"), D.where("compartilhar","==",true)), snap => cb(snap.docs.map(d => ({ uid:d.id, ...d.data() }))), onErr),
+        getSelecao: async uid => { const sn = await D.getDoc(D.doc(db,"selecoes",uid)); return sn.exists() ? (sn.data().alunos || []) : []; },
+        setSelecao: (uid, alunos) => D.setDoc(D.doc(db,"selecoes",uid), { alunos }),
         watchVagas:(cb, onErr, uid, isAdmin) => {
           const parts = {}, push = () => cb(Object.values(parts).flat().filter((v,i,a) => a.findIndex(w => w.id === v.id) === i).sort((a,b) => (b.createdMs||0)-(a.createdMs||0)));
           const map = snap => snap.docs.map(d => { const x = d.data(); return { id:d.id, ...x, createdMs: x.createdAt && x.createdAt.toMillis ? x.createdAt.toMillis() : 0 }; });
@@ -1442,39 +1543,38 @@ function viewEntrar(){
     <button class="btn primary block" data-auth="check" type="button">Já confirmei</button>
     <p class="authlinks"><button class="linkbtn" data-auth="resend" type="button">Reenviar e-mail</button><button class="linkbtn" data-auth="out" type="button">Sair</button></p></div>${skip}</div>`;
   if (u) return `<div class="authwrap" id="authBox"><h1>Sua conta</h1><div class="authcard">
-    <p>Usuário: <strong>${esc(u.name)}</strong><br><span class="pill st-aberta" style="margin-top:6px">${u.role==="professor"?"Professor(a)":"Aluno(a)"}</span></p>
-    <p class="authnote">Neste protótipo, a conta ainda não sincroniza seus Salvos: eles continuam guardados só neste navegador.</p><div id="authmsg" role="status" aria-live="polite"></div>
+    <p>E-mail: <strong>${esc(dispName(u.email))}</strong><br><span class="pill st-aberta" style="margin-top:6px">${u.role==="admin"?"Administrador(a)":u.role==="professor"?"Professor(a)":"Aluno(a)"}</span></p>
+    ${u.role==="aluno"?`<p class="authnote">Professores cadastrados ${u.compartilhar?"podem":"não podem"} ver seu nome, curso, e-mail e interesses. Você muda isso em Perfil.</p>`:""}
+    <p class="authnote">Neste protótipo, seus Salvos continuam guardados só neste navegador.</p><div id="authmsg" role="status" aria-live="polite"></div>
     <button class="btn block" data-auth="out" type="button">Sair</button></div></div>`;
   const m = AUTH.mode;
   const title = m==="criar" ? "Criar conta" : m==="reset" ? "Redefinir senha" : "Entrar";
-  const pwField = m==="reset" ? "" : `<label class="field"><span>Senha</span><input id="authPw" type="password" required autocomplete="${m==="criar"?"new-password":"current-password"}"${m==="criar"?' aria-describedby="pwhint"':""}>${m==="criar"?'<small id="pwhint">Mínimo de 8 caracteres.</small>':""}</label>
-    <label class="showpw"><input type="checkbox" id="showPw"> Mostrar senha</label>${m==="criar"?'<div class="pwwarn" role="note"><strong>Atenção:</strong> sem e-mail, não existe recuperação de senha. Anote sua senha em lugar seguro.<label class="showpw"><input type="checkbox" id="pwAck"> Entendi que não dá para recuperar a senha</label></div>':""}`;
+  const pwField = m==="reset" ? "" : `<label class="field"><span>Senha</span><input id="authPw" type="password" required autocomplete="${m==="criar"?"new-password":"current-password"}"${m==="criar"?' aria-describedby="pwhint"':""}>${m==="criar"?'<small id="pwhint">Use a senha que quiser, com pelo menos 6 caracteres.</small>':""}</label>
+    <label class="showpw"><input type="checkbox" id="showPw"> Mostrar senha</label>`;
   const go = m==="criar" ? "Criar conta" : m==="reset" ? "Enviar link de redefinição" : "Entrar";
   const google = ""; /* login com Google desativado: o acesso é só por e-mail e senha */
-  if (m === "reset") return `<div class="authwrap" id="authBox"><h1>Esqueci a senha</h1><div class="authcard">
-    <p>Este protótipo não pede e-mail, então <strong>não consegue recuperar senhas</strong>.</p>
-    <p>O que fazer: crie uma conta nova com outro nome de usuário. Se você divulgou vagas com a conta antiga, peça à moderação para remover a conta antiga e liberar o nome.</p>
-    <p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button><button class="linkbtn" type="button" data-authmode="criar">Criar conta nova</button></p></div></div>`;
   const extra = m==="entrar" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="reset">Esqueci a senha</button></p>' : m==="reset" ? '<p class="authlinks"><button class="linkbtn" type="button" data-authmode="entrar">Voltar para entrar</button></p>' : "";
-  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico: não pedimos e-mail. Só professores divulgam vagas, e toda vaga passa por moderação.</p>' : "";
+  const note = m==="criar" ? '<p class="authnote">Protótipo acadêmico. Ninguém do site vê sua senha. Professores divulgam vagas, e toda vaga passa por moderação.</p>' : "";
   return `<div class="authwrap" id="authBox"><h1>${title}</h1>${intro}${warn}<div class="authcard">
     ${m==="reset"?"":`<div class="authtabs" role="group" aria-label="Escolha"><button type="button" data-authmode="entrar" aria-pressed="${m==="entrar"}">Entrar</button><button type="button" data-authmode="criar" aria-pressed="${m==="criar"}">Criar conta</button></div>`}
     <form id="authForm" novalidate><div id="authmsg" role="status" aria-live="polite"></div>
-    ${m==="criar"?'<fieldset class="roles"><legend>Você é</legend><label><input type="radio" name="role" value="aluno" checked> Aluno(a): procuro vagas</label><label><input type="radio" name="role" value="professor"> Professor(a): quero divulgar vagas (passam por moderação)</label><small>A escolha fica registrada na conta. Para mudar depois, fale com a moderação.</small></fieldset>':""}<label class="field"><span>Nome de usuário</span><input id="authEmail" type="text" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="unhint"><small id="unhint">3 a 20 caracteres: letras, números, ponto, hífen ou sublinhado.</small></label>${pwField}
+    ${m==="criar"?'<fieldset class="roles"><legend>Você é</legend><label><input type="radio" name="role" value="aluno" checked> Aluno(a): procuro vagas de IC</label><label><input type="radio" name="role" value="professor"> Professor(a): quero divulgar uma IC e ver alunos</label></fieldset><label class="field"><span>Nome completo</span><input id="authNome" type="text" required maxlength="80" autocomplete="name"></label>':""}<label class="field"><span>${m==="criar"?"E-mail institucional":"E-mail"}</span><input id="authEmail" type="email" required autocomplete="username" autocapitalize="none" spellcheck="false"${m==="criar"?' aria-describedby="unhint"':""}>${m==="criar"?'<small id="unhint">Use o e-mail da sua instituição, por exemplo nome@unifei.edu.br.</small>':""}</label>${pwField}${m==="criar"?'<label class="showpw"><input type="checkbox" id="authShare" checked> Deixar professores cadastrados verem meu nome, curso, e-mail e interesses (vale para alunos; dá para desligar no Perfil)</label>':""}
     <button class="btn primary block" type="submit"${dis}>${go}</button></form>${google}${extra}${note}${retry}</div>${skip}</div>`;
 }
 document.addEventListener("submit", async e => {
   if (e.target.id !== "authForm") return; e.preventDefault();
   if (!AUTH.api) { setMsg("O login não está disponível agora.", "err"); return; }
-  const uname0 = $("#authEmail").value.trim().toLowerCase(), email = toEmail(uname0), pw = $("#authPw") ? $("#authPw").value : "";
-  if (!/^[a-z0-9._-]{3,20}$/.test(uname0)) { setMsg("Usuário: 3 a 20 caracteres, só letras, números, ponto, hífen ou sublinhado.", "err"); $("#authEmail").focus(); return; }
+  const raw = $("#authEmail").value.trim().toLowerCase(), pw = $("#authPw") ? $("#authPw").value : "";
+  const email = (AUTH.mode === "entrar" && raw && !raw.includes("@")) ? toEmail(raw) : raw;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setMsg("Digite um e-mail válido, por exemplo nome@unifei.edu.br.", "err"); $("#authEmail").focus(); return; }
+  const nome = AUTH.mode === "criar" ? $("#authNome").value.trim() : "";
+  if (AUTH.mode === "criar" && nome.length < 2) { setMsg("Digite seu nome.", "err"); $("#authNome").focus(); return; }
   if (AUTH.mode !== "reset" && !pw) { setMsg("Digite a senha.", "err"); $("#authPw").focus(); return; }
-  if (AUTH.mode === "criar" && !$("#pwAck").checked) { setMsg("Marque que entendeu que não há recuperação de senha.", "err"); $("#pwAck").focus(); return; }
-  if (AUTH.mode === "criar" && pw.length < 8) { setMsg("A senha precisa ter pelo menos 8 caracteres.", "err"); $("#authPw").focus(); return; }
+  if (AUTH.mode === "criar" && pw.length < 6) { setMsg("A senha precisa ter pelo menos 6 caracteres.", "err"); $("#authPw").focus(); return; }
   setBusy(true); setMsg("");
   try {
     if (AUTH.mode === "entrar") await AUTH.api.signIn(email, pw);
-    else if (AUTH.mode === "criar") { AUTH.pendingRole = (document.querySelector("input[name=role]:checked")||{}).value || "aluno"; await AUTH.api.signUp(email, pw); }
+    else if (AUTH.mode === "criar") { AUTH.pending = { role:(document.querySelector("input[name=role]:checked")||{}).value || "aluno", nome, compartilhar:!!($("#authShare") && $("#authShare").checked) }; await AUTH.api.signUp(email, pw); }
     else { await AUTH.api.reset(email); setMsg("Se existir uma conta com esse e-mail, enviamos um link para redefinir a senha.", "ok"); }
   } catch (err) { setMsg(authErr(err), "err"); }
   setBusy(false);
@@ -1589,7 +1689,7 @@ function viewPerfilLeitura(){
   const ur = u => /^https?:\/\//i.test(u) ? esc(u) : "#";
   return `
     <h1>Perfil</h1>
-    <p class="proto">Alunos não precisam de conta. O perfil fica só neste navegador, não é enviado ao site nem a professores, e serve apenas para priorizar o que aparece para você.</p>
+    <p class="proto">Seu perfil fica neste navegador. Nome, curso e interesses também ficam na sua conta e só aparecem para professores se o compartilhamento estiver ligado. Certificados, links e currículo ficam só aqui.</p>
     <div class="pf pfview" style="margin-top:16px">
       <div class="fotobox"><span class="foto">${p.foto?`<img src="${p.foto}" alt="Sua foto" width="96" height="96">`:'<span aria-hidden="true">?</span>'}</span><div><h2 style="margin:0">${esc(p.nome) || "Sem nome"}</h2><div class="na">${[esc(p.curso), esc(p.faculdade)].filter(Boolean).join(" · ")}</div>${anos?`<div class="na">${anos}</div>`:""}</div></div>
       ${p.interesses.length?`<div><h3 class="sec">Interesses</h3><div class="chips">${p.interesses.map(t=>`<span class="chip" style="cursor:default">${esc(t)}</span>`).join("")}</div></div>`:'<p class="hint">Escolha seus interesses para ver o que combina com você primeiro na tela inicial.</p>'}
@@ -1600,9 +1700,9 @@ function viewPerfilLeitura(){
       ${p.certs.length?`<div><h3 class="sec">Certificados <span class="na">(informados por você, sem conferência)</span></h3><ul class="plain">${p.certs.map(c=>`<li><strong>${esc(c.t)}</strong>${c.e||c.a?" · "+[esc(c.e),esc(c.a)].filter(Boolean).join(", "):""}${c.u&&/^https?:\/\//i.test(c.u)?` · <a href="${esc(c.u)}" target="_blank" rel="noopener noreferrer">validar</a>`:""}</li>`).join("")}</ul></div>`:""}
       ${cv?`<p style="margin:0">Currículo: ${esc(cv.name)} (${kb(cv.size)}) <button class="btn" type="button" id="cv-get" data-pf-cvget>Baixar</button></p>`:""}
       <div class="actions"><button class="btn primary" type="button" id="pf-edit" data-pf-edit>Editar perfil</button><button class="btn" type="button" id="pf-copy" data-copymsg="">Copiar apresentação para um professor</button><button class="btn" type="button" id="pf-clear" data-pf-clear>${pfClear?"Confirmar: apagar tudo deste navegador":"Apagar perfil e currículo"}</button></div>
-      <p class="hint">${AUTH.user ? `Você está conectada como <strong>${esc(AUTH.user.username||"")}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>` : ""}</p>
+      <p class="hint">${AUTH.user ? `Você está conectada como <strong>${esc(dispName(AUTH.user.email))}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>` : ""}</p>
       <h2 class="sec" style="margin-top:22px">Mais</h2>
-      <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Conta (para professores que divulgam vagas)</a></li></ul>
+      <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Minha conta e sair</a></li></ul>
     </div>`;
 }
 function viewPerfil(){
@@ -1611,14 +1711,15 @@ function viewPerfil(){
   const d = pfDraft, y = new Date().getFullYear();
   const yrs = (a,b,cur) => `<option value="">Selecione</option>` + Array.from({length:b-a+1},(_,k)=>a+k).map(v=>`<option value="${v}"${String(cur)===String(v)?" selected":""}>${v}</option>`).join("");
   const cv = perfil && perfil.cv;
-  const conta = AUTH.user ? `Você está conectada como <strong>${esc(AUTH.user.username||"")}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>${AUTH.user.role==="professor"||AUTH.user.role==="admin"?` · <a href="#publicar">Divulgar vaga</a>`:""}${AUTH.user.role==="admin"?` · <a href="#moderacao">Moderação</a>`:""}` : `Conta é opcional e só serve para professores divulgarem vagas. <a href="#entrar">Entrar ou criar conta</a>`;
+  const conta = AUTH.user ? `Você está conectada como <strong>${esc(dispName(AUTH.user.email))}</strong> (${esc(AUTH.user.role||"")}). <a href="#entrar">Gerenciar conta</a>${AUTH.user.role==="professor"||AUTH.user.role==="admin"?` · <a href="#publicar">Divulgar vaga</a>`:""}${AUTH.user.role==="admin"?` · <a href="#moderacao">Moderação</a>`:""}` : `Conta é opcional e só serve para professores divulgarem vagas. <a href="#entrar">Entrar ou criar conta</a>`;
   return `
     <h1>Perfil</h1>
     <p class="lede">Preencha o que quiser. As áreas de interesse e o que você procura mudam o que aparece primeiro na tela inicial.</p>
-    <p class="proto">Alunos não precisam de conta. O perfil e o currículo ficam só neste navegador, não são enviados ao site nem a professores, e servem apenas para priorizar o que aparece para você. Se você limpar os dados do navegador, eles somem.</p>
+    <p class="proto">Seu perfil fica neste navegador. Nome, curso e interesses também ficam na sua conta e só aparecem para professores se o compartilhamento estiver ligado. Certificados, links e currículo ficam só aqui. Se você limpar os dados do navegador, o que está só aqui some.</p>
     <div class="pf" style="margin-top:16px">
       <div><label for="pf-nome">Nome</label><input type="text" id="pf-nome" data-pf="nome" maxlength="80" autocomplete="off" value="${esc(d.nome)}"></div>
-      <div><label for="pf-curso">Curso</label><input type="text" id="pf-curso" data-pf="curso" maxlength="80" autocomplete="off" value="${esc(d.curso)}"></div>
+      <div><label for="pf-curso">${isProf() ? "Departamento ou área de atuação" : "Curso"}</label><input type="text" id="pf-curso" data-pf="curso" maxlength="80" autocomplete="off" value="${esc(d.curso)}"></div>
+      ${AUTH.user && AUTH.user.role === "aluno" ? `<label class="showpw"><input type="checkbox" id="pf-share"${AUTH.user.compartilhar?" checked":""}> Deixar professores cadastrados verem meu nome, curso, e-mail da conta e interesses</label>` : ""}
       <fieldset><legend>Seus interesses</legend><div class="hint">Escolha quantos quiser e escreva outros se não encontrar o seu.</div><div class="chips" role="group" aria-label="Interesses">${(pfIntAll?PF_INT():DISCOVER).map(t=>`<button class="chip" type="button" id="pi-${slug(t)}" data-pf-int="${esc(t)}" aria-pressed="${d.interesses.includes(t)}">${esc(t)}</button>`).join("")}${d.interesses.filter(t=>!PF_INT().includes(t)||(!pfIntAll&&!DISCOVER.includes(t))).map((t,k)=>`<button class="chip" type="button" id="pic-${k}" data-pf-int="${esc(t)}" aria-pressed="true" aria-label="Remover interesse ${esc(t)}">${esc(t)} <span aria-hidden="true">×</span></button>`).join("")}</div>
         <div class="intadd"><label for="pf-int-new" class="sr">Outro interesse</label><input type="text" id="pf-int-new" list="pf-int-list" maxlength="40" autocomplete="off" placeholder="Escreva outro interesse e toque em Adicionar"><datalist id="pf-int-list">${PF_INT().map(t=>`<option value="${esc(t)}">`).join("")}</datalist><button class="btn" type="button" id="pf-int-add" data-pf-int-add>Adicionar</button></div>
         <button class="linkbtn" type="button" id="pf-int-more" data-pf-int-more>${pfIntAll?"Mostrar menos áreas":"Mostrar mais áreas"}</button></fieldset>
@@ -1653,7 +1754,7 @@ function viewPerfil(){
       <div class="actions"><button class="btn primary" type="button" id="pf-save" data-pf-save>Salvar perfil</button>${perfil?`<button class="btn" type="button" id="pf-cancel" data-pf-cancel>Cancelar</button>`:""}${perfil?`<button class="btn" type="button" id="pf-copy" data-copymsg="">Copiar apresentação para um professor</button>`:""}${perfil?`<button class="btn" type="button" id="pf-clear" data-pf-clear>${pfClear?"Confirmar: apagar perfil e currículo":"Apagar perfil e currículo"}</button>`:""}</div>
       <p class="hint">${conta}</p>
       <h2 class="sec" style="margin-top:22px">Mais</h2>
-      <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Conta (para professores que divulgam vagas)</a></li><li><a href="#diretrizes">Diretrizes de uso</a></li></ul>
+      <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Minha conta e sair</a></li><li><a href="#diretrizes">Diretrizes de uso</a></li></ul>
     </div>`;
 }
 function fotoFrom(file){ return new Promise((res,rej)=>{ const r = new FileReader(); r.onerror = () => rej(r.error); r.onload = () => { const im = new Image(); im.onerror = () => rej(new Error("img")); im.onload = () => { const c = document.createElement("canvas"); c.width = c.height = 192; const m = Math.min(im.width, im.height), sx = (im.width - m)/2, sy = (im.height - m)/2; c.getContext("2d").drawImage(im, sx, sy, m, m, 0, 0, 192, 192); res(c.toDataURL("image/jpeg", .82)); }; im.src = r.result; }; r.readAsDataURL(file); }); }
@@ -1775,7 +1876,7 @@ function viewDiretrizes(){
   <section class="block"><h2>Verificação</h2><ul class="plain"><li>Toda vaga divulgada fica em “Aguardando moderação” até a equipe do site conferir.</li><li>A moderação avalia coerência e contato; ela <strong>não substitui</strong> o edital ou a confirmação com o(a) responsável.</li><li>Vagas recusadas não aparecem no site. Quem divulgou pode removê-las a qualquer momento.</li></ul></section>
   <section class="block"><h2>Vaga por desistência</h2><ul class="plain"><li>Só professores divulgam vagas. Se você é aluno(a) e vai deixar um projeto, peça ao(à) orientador(a) que divulgue a continuidade.</li><li>Não exponha dados pessoais de outras pessoas nem resultados ainda não publicados.</li></ul></section>
   <section class="block"><h2>Proibido</h2><ul class="plain"><li>Cobrar dinheiro, pedir senhas ou documentos pessoais para “garantir” uma vaga.</li><li>Divulgar conteúdo falso, ofensivo ou que se passe por outra pessoa ou instituição.</li></ul></section>
-  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa só nome de usuário e senha, sem e-mail. Não há recuperação de senha.</li><li>O perfil (aluno ou professor) é escolhido por você no cadastro e não é verificado; a moderação confere cada vaga antes de ela aparecer.</li></ul></section>`;
+  <section class="block"><h2>Dados e privacidade</h2><ul class="plain"><li>O cadastro usa e-mail (de preferência o institucional) e senha. Se esquecer a senha, peça um link de redefinição na tela de entrar.</li><li>Alunos escolhem se professores cadastrados veem nome, curso, e-mail e interesses; dá para desligar no Perfil.</li><li>O tipo da conta (aluno ou professor) é escolhido no cadastro e não é verificado; a moderação confere cada vaga antes de ela aparecer.</li></ul></section>`;
 }
 
 /* ===================== roteamento ===================== */
@@ -1794,6 +1895,7 @@ function render(){
   else if (r === "pesquisadores") { html = viewPesquisadores(); nav = "explorar"; }
   else if (r === "adicionar") { html = viewAdicionar(); nav = window.matchMedia("(max-width:720px)").matches ? "perfil" : "adicionar"; }
   else if (r === "sobre") { html = viewSobre(); nav = "perfil"; }
+  else if (r === "alunos") html = isProf() ? viewAlunos() : viewInicio();
   else if (r === "perfil") html = viewPerfil();
   else if (r === "salvos") html = viewSalvos();
   else if (r === "ajuda") html = viewAjuda();
@@ -1834,7 +1936,7 @@ function clearFilters(){ F.onlyOpen=true; F.limit=12; F.sort="status"; ["status"
 document.addEventListener("click", e => {
   const s = e.target.closest("[data-save]"); if (s) { toggleSave(s.dataset.save); return; }
   const a = e.target.closest("[data-alert]"); if (a) { toggleAlert(a.dataset.alert); return; }
-  const t = e.target.closest("[data-topic]"); if (t) { clearFilters(); F.q=""; $("#q").value=""; F.area = t.dataset.topic; go("explorar"); return; }
+  const t = e.target.closest("[data-topic]"); if (t) { clearFilters(); F.onlyOpen = false; F.q=""; $("#q").value=""; F.area = t.dataset.topic; go("explorar"); return; }
   const rm = e.target.closest("[data-rm]");
   if (rm) { const [k,v] = rm.dataset.rm.split(/:(.*)/s); if (F[k] instanceof Set) F[k].delete(v); else { F[k] = ""; if (k==="q") $("#q").value=""; } render(); return; }
   if (e.target.closest("#openF")) { filtersOpen = true; render(); $("#filters")?.querySelector("input,select")?.focus(); return; }
@@ -1870,7 +1972,7 @@ document.addEventListener("click", async e => {
   if (e.target.closest("[data-pf-edit]")) { pfEdit = true; pfMore = false; pfDraft = null; render(); window.scrollTo(0,0); return; }
   if (e.target.closest("[data-pf-cancel]")) { pfEdit = false; pfMore = false; pfDraft = null; render(); window.scrollTo(0,0); return; }
   if (e.target.closest("[data-pf-save]") && pfDraft) {
-    const d = pfDraft;
+    const d = pfDraft, shEl = $("#pf-share"), share = shEl ? shEl.checked : !!(AUTH.user && AUTH.user.compartilhar);
     if (d.ingresso && d.formatura && +d.formatura < +d.ingresso) { pfMsg("O ano de formatura não pode ser anterior ao de ingresso.", true); return; }
     d.links = d.links.map(l => ({r:(l.r||"").trim(), u:(l.u||"").trim()})).filter(l => l.r || l.u);
     d.exps = d.exps.map(x => Object.assign({}, x, {t:(x.t||"").trim()})).filter(x => x.t);
@@ -1879,7 +1981,7 @@ document.addEventListener("click", async e => {
     for (const c of d.certs) if (c.u && !/^https?:\/\//i.test(c.u)) { pfMsg("O link de validação de \"" + c.t + "\" precisa começar com http:// ou https://.", true); return; }
     if (d.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) { pfMsg("O e-mail não parece válido.", true); return; }
     if (d.horas && !/^\d{1,2}$/.test(d.horas)) { pfMsg("Horas por semana: use só números, por exemplo 10.", true); return; }
-    perfil = Object.assign({}, perfil || {}, d); pfSave(); pfDraft = null; pfEdit = false; pfMore = false; toast("Perfil salvo neste navegador."); render(); window.scrollTo(0,0); return;
+    perfil = Object.assign({}, perfil || {}, d); pfSave(); pfDraft = null; pfEdit = false; pfMore = false; toast("Perfil salvo."); render(); window.scrollTo(0,0); pfCloud(share); return;
   }
   if (e.target.closest("[data-pf-clear]")) { if (!pfClear) { pfClear = true; render(); return; } try { await cvDel(); } catch(_) {} for (const c of ((perfil && perfil.certs) || [])) if (c.id) await fileDel("cert-" + c.id); perfil = null; pfDraft = null; pfClear = false; try { localStorage.removeItem("icconnect-perfil"); localStorage.removeItem("icconnect-interesses"); } catch(_) {} toast("Perfil e currículo apagados deste navegador."); render(); return; }
   const ad = e.target.closest("[data-pfl-add]"); if (ad) { pfAdd(ad.dataset.pflAdd); return; }

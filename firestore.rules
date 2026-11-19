@@ -7,15 +7,39 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
-    // Perfil: cada pessoa lê o próprio e o cria uma vez como aluno ou professor.
-    // O papel 'admin' só pode ser definido manualmente no console do Firebase.
+    function isProf() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['professor', 'admin'];
+    }
+
+    // Perfil da conta. Cada pessoa lê e atualiza o próprio. Professores (e admin) leem só alunos que
+    // ligaram o compartilhamento. O papel 'admin' só pode ser definido manualmente no console do Firebase.
     match /users/{uid} {
-      allow read: if signedIn() && request.auth.uid == uid;
+      allow read: if signedIn() && (request.auth.uid == uid
+        || (isProf() && resource.data.role == 'aluno' && resource.data.compartilhar == true));
       allow create: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['username', 'role'])
+        && request.resource.data.keys().hasOnly(['username', 'role', 'nome', 'email', 'compartilhar'])
         && request.resource.data.role in ['aluno', 'professor']
-        && request.resource.data.username is string && request.resource.data.username.size() <= 20;
-      allow update, delete: if false;
+        && request.resource.data.username is string && request.resource.data.username.size() <= 120
+        && request.resource.data.nome is string && request.resource.data.nome.size() <= 80
+        && request.resource.data.email is string && request.resource.data.email.size() <= 120
+        && request.resource.data.compartilhar is bool;
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nome', 'curso', 'interesses', 'compartilhar', 'email'])
+        && request.resource.data.nome is string && request.resource.data.nome.size() <= 80
+        && request.resource.data.curso is string && request.resource.data.curso.size() <= 80
+        && request.resource.data.interesses is list && request.resource.data.interesses.size() <= 30
+        && request.resource.data.compartilhar is bool
+        && request.resource.data.email is string && request.resource.data.email.size() <= 120;
+      allow delete: if false;
+    }
+
+    // Seleção de alunos feita por cada professor (só ele lê e grava a própria).
+    match /selecoes/{uid} {
+      allow read: if isProf() && request.auth.uid == uid;
+      allow create, update: if isProf() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['alunos'])
+        && request.resource.data.alunos is list && request.resource.data.alunos.size() <= 300;
     }
 
     // Vagas: nascem 'pendente'; só o admin aprova ou recusa; só vagas aprovadas são públicas (para logados).
