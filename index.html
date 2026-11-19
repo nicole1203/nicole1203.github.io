@@ -404,6 +404,7 @@ ul.plain{margin:0;padding-left:18px}
       <a href="#alunos" data-nav="alunos"><span class="lbl-alunos">Comunidade</span></a>
       <a href="#moderacao" data-nav="moderacao" class="adm-only" hidden>Moderação</a>
       <a href="#perfil" data-nav="perfil">Perfil</a>
+      <button class="linkbtn acct-out" data-auth="out" type="button" hidden>Sair</button>
       <a href="#criar" data-nav="criar" class="addtop prof-only" hidden title="Criar vaga, aviso ou evento">+ Criar</a>
       <a href="#adicionar" data-nav="adicionar" class="addtop stu-only" title="Adicionar certificado, experiência ou link ao seu perfil">+ Adicionar ao perfil</a>
     </nav>
@@ -1359,7 +1360,7 @@ const DOMAIN_OK = u => /^https?:\/\//i.test(u);
 const authErr = e => AUTH_ERR[e && e.code] || "Não foi possível concluir. Tente de novo em instantes.";
 function setMsg(text, kind){ const m = $("#authmsg"); if (!m) return; m.textContent = text || ""; m.className = kind || ""; m.setAttribute("role", kind==="err" ? "alert" : "status"); }
 function setBusy(b){ document.querySelectorAll("#authForm button, #authBox button[data-auth]").forEach(x => { x.disabled = b || (x.dataset.needsCfg === "1" && !authConfigured()); }); }
-function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".prof-only").forEach(a => a.hidden = !(AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin"))); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); document.querySelectorAll(".stu-only").forEach(a => a.hidden = isProf()); document.querySelectorAll(".lbl-alunos").forEach(a => a.textContent = isProf() ? "Alunos" : "Comunidade"); }
+function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a => a.textContent = AUTH.user ? "Conta" : "Entrar"); document.querySelectorAll(".prof-only").forEach(a => a.hidden = !(AUTH.user && (AUTH.user.role === "professor" || AUTH.user.role === "admin"))); document.querySelectorAll(".adm-only").forEach(a => a.hidden = !(AUTH.user && AUTH.user.role === "admin")); document.querySelectorAll(".stu-only").forEach(a => a.hidden = isProf()); document.querySelectorAll(".acct-out").forEach(a => a.hidden = !AUTH.user); document.querySelectorAll(".lbl-alunos").forEach(a => a.textContent = isProf() ? "Alunos" : "Comunidade"); }
 async function applyUser(u){
   const was = gated();
   if (!u) { AUTH.user = null; VAGAS.stop(); ALUNOS.stop(); POSTS.stop(); } else {
@@ -1917,7 +1918,13 @@ function viewPerfilLeitura(){
       <ul class="plain morelinks"><li><a href="#adicionar">Adicionar certificado, experiência ou link; divulgar vaga</a></li><li><a href="#ajuda">Ajuda: o que significa cada selo</a></li><li><a href="#sobre">Sobre o IC Connect</a></li><li><a href="#entrar">Minha conta e sair</a></li></ul>
     </div>`;
 }
-function viewPerfil(){
+function contaBox(){
+  if (!AUTH.user) return "";
+  const papel = AUTH.user.role === "admin" ? "Administrador(a)" : AUTH.user.role === "professor" ? "Professor(a)" : "Aluno(a)";
+  return `<section class="block" aria-labelledby="h-conta"><h2 id="h-conta">Sua conta</h2><p style="margin:0 0 8px">${esc(AUTH.user.name||"")} · ${esc(AUTH.user.email||"")} · ${papel}</p><p class="hint" style="margin:0 0 10px">Para entrar com outra conta ou criar uma nova, saia desta primeiro.</p><button class="btn" type="button" data-auth="out">Sair da conta</button></section>`;
+}
+function viewPerfil(){ return contaBox() + viewPerfilBase(); }
+function viewPerfilBase(){
   if (perfil && !pfEdit) return viewPerfilLeitura();
   if (!pfDraft) pfDraft = pfMigrate(JSON.parse(JSON.stringify(perfil || {})));
   const d = pfDraft, y = new Date().getFullYear();
