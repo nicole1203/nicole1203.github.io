@@ -1400,9 +1400,20 @@ function updateAcctLinks(){ document.querySelectorAll(".acct-link").forEach(a =>
 async function applyUser(u){
   const was = gated();
   if (!u) { AUTH.user = null; VAGAS.stop(); ALUNOS.stop(); POSTS.stop(); } else {
-    let info = { role:"aluno", data:{} };
-    try { info = await AUTH.api.loadRole(u.uid, u.email, AUTH.pending || {}); AUTH.dbError = false; } catch (e) { AUTH.dbError = true; }
+    let info = { role:"aluno", data:{} }, falhou = false;
+    const pkey = "icconnect-pend-" + String(u.email || "").toLowerCase();
+    const pend = AUTH.pending || lsGet(pkey, {}) || {};
+    if (AUTH.pending) lsSet(pkey, AUTH.pending);
+    try { info = await AUTH.api.loadRole(u.uid, u.email, pend); AUTH.dbError = false; try { localStorage.removeItem(pkey); } catch(_) {} } catch (e) { AUTH.dbError = true; falhou = true; }
     AUTH.pending = null;
+    if (falhou) {
+      /* não entra como aluno por engano: sem o registro da conta no banco o tipo (professor/aluno) se perde */
+      AUTH.user = null; VAGAS.stop(); ALUNOS.stop(); POSTS.stop();
+      try { await AUTH.api.signOut(); } catch(_) {}
+      AUTH.mode = "entrar"; AUTH.checked = true; updateAcctLinks(); render();
+      setTimeout(() => setMsg("A conta foi criada, mas não foi possível salvar o tipo (aluno ou professor) no banco de dados. Normalmente as regras do Firestore não foram publicadas. Quando o problema for resolvido, entre de novo: o tipo escolhido será salvo.", "err"), 60);
+      return;
+    }
     const dt = info.data || {};
     AUTH.user = { uid:u.uid, email:u.email, name:dt.nome || dispName(u.email), role:info.role, verified:true, nome:dt.nome || "", compartilhar:dt.compartilhar === true, visivelAlunos:dt.visivelAlunos === true };
     if (lsGet("icconnect-uid", null) && lsGet("icconnect-uid", null) !== u.uid) limparLocal();
